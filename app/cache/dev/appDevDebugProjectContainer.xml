@@ -32,7 +32,6 @@
       <parameter key="SonataIntlBundle">Sonata\IntlBundle\SonataIntlBundle</parameter>
       <parameter key="IvoryCKEditorBundle">Ivory\CKEditorBundle\IvoryCKEditorBundle</parameter>
       <parameter key="DebugBundle">Symfony\Bundle\DebugBundle\DebugBundle</parameter>
-      <parameter key="AcmeDemoBundle">Acme\DemoBundle\AcmeDemoBundle</parameter>
       <parameter key="WebProfilerBundle">Symfony\Bundle\WebProfilerBundle\WebProfilerBundle</parameter>
       <parameter key="SensioDistributionBundle">Sensio\Bundle\DistributionBundle\SensioDistributionBundle</parameter>
       <parameter key="SensioGeneratorBundle">Sensio\Bundle\GeneratorBundle\SensioGeneratorBundle</parameter>
@@ -50,7 +49,7 @@
     <parameter key="mailer_user">null</parameter>
     <parameter key="mailer_password">null</parameter>
     <parameter key="locale">fr</parameter>
-    <parameter key="secret">ThisTokenIsNotSoSecretChangeIt</parameter>
+    <parameter key="secret">chouchou</parameter>
     <parameter key="controller_resolver.class">Symfony\Bundle\FrameworkBundle\Controller\ControllerResolver</parameter>
     <parameter key="controller_name_converter.class">Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser</parameter>
     <parameter key="response_listener.class">Symfony\Component\HttpKernel\EventListener\ResponseListener</parameter>
@@ -99,7 +98,7 @@
     <parameter key="translation.extractor.class">Symfony\Component\Translation\Extractor\ChainExtractor</parameter>
     <parameter key="translation.writer.class">Symfony\Component\Translation\Writer\TranslationWriter</parameter>
     <parameter key="property_accessor.class">Symfony\Component\PropertyAccess\PropertyAccessor</parameter>
-    <parameter key="kernel.secret">ThisTokenIsNotSoSecretChangeIt</parameter>
+    <parameter key="kernel.secret">chouchou</parameter>
     <parameter key="kernel.http_method_override">true</parameter>
     <parameter key="kernel.trusted_hosts" type="collection"/>
     <parameter key="kernel.trusted_proxies" type="collection"/>
@@ -1134,7 +1133,7 @@
       <argument>C:\wamp\www\Oetherium\app/Resources</argument>
     </service>
     <service id="uri_signer" class="Symfony\Component\HttpKernel\UriSigner">
-      <argument>ThisTokenIsNotSoSecretChangeIt</argument>
+      <argument>chouchou</argument>
     </service>
     <service id="fragment.handler" class="Symfony\Component\HttpKernel\Fragment\FragmentHandler">
       <argument type="collection"/>
@@ -1786,6 +1785,12 @@
       </call>
       <call method="addResource">
         <argument>xlf</argument>
+        <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.bg.xlf</argument>
+        <argument>bg</argument>
+        <argument>security</argument>
+      </call>
+      <call method="addResource">
+        <argument>xlf</argument>
         <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.ca.xlf</argument>
         <argument>ca</argument>
         <argument>security</argument>
@@ -1852,8 +1857,20 @@
       </call>
       <call method="addResource">
         <argument>xlf</argument>
+        <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.hr.xlf</argument>
+        <argument>hr</argument>
+        <argument>security</argument>
+      </call>
+      <call method="addResource">
+        <argument>xlf</argument>
         <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.hu.xlf</argument>
         <argument>hu</argument>
+        <argument>security</argument>
+      </call>
+      <call method="addResource">
+        <argument>xlf</argument>
+        <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.id.xlf</argument>
+        <argument>id</argument>
         <argument>security</argument>
       </call>
       <call method="addResource">
@@ -1864,8 +1881,20 @@
       </call>
       <call method="addResource">
         <argument>xlf</argument>
+        <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.ja.xlf</argument>
+        <argument>ja</argument>
+        <argument>security</argument>
+      </call>
+      <call method="addResource">
+        <argument>xlf</argument>
         <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.lb.xlf</argument>
         <argument>lb</argument>
+        <argument>security</argument>
+      </call>
+      <call method="addResource">
+        <argument>xlf</argument>
+        <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.lt.xlf</argument>
+        <argument>lt</argument>
         <argument>security</argument>
       </call>
       <call method="addResource">
@@ -1942,6 +1971,12 @@
       </call>
       <call method="addResource">
         <argument>xlf</argument>
+        <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.th.xlf</argument>
+        <argument>th</argument>
+        <argument>security</argument>
+      </call>
+      <call method="addResource">
+        <argument>xlf</argument>
         <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.tr.xlf</argument>
         <argument>tr</argument>
         <argument>security</argument>
@@ -1950,6 +1985,18 @@
         <argument>xlf</argument>
         <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.ua.xlf</argument>
         <argument>ua</argument>
+        <argument>security</argument>
+      </call>
+      <call method="addResource">
+        <argument>xlf</argument>
+        <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.vi.xlf</argument>
+        <argument>vi</argument>
+        <argument>security</argument>
+      </call>
+      <call method="addResource">
+        <argument>xlf</argument>
+        <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Component\Security\Core\Exception/../Resources/translations\security.zh_CN.xlf</argument>
+        <argument>zh_CN</argument>
         <argument>security</argument>
       </call>
       <call method="addResource">
@@ -3039,6 +3086,7 @@
               <argument key="sonata_type_date_range_picker">sonata.core.form.type.date_range_picker</argument>
               <argument key="sonata_type_datetime_range_picker">sonata.core.form.type.datetime_range_picker</argument>
               <argument key="sonata_type_equal">sonata.core.form.type.equal</argument>
+              <argument key="sonata_type_color_selector">sonata.core.form.type.color_selector</argument>
               <argument key="sonata_block_service_choice">sonata.block.form.type.block</argument>
               <argument key="sonata_type_container_template_choice">sonata.block.form.type.container_template</argument>
               <argument key="ckeditor">ivory_ck_editor.form.type</argument>
@@ -3653,14 +3701,6 @@
         </argument>
         <argument>0</argument>
       </call>
-      <call method="addListenerService">
-        <argument>kernel.controller</argument>
-        <argument type="collection">
-          <argument>acme.demo.listener</argument>
-          <argument>onKernelController</argument>
-        </argument>
-        <argument>0</argument>
-      </call>
       <call method="addSubscriberService">
         <argument>response_listener</argument>
         <argument>Symfony\Component\HttpKernel\EventListener\ResponseListener</argument>
@@ -3850,13 +3890,13 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider" public="false">
             <argument type="service" id="security.user_checker"/>
-            <argument>ThisTokenIsNotSoSecretChangeIt</argument>
+            <argument>chouchou</argument>
             <argument>main</argument>
           </service>
         </argument>
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>55ddd03b2b81c</argument>
+            <argument>55de19c63c7be5.00589067</argument>
           </service>
         </argument>
       </argument>
@@ -4063,7 +4103,7 @@
                   <argument type="collection">
                     <argument type="service" id="fos_user.user_provider.username"/>
                   </argument>
-                  <argument>ThisTokenIsNotSoSecretChangeIt</argument>
+                  <argument>chouchou</argument>
                   <argument>main</argument>
                   <argument type="collection">
                     <argument key="name">REMEMBERME</argument>
@@ -4157,7 +4197,7 @@
                   <argument type="collection">
                     <argument type="service" id="fos_user.user_provider.username"/>
                   </argument>
-                  <argument>ThisTokenIsNotSoSecretChangeIt</argument>
+                  <argument>chouchou</argument>
                   <argument>main</argument>
                   <argument type="collection">
                     <argument key="name">REMEMBERME</argument>
@@ -4183,7 +4223,7 @@
                 <argument type="collection">
                   <argument type="service" id="fos_user.user_provider.username"/>
                 </argument>
-                <argument>ThisTokenIsNotSoSecretChangeIt</argument>
+                <argument>chouchou</argument>
                 <argument>main</argument>
                 <argument type="collection">
                   <argument key="name">REMEMBERME</argument>
@@ -4207,7 +4247,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.context"/>
-            <argument>55ddd03b2b81c</argument>
+            <argument>55de19c63c7be5.00589067</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -4512,9 +4552,6 @@
             <argument type="service" id="var_dumper.cloner"/>
           </service>
         </argument>
-      </call>
-      <call method="addExtension">
-        <argument type="service" id="twig.extension.acme.demo"/>
       </call>
       <call method="addExtension">
         <argument type="service">
@@ -4831,7 +4868,6 @@
               <argument key="ApaStoryBundle">Apa\StoryBundle\Entity</argument>
               <argument key="ApaUserBundle">Apa\UserBundle\Entity</argument>
               <argument key="ApaGeneralPageBundle">Apa\GeneralPageBundle\Entity</argument>
-              <argument key="AcmeDemoBundle">Acme\DemoBundle\Entity</argument>
             </argument>
           </call>
           <call method="setMetadataCacheImpl">
@@ -4854,7 +4890,6 @@
                         <argument>C:\wamp\www\Oetherium\src\Apa\StoryBundle\Entity</argument>
                         <argument>C:\wamp\www\Oetherium\src\Apa\UserBundle\Entity</argument>
                         <argument>C:\wamp\www\Oetherium\src\Apa\GeneralPageBundle\Entity</argument>
-                        <argument>C:\wamp\www\Oetherium\src\Acme\DemoBundle\Entity</argument>
                       </argument>
                     </service>
                   </argument>
@@ -4868,7 +4903,6 @@
                         <argument>C:\wamp\www\Oetherium\src\Apa\StoryBundle\Entity</argument>
                         <argument>C:\wamp\www\Oetherium\src\Apa\UserBundle\Entity</argument>
                         <argument>C:\wamp\www\Oetherium\src\Apa\GeneralPageBundle\Entity</argument>
-                        <argument>C:\wamp\www\Oetherium\src\Acme\DemoBundle\Entity</argument>
                       </argument>
                     </service>
                   </argument>
@@ -4882,25 +4916,10 @@
                         <argument>C:\wamp\www\Oetherium\src\Apa\StoryBundle\Entity</argument>
                         <argument>C:\wamp\www\Oetherium\src\Apa\UserBundle\Entity</argument>
                         <argument>C:\wamp\www\Oetherium\src\Apa\GeneralPageBundle\Entity</argument>
-                        <argument>C:\wamp\www\Oetherium\src\Acme\DemoBundle\Entity</argument>
                       </argument>
                     </service>
                   </argument>
                   <argument>Apa\GeneralPageBundle\Entity</argument>
-                </call>
-                <call method="addDriver">
-                  <argument type="service">
-                    <service class="Doctrine\ORM\Mapping\Driver\AnnotationDriver" public="false">
-                      <argument type="service" id="annotation_reader"/>
-                      <argument type="collection">
-                        <argument>C:\wamp\www\Oetherium\src\Apa\StoryBundle\Entity</argument>
-                        <argument>C:\wamp\www\Oetherium\src\Apa\UserBundle\Entity</argument>
-                        <argument>C:\wamp\www\Oetherium\src\Apa\GeneralPageBundle\Entity</argument>
-                        <argument>C:\wamp\www\Oetherium\src\Acme\DemoBundle\Entity</argument>
-                      </argument>
-                    </service>
-                  </argument>
-                  <argument>Acme\DemoBundle\Entity</argument>
                 </call>
                 <call method="addDriver">
                   <argument type="service">
@@ -6052,7 +6071,7 @@
       <argument type="service" id="liip_imagine.mime_type_guesser"/>
     </service>
     <service id="liip_imagine.cache.signer" class="Liip\ImagineBundle\Imagine\Cache\Signer">
-      <argument>ThisTokenIsNotSoSecretChangeIt</argument>
+      <argument>chouchou</argument>
     </service>
     <service id="liip_imagine.filter.post_processor.jpegoptim" class="Liip\ImagineBundle\Imagine\Filter\PostProcessor\JpegOptimPostProcessor">
       <tag name="liip_imagine.filter.post_processor" post_processor="jpegoptim"/>
@@ -6570,6 +6589,9 @@
       <tag name="form.type" alias="sonata_type_equal"/>
       <argument type="service" id="translator"/>
     </service>
+    <service id="sonata.core.form.type.color_selector" class="Sonata\CoreBundle\Form\Type\ColorSelectorType">
+      <tag name="form.type" alias="sonata_type_color_selector"/>
+    </service>
     <service id="sonata.core.validator.inline" class="Sonata\CoreBundle\Validator\InlineValidator">
       <tag name="validator.constraint_validator" alias="sonata.core.validator.inline"/>
       <argument type="service" id="service_container"/>
@@ -6867,14 +6889,6 @@
     <service id="var_dumper.cli_dumper" class="Symfony\Component\VarDumper\Dumper\CliDumper">
       <argument>null</argument>
       <argument>UTF-8</argument>
-    </service>
-    <service id="twig.extension.acme.demo" class="Acme\DemoBundle\Twig\Extension\DemoExtension" public="false">
-      <tag name="twig.extension"/>
-      <argument type="service" id="twig.loader"/>
-    </service>
-    <service id="acme.demo.listener" class="Acme\DemoBundle\EventListener\ControllerListener">
-      <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"/>
-      <argument type="service" id="twig.extension.acme.demo"/>
     </service>
     <service id="web_profiler.controller.profiler" class="Symfony\Bundle\WebProfilerBundle\Controller\ProfilerController">
       <argument type="service" id="router" on-invalid="null"/>
@@ -7297,10 +7311,6 @@
       <call method="addPath">
         <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Bundle\DebugBundle/Resources/views</argument>
         <argument>Debug</argument>
-      </call>
-      <call method="addPath">
-        <argument>C:\wamp\www\Oetherium\src\Acme\DemoBundle/Resources/views</argument>
-        <argument>AcmeDemo</argument>
       </call>
       <call method="addPath">
         <argument>C:\wamp\www\Oetherium\vendor\symfony\symfony\src\Symfony\Bundle\WebProfilerBundle/Resources/views</argument>

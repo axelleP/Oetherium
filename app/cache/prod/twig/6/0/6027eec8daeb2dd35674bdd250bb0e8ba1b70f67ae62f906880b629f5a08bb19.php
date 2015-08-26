@@ -199,12 +199,13 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
             <div class=\"clear\"></div>
         </footer>
         <!--on met le javascript à la fin si possible (performance)-->
+        <!-- pour que ça marche en mode prod : php app/console cache:clear --env=prod ET php app/console assetic:dump --env=prod -->
         ";
-        // line 106
+        // line 107
         if (isset($context['assetic']['debug']) && $context['assetic']['debug']) {
             // asset "7a81978_0"
             $context["asset_url"] = isset($context['assetic']['use_controller']) && $context['assetic']['use_controller'] ? $this->env->getExtension('routing')->getPath("_assetic_7a81978_0") : $this->env->getExtension('assets')->getAssetUrl("js/7a81978_init_1.js");
-            // line 107
+            // line 108
             echo "            <script type=\"text/javascript\" src=\"";
             echo twig_escape_filter($this->env, (isset($context["asset_url"]) ? $context["asset_url"] : null), "html", null, true);
             echo "\"></script>
@@ -224,11 +225,8 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         ";
         }
         unset($context["asset_url"]);
-        // line 109
-        echo "        <!--<script src=\"";
-        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("js/generalFiles-js.js"), "html", null, true);
-        echo "\"></script>-->
-    </body>
+        // line 110
+        echo "    </body>
 </html>
 ";
     }
@@ -247,7 +245,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
     public function block_stylesheets($context, array $blocks = array())
     {
         // line 9
-        echo "            <!-- pour que ça marche en mode prod : php app/console assetic:dump --env=prod -->
+        echo "            <!-- pour que ça marche en mode prod : php app/console cache:clear --env=prod ET php app/console assetic:dump --env=prod -->
             ";
         // line 10
         if (isset($context['assetic']['debug']) && $context['assetic']['debug']) {
@@ -317,6 +315,6 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
 
     public function getDebugInfo()
     {
-        return array (  304 => 71,  299 => 70,  294 => 62,  289 => 29,  284 => 16,  281 => 15,  277 => 13,  257 => 11,  253 => 10,  250 => 9,  247 => 8,  242 => 6,  237 => 4,  228 => 109,  208 => 107,  204 => 106,  197 => 101,  193 => 99,  186 => 94,  178 => 92,  176 => 91,  173 => 90,  171 => 89,  163 => 84,  149 => 72,  146 => 71,  144 => 70,  133 => 62,  128 => 60,  115 => 50,  111 => 49,  107 => 48,  99 => 43,  93 => 40,  87 => 37,  82 => 35,  78 => 34,  72 => 30,  70 => 29,  63 => 25,  59 => 24,  51 => 18,  49 => 15,  46 => 14,  44 => 8,  39 => 7,  37 => 6,  32 => 4,  27 => 1,);
+        return array (  302 => 71,  297 => 70,  292 => 62,  287 => 29,  282 => 16,  279 => 15,  275 => 13,  255 => 11,  251 => 10,  248 => 9,  245 => 8,  240 => 6,  235 => 4,  229 => 110,  209 => 108,  205 => 107,  197 => 101,  193 => 99,  186 => 94,  178 => 92,  176 => 91,  173 => 90,  171 => 89,  163 => 84,  149 => 72,  146 => 71,  144 => 70,  133 => 62,  128 => 60,  115 => 50,  111 => 49,  107 => 48,  99 => 43,  93 => 40,  87 => 37,  82 => 35,  78 => 34,  72 => 30,  70 => 29,  63 => 25,  59 => 24,  51 => 18,  49 => 15,  46 => 14,  44 => 8,  39 => 7,  37 => 6,  32 => 4,  27 => 1,);
     }
 }

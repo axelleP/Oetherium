@@ -231,6 +231,7 @@
   'SonataDoctrineORMAdminBundle:Form:filter_admin_fields.html.twig' => 'C:\\wamp\\www\\Oetherium\\vendor\\sonata-project\\doctrine-orm-admin-bundle/Resources/views/Form/filter_admin_fields.html.twig',
   'SonataDoctrineORMAdminBundle:Form:form_admin_fields.html.twig' => 'C:\\wamp\\www\\Oetherium\\vendor\\sonata-project\\doctrine-orm-admin-bundle/Resources/views/Form/form_admin_fields.html.twig',
   'SonataCoreBundle:FlashMessage:render.html.twig' => 'C:\\wamp\\www\\Oetherium\\vendor\\sonata-project\\core-bundle/Resources/views/FlashMessage/render.html.twig',
+  'SonataCoreBundle:Form:colorpicker.html.twig' => 'C:\\wamp\\www\\Oetherium\\vendor\\sonata-project\\core-bundle/Resources/views/Form/colorpicker.html.twig',
   'SonataCoreBundle:Form:datepicker.html.twig' => 'C:\\wamp\\www\\Oetherium\\vendor\\sonata-project\\core-bundle/Resources/views/Form/datepicker.html.twig',
   'SonataBlockBundle:Block:block_base.html.twig' => 'C:\\wamp\\www\\Oetherium\\vendor\\sonata-project\\block-bundle/Resources/views/Block/block_base.html.twig',
   'SonataBlockBundle:Block:block_container.html.twig' => 'C:\\wamp\\www\\Oetherium\\vendor\\sonata-project\\block-bundle/Resources/views/Block/block_container.html.twig',

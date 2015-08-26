@@ -24,7 +24,7 @@ class __TwigTemplate_d25afce75c319b78b7c9be7ba5b97729f25c6fcd21a9180a24a952cbdc6
     protected function doDisplay(array $context, array $blocks = array())
     {
         // line 3
-        $context["__internal_bc46ceed758b4b74a8ac7223adb79363fd415ee959d808c3b07b9829a4aaf148"] = $this;
+        $context["__internal_2f665001a9c370721c82d3a1ac8d143ed011c8638c49e5ece5741bfe6747df17"] = $this;
         // line 1
         $this->parent->display($context, array_merge($this->blocks, $blocks));
     }
@@ -85,7 +85,7 @@ class __TwigTemplate_d25afce75c319b78b7c9be7ba5b97729f25c6fcd21a9180a24a952cbdc6
             echo "</code></td>
                 <td><code>";
             // line 34
-            echo $context["__internal_bc46ceed758b4b74a8ac7223adb79363fd415ee959d808c3b07b9829a4aaf148"]->getdisplay_listener($context["listener"]);
+            echo $context["__internal_2f665001a9c370721c82d3a1ac8d143ed011c8638c49e5ece5741bfe6747df17"]->getdisplay_listener($context["listener"]);
             echo "</code></td>
             </tr>
         ";
@@ -123,7 +123,7 @@ class __TwigTemplate_d25afce75c319b78b7c9be7ba5b97729f25c6fcd21a9180a24a952cbdc6
                 echo "</code></td>
                     <td><code>";
                 // line 51
-                echo $context["__internal_bc46ceed758b4b74a8ac7223adb79363fd415ee959d808c3b07b9829a4aaf148"]->getdisplay_listener($this->getAttribute((isset($context["listeners"]) ? $context["listeners"] : $this->getContext($context, "listeners")), $context["listener"], array(), "array"));
+                echo $context["__internal_2f665001a9c370721c82d3a1ac8d143ed011c8638c49e5ece5741bfe6747df17"]->getdisplay_listener($this->getAttribute((isset($context["listeners"]) ? $context["listeners"] : $this->getContext($context, "listeners")), $context["listener"], array(), "array"));
                 echo "</code></td>
                 </tr>
             ";
@@ -155,6 +155,7 @@ class __TwigTemplate_d25afce75c319b78b7c9be7ba5b97729f25c6fcd21a9180a24a952cbdc6
     {
         $context = $this->env->mergeGlobals(array(
             "listener" => $__listener__,
+            "varargs" => func_num_args() > 1 ? array_slice(func_get_args(), 1) : array(),
         ));
 
         $blocks = array();
@@ -226,6 +227,6 @@ class __TwigTemplate_d25afce75c319b78b7c9be7ba5b97729f25c6fcd21a9180a24a952cbdc6
 
     public function getDebugInfo()
     {
-        return array (  206 => 78,  193 => 77,  190 => 76,  187 => 75,  176 => 74,  173 => 73,  171 => 72,  168 => 71,  165 => 70,  154 => 69,  139 => 56,  135 => 54,  126 => 51,  122 => 50,  119 => 49,  114 => 48,  112 => 47,  105 => 42,  103 => 41,  97 => 37,  88 => 34,  84 => 33,  81 => 32,  77 => 31,  68 => 24,  65 => 23,  56 => 16,  50 => 14,  47 => 13,  44 => 12,  36 => 6,  33 => 5,  29 => 1,  27 => 3,  11 => 1,);
+        return array (  207 => 78,  194 => 77,  191 => 76,  188 => 75,  177 => 74,  174 => 73,  172 => 72,  169 => 71,  166 => 70,  154 => 69,  139 => 56,  135 => 54,  126 => 51,  122 => 50,  119 => 49,  114 => 48,  112 => 47,  105 => 42,  103 => 41,  97 => 37,  88 => 34,  84 => 33,  81 => 32,  77 => 31,  68 => 24,  65 => 23,  56 => 16,  50 => 14,  47 => 13,  44 => 12,  36 => 6,  33 => 5,  29 => 1,  27 => 3,  11 => 1,);
     }
 }

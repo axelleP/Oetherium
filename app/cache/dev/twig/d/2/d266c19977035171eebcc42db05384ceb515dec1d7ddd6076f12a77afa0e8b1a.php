@@ -25,6 +25,7 @@ class __TwigTemplate_d266c19977035171eebcc42db05384ceb515dec1d7ddd6076f12a77afa0
             "form" => $__form__,
             "groups" => $__groups__,
             "has_tab" => $__has_tab__,
+            "varargs" => func_num_args() > 4 ? array_slice(func_get_args(), 4) : array(),
         ));
 
         $blocks = array();
@@ -139,6 +140,6 @@ class __TwigTemplate_d266c19977035171eebcc42db05384ceb515dec1d7ddd6076f12a77afa0
 
     public function getDebugInfo()
     {
-        return array (  117 => 32,  109 => 29,  105 => 26,  96 => 24,  91 => 23,  85 => 21,  82 => 20,  77 => 19,  74 => 18,  68 => 16,  66 => 15,  62 => 13,  56 => 9,  48 => 5,  45 => 4,  40 => 3,  35 => 2,  21 => 1,);
+        return array (  118 => 32,  110 => 29,  106 => 26,  97 => 24,  92 => 23,  86 => 21,  83 => 20,  78 => 19,  75 => 18,  69 => 16,  67 => 15,  63 => 13,  57 => 9,  49 => 5,  46 => 4,  41 => 3,  36 => 2,  21 => 1,);
     }
 }
