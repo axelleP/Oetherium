@@ -1,0 +1,7 @@
+{% for chapter in listChapters %}
+    <li>
+        <a class="oneCapital" href="{{ path('apa_story_chapter', {'numero': chapter.id}) }}">
+            {{ chapter.title }}
+        </a>
+    </li>  
+{% endfor %}

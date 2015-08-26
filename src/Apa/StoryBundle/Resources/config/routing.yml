@@ -1,0 +1,30 @@
+apa_story_characters:
+    path:     /personnages
+    defaults: { _controller: ApaStoryBundle:Story:seeCharacters }
+    
+apa_story_characterProfile:
+    path:     /profil/{firstname}-{name}
+    defaults: { _controller: ApaStoryBundle:Story:seeCharacterProfile, name: 'null',  firstname: 'null'  }
+    
+apa_story_chapters:
+    path:     /chapitres/page-{page}
+    defaults: { _controller: ApaStoryBundle:Story:seeChapters, page: 1 }
+    requirements:
+        page:  \d*
+    
+apa_story_chapter:
+    path:     /chapitre-{numero}/page-{page}
+    defaults: { _controller: ApaStoryBundle:Story:readChapter, page: 1 }
+    requirements:
+        page:  \d*
+         
+apa_story_annexTexts:
+    path:     /textes-annexes/page-{page}
+    defaults: { _controller: ApaStoryBundle:Story:seeAnnexTexts, page: 1 }
+    requirements:
+        page:  \d*
+    
+apa_story_annexText:
+    path:     /texte-annexe-{numero}
+    defaults: { _controller: ApaStoryBundle:Story:readAnnexText }
+

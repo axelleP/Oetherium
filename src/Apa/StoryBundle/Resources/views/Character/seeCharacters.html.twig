@@ -1,0 +1,85 @@
+{% extends "::layout.html.twig" %}
+{% block titlePage %}Les personnages de l'Oetherium{% endblock %}
+
+{% block metaDescriptionPage %}
+    <meta name="description" content="Retrouvez tout vos personnages préférés de l'Oetherium.">
+{% endblock %}
+
+{% block descriptionMenu %}Les personnages{% endblock %}
+
+{% block body %}
+    <div itemscope itemtype="http://schema.org/CreativeWork">
+        <h1 id="title" class="uppercase" itemprop="headline">Personnages</h1>
+        
+        <div id="contentMiddleFrame" itemprop="text"> 
+            <h2 class="subtitle" itemprop="alternativeHeadline">Principaux</h2>
+    
+            <div class="centerText">
+                {% if mainCharacters %}
+                    {% for character in mainCharacters %}
+                        <div class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
+                            <ul class="zoom">
+                                <li>
+                                    <a class="link" itemprop="url" href="{{ path('apa_story_characterProfile',{'firstname':character.firstname, 'name':character.name}) }}">
+                                        <div class="centerPage vignetteAvatar">
+                                            {% if character.avatar == 'avatarByDefault.png' %}
+                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{character.name}}"/>
+                                            {% else %}
+                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.firstname ~'-' ~character.name ~'/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{character.name}}"/>
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="vignetteName capital"><span itemprop="givenName">{{ character.firstname }}</span><br><span itemprop="familyName">{{ character.name }}</span></div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    Il n'existe pas encore de personnages principaux.
+                {% endif %}
+            </div>
+            <div class="clear"></div> 
+    
+            <h2 class="subtitle" itemprop="alternativeHeadline">Secondaires</h2>
+            
+            <div class="centerText">
+                {% if minorCharacters %}
+                    {% for character in minorCharacters %}
+                        <div class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
+                            <ul class="zoom">
+                                <li>
+                                    <a class="link" itemprop="url" href="{{ path('apa_story_characterProfile',{'firstname':character.firstname, 'name':character.name}) }}">
+                                        <div class="centerPage vignetteAvatar">
+                                            {% if character.avatar == 'avatarByDefault.png' %}
+                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{character.name}}"/>
+                                            {% else %}
+                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.firstname ~'-' ~character.name ~'/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{character.name}}"/>
+                                            {% endif %}
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="vignetteName capital"><span itemprop="givenName">{{ character.firstname }}</span><br><span itemprop="familyName">{{ character.name }}</span></div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    Il n'existe pas encore de personnages secondaires.
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block socialNetwork %}
+    <a class="buttonSocialNetworkFirst centerPage" target="_blank" title="Twitter" href="http://twitter.com/share?url={{ app.request.uri }}&amp;text=Les%20personnages%20de%20l'Oetherium">
+        <i class="fa fa-twitter fa-lg tw">t</i>
+    </a>
+    
+    <a class="buttonSocialNetwork centerPage" target="_blank" title="Facebook" href="http://www.facebook.com/sharer.php?u={{ app.request.uri }}&amp;t=Les%20personnages%20de%20l'Oetherium">
+        <i class="fa fa-facebook fa-lg fb">f</i>
+    </a>
+    
+    <a class="buttonSocialNetwork centerPage" target="_blank" title="Google Plus" href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url={{ app.request.uri }}">
+        <i class="fa fa-google-plus fa-lg google">g</i>
+    </a>
+{% endblock %}

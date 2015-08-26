@@ -1,0 +1,43 @@
+{% extends "::layout.html.twig" %}
+{% block titlePage %}Les textes annexes de l'Oetherium{% endblock %}
+
+{% block metaDescriptionPage %}
+    <meta name="description" content="Vous voulez en savoir plus sur l'univers de l'Oetherium? Venez alors découvrir ses textes annexes.">
+{% endblock %}
+
+{% block descriptionMenu %}Les textes annexes{% endblock %}
+
+{% block body %}
+    <div itemscope itemtype="http://schema.org/CreativeWork">
+        <h1 id="title" class="uppercase" itemprop="headline">Textes annexes</h1>
+        
+        <div id="contentMiddleFrame" itemprop="text"> 
+            {% if pagination is not empty %}
+                {% for annexText in pagination %}
+                    <div itemscope itemtype="http://schema.org/Thing">
+                        <p class="capital underline subtitle bold" itemprop="name">{{ annexText.title }}</p>
+                        <p itemprop="description">{{ annexText.contents |striptags|truncate(370, true)|raw}}</p>
+                        <a class="colorUnderlineLink" itemprop="url" href="{{ path('apa_story_annexText', {'numero': annexText.id}) }}">Lire la suite</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                Il n'existe pas encore de textes annexes.
+            {% endif %}
+        </div>
+        <div id="pagination" itemprop="pagination">{{ knp_pagination_render(pagination) }}</div>
+    </div>
+{% endblock %}
+
+{% block socialNetwork %}
+    <a class="buttonSocialNetworkFirst centerPage" target="_blank" title="Twitter" href="http://twitter.com/share?url={{ app.request.uri }}&amp;text=Les%20textes%20annexes%20de%20l'Oetherium">
+        <i class="fa fa-twitter fa-lg tw">t</i>
+    </a>
+    
+    <a class="buttonSocialNetwork centerPage" target="_blank" title="Facebook" href="http://www.facebook.com/sharer.php?u={{ app.request.uri }}&amp;t=Les%20textes%20annexes%20de%20l'Oetherium">
+        <i class="fa fa-facebook fa-lg fb">f</i>
+    </a>
+    
+    <a class="buttonSocialNetwork centerPage" target="_blank" title="Google Plus" href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url={{ app.request.uri }}">
+        <i class="fa fa-google-plus fa-lg google">g</i>
+    </a>
+{% endblock %}

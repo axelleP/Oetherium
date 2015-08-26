@@ -1,0 +1,45 @@
+<?php
+
+namespace Apa\StoryBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Chapter
+ *
+ * @ORM\Table()
+ * @ORM\Entity(repositoryClass="Apa\StoryBundle\Entity\ChapterRepository")
+ */
+class Chapter
+{
+    /**
+     * @ORM\OneToMany(targetEntity="Apa\StoryBundle\Entity\PageBook", mappedBy="chapter")
+     */
+    private $pagesBook;
+   
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @var smallint
+     *
+     * @ORM\Column(name="number", type="smallint")
+     */
+    private $number;
+    
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="string", length=50)
+     */
+    private $title;
+
+
+}

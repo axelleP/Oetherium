@@ -1,0 +1,67 @@
+{% extends "::layout.html.twig" %}
+{% block titlePage %}Profil de {{ characterProfile.firstname }} {{ characterProfile.name }} - Oetherium{% endblock %}
+
+{% block metaDescriptionPage %}
+    <meta name="description" content="Qui est ce personnage de l'Oetherium? Un bandit? un aristocrate? Venez tout de suite le découvrir!">
+{% endblock %}
+
+{% block stylesheets %} {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('bundles/apastory/css/lightbox.css') }}" type="text/css" />
+{% endblock %}
+
+{% block descriptionMenu %}Fiche de {{ characterProfile.firstname }} {{ characterProfile.name }}{% endblock %}
+
+{% block body %}
+    <div id="contentMiddleFrameUntitled" itemscope itemtype="http://schema.org/Person">   
+        <div id="characterAvatar">
+            {% if characterProfile.avatar == 'avatarByDefault.png' %}
+                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~characterProfile.avatar ) | imagine_filter('normalAvatar')) }}" alt="Avatar de {{characterProfile.firstname}} {{characterProfile.name}}"/>
+            {% else %}
+                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~characterProfile.firstname ~'-' ~characterProfile.name ~'/' ~characterProfile.avatar ) | imagine_filter('normalAvatar')) }}" alt="Avatar de {{characterProfile.firstname}} {{characterProfile.name}}"/>
+            {% endif %}
+        </div>
+        
+        <div id="characterInformation">
+            <h1 class="bold uppercase h1Character"><span itemprop="givenName">{{ characterProfile.arrayFirstnames }} </span><span itemprop="familyName">{{ characterProfile.name }}</span></h1>
+            <p class="capital">Espèce : {{ characterProfile.species }}</p>
+            <p class="capital">Genre : <span itemprop="gender">{{ characterProfile.gender }}</span></p>
+            <p>Date et lieu de naissance : Le <span itemprop="birthDate">{{ characterProfile.dateBirth | date("d/m/Y")}}</span> à <span class="capital" itemprop="birthPlace">{{ characterProfile.placeBirth }}</span> </p>
+            <p class="capital" itemscope itemtype="http://schema.org/CreativeWork">Citation : <span class="italic" itemprop="citation">"{{ characterProfile.citation }}"</span></p>
+        </div>
+        
+        <div class="clear"></div>  
+
+        <div id="characterDescription">
+            <p class="oneCapital" itemprop="description">{{ characterProfile.description }}</p>
+        </div>
+	
+        <!-- Gallery -->
+            <div class="portfolio-area">
+                {% for image in images %}
+                    <span class="image-block">
+                        <a class="image-zoom" data-lightbox="image" itemprop="url" href="{{ asset('uploads/apastory/images/' ~characterProfile.firstname ~'-' ~characterProfile.name ~'/' ~image.path)}}" >
+                            <img itemprop="image" height="130" src="{{ asset('uploads/apastory/images/' ~characterProfile.firstname ~'-' ~characterProfile.name ~'/' ~image.path)}}" alt="{{ image.description }}"/>                    
+                        </a>
+                    </span>                        	
+                {% endfor %}
+            </div>
+    </div>
+{% endblock %}
+
+{% block socialNetwork %}
+    <a class="buttonSocialNetworkFirst centerPage" target="_blank" title="Twitter" href="http://twitter.com/share?url={{ app.request.uri }}&amp;text=Profil%20de%20{{ characterProfile.firstname }}%20{{ characterProfile.name }}%20-%20Oetherium">
+        <i class="fa fa-twitter fa-lg tw">t</i>
+    </a>
+    
+    <a class="buttonSocialNetwork centerPage" target="_blank" title="Facebook" href="http://www.facebook.com/sharer.php?u={{ app.request.uri }}&amp;t=Profil%20de%20{{ characterProfile.firstname }}%20{{ characterProfile.name }}%20-%20Oetherium">
+        <i class="fa fa-facebook fa-lg fb">f</i>
+    </a>
+    
+    <a class="buttonSocialNetwork centerPage" target="_blank" title="Google Plus" href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url=Profil%20de%20{{ characterProfile.firstname }}%20{{ characterProfile.name }}%20-%20Oetherium">
+        <i class="fa fa-google-plus fa-lg google">g</i>
+    </a>
+{% endblock %}
+
+{% block javascripts %} {{ parent() }}
+    <script src="{{ asset('bundles/apastory/js/lightbox.min.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,76 @@
+# Apa/AdminBundle/Resources/config/admin.yml
+services:
+    # le contrôleur appelé avec ces paramètres pour le service sonata.admin.page
+    # class : la page d'admin
+    # arguments : l'entité
+    sonata.admin.chapter:
+        class: Apa\AdminBundle\Admin\ChapterAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Tableau de bord", label: "Chapitres de l'Oetherium" }
+        arguments:
+            - ~
+            - Apa\StoryBundle\Entity\Chapter
+            - ~
+        calls:
+            - [ setTranslationDomain, [ApaAdminBundle]]
+            
+    sonata.admin.annexText:
+        class: Apa\AdminBundle\Admin\AnnexTextAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Tableau de bord", label: "Textes annexes" }
+        arguments:
+            - ~
+            - Apa\StoryBundle\Entity\AnnexText
+            - ~
+        calls:
+            - [ setTranslationDomain, [ApaAdminBundle]]
+    
+    sonata.admin.characterStory:
+        class: Apa\AdminBundle\Admin\CharacterStoryAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Tableau de bord", label: "Personnages" }
+        arguments:
+            - ~
+            - Apa\StoryBundle\Entity\CharacterStory
+            - ~
+        calls:
+            - [ setTranslationDomain, [ApaAdminBundle]]
+            
+    sonata.admin.generalPage:
+        class: Apa\AdminBundle\Admin\GeneralPageAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Tableau de bord", label: "Pages générales du site" }
+        arguments:
+            - ~
+            - Apa\GeneralPageBundle\Entity\Page
+            - ~
+        calls:
+            - [ setTranslationDomain, [ApaAdminBundle]]
+    
+    # ATTENTION : le groupe Gestion optionnel est caché en javascript
+    # dans app\resources\SonataAdminBundle\views\layout.html.twig' en fixe!
+    sonata.admin.pageBook:
+        class: Apa\AdminBundle\Admin\PageBookAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Gestion optionnel", label: "Pages de l'Oetherium" }
+        arguments:
+            - ~
+            - Apa\StoryBundle\Entity\PageBook
+            - ~
+        calls:
+            - [ setTranslationDomain, [ApaAdminBundle]]
+            
+    sonata.admin.image:
+        dashboard:
+            blocks:
+                # display a dashboard block
+                - { position: right, type: sonata.admin.block.admin_list }
+        class: Apa\AdminBundle\Admin\ImageAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Gestion optionnel", label: "Galerie des personnages" }
+        arguments:
+            - ~
+            - Apa\StoryBundle\Entity\Image
+            - ~
+        calls:
+            - [ setTranslationDomain, [ApaAdminBundle]]

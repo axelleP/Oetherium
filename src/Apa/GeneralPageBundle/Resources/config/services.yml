@@ -1,0 +1,4 @@
+services:
+#    apa_general_page.example:
+#        class: Apa\GeneralPageBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

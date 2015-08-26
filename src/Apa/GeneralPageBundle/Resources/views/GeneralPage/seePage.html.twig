@@ -1,0 +1,86 @@
+{% extends "::layout.html.twig" %}
+{% block titlePage %}
+    {% for page in selectedPage %}
+        {% if page.title == 'Oetherium' %}
+            L'histoire de l'Oetherium
+        {% elseif page.title == 'Auteurs' %}
+            Les auteurs de l'Oetherium
+        {% elseif page.title == 'Faq' %}
+            L'Oetherium répond à vos questions
+        {% elseif page.title == 'Liens' %}
+            Les contacts de l'Oetherium
+        {% else %}
+            Les mentions légales du site Oetherium
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block metaDescriptionPage %}
+    {% for page in selectedPage %}
+        {% if page.title == 'Oetherium' %}
+            <meta name="description" content="Venez découvrir <strong>l'univers de l'Otherium</strong> et de ses nombreux personnages!">
+        {% elseif page.title == 'Auteurs' %}
+            <meta name="description" content="Bianca et kikile sont les auteurs de l'Oetherium.">
+        {% elseif page.title == 'Faq' %}
+            <meta name="description" content="Voici la foire aux quenelles. Heu questions* pardon! En plus j'aime pas ça les quenelles...">
+        {% elseif page.title == 'Liens' %}
+            <meta name="description" content="Retrouvez les <strike>esclaves</strike> amis de nos auteurs.">
+        {% else %}
+            <meta name="description" content="Cette page vous permet de consulter les mentions légales de l'Oetherium.">
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+    
+{% block descriptionMenu %}
+    {% for page in selectedPage %}
+        {% if page.title == 'Oetherium' %}
+            Accueil
+        {% elseif page.title == 'Auteurs' %}
+            Inventeurs de l'Oetherium
+        {% elseif page.title == 'Faq' %}
+            Trouvez la réponse à votre problème
+        {% elseif page.title == 'Liens' %}
+            Contacts de l'Oetherium
+        {% else %}
+            Mentions légales
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+
+{% block body %}
+    {% if errorC == 'true' %}
+        <div id="failedConnection">
+            <input type="button" class="closeForm" value="X">
+            <div class="clear"></div>
+            <table class="centerPage">
+                <tr>
+                    <td>Login et/ou mot de passe incorrect</td>
+                </tr>
+            </table>
+        </div>
+    {% endif %}
+    
+    {% for page in selectedPage %}
+        <div itemscope itemtype="http://schema.org/CreativeWork">
+            <h1 id="title" class="uppercase" itemprop="headline">{{ page.title }}</h1>
+            <div id="contentMiddleFrame" itemprop="text">{{ page.contents|raw }}</div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block socialNetwork %}
+    {% for page in selectedPage %}
+        <a class="buttonSocialNetworkFirst centerPage" target="_blank" title="Twitter" href="http://twitter.com/share?url={{ app.request.uri }}&amp;text={{ page.title|replace({(' '):'%20'}) }}">
+            <i class="fa fa-twitter fa-lg tw">t</i>
+        </a>
+        
+        <a class="buttonSocialNetwork centerPage" target="_blank" title="Facebook" href="http://www.facebook.com/sharer.php?u={{ app.request.uri }}&amp;t={{ page.title|replace({(' '):'%20'}) }}">
+            <i class="fa fa-facebook fa-lg fb">f</i>
+        </a>
+        
+        <a class="buttonSocialNetwork centerPage" target="_blank" title="Google Plus" href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url={{ app.request.uri }}">
+            <i class="fa fa-google-plus fa-lg google">g</i>
+        </a>
+        
+    {% endfor %}
+{% endblock %}

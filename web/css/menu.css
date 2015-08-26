@@ -1,0 +1,70 @@
+#descriptionMenu{
+    color: #f8e8c0;
+    margin: 5% 7% 0 7%;
+}
+
+/* Menu vertical */
+#navigation ul.firstUl {
+    margin-top: 7%;
+    padding: 0;
+    list-style-type : none;
+}
+
+/* Blocs  */
+#navigation ul li{
+    margin-top: 5%;
+}
+
+/* Liens */
+#navigation ul a{
+    font-size: 1.3em;
+    color: #5c4f37; 
+    text-decoration: none;
+    border: solid 1px #5c4f37;
+    background-color: #f8e8c0;
+    padding: 2%;
+    display: block;
+    width: auto;
+    margin: 1% 17.5% 0 17.5%;
+}
+
+#navigation ul a:hover{
+    color: #f8e8c0;
+    border: outset 1px #f8e8c0;
+    background-color: #231d18;
+
+}
+
+/* SOUS MENU */
+/* Cache le sous menu */
+#navigation ul li ul {
+    list-style-type : none;
+    padding: 0;
+    max-height: 0em;
+    overflow: hidden;
+    transition: 1s max-height 0.1s;
+}
+
+/* Enleve le margin de trop */
+#navigation ul.firstUl li ul li {
+    margin: -2% 0 0 0;
+}
+
+/* Affiche le sous menu */
+#navigation ul li:hover ul {
+    display: block;
+    position: relative;
+    max-height: 13em;
+}
+/* FIN SOUS MENU */
+
+/* RESOLUTION */
+@media (max-width: 650px) {
+    #navigation { font-size: 77%; }
+}
+
+@media screen and (max-width:500px){
+    #navigation ul a{
+        margin: 1% 20% 0 20%;
+    }
+}

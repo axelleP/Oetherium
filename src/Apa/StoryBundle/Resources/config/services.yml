@@ -1,0 +1,4 @@
+services:
+#    apa_story.example:
+#        class: Apa\StoryBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

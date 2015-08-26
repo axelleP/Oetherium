@@ -1,0 +1,54 @@
+# http://symfony.com/doc/current/book/security.html
+security:
+    encoders:
+        # on securise les mdp
+        Apa\UserBundle\Entity\User: sha512
+        
+    # rôle des utilisateurs (droits selon rôle)
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    # fournisseur
+    providers: 
+        in_memory:
+            memory:
+                users:
+                    user:  { password: userpass, roles: [ 'ROLE_USER' ] }
+                    admin: { password: adminpass, roles: [ 'ROLE_ADMIN' ] }
+        main:
+            id: fos_user.user_provider.username
+
+    # the main part of the security, where you can set up firewalls
+    # for specific sections of your app
+    firewalls: #pare-feu
+        dev:
+            #  permet de désactiver la sécurité sur certaines URL
+            pattern:  ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            pattern:        ^/
+            anonymous:      true
+            provider:       main
+            form_login:
+                # route du formulaire de connexion
+                login_path: fos_user_security_login
+                # route de validation du formulaire
+                check_path: fos_user_security_check
+                always_use_default_target_path : true
+                # redirection page après connexion
+                default_target_path: /admin
+            logout:
+                path:       fos_user_security_logout
+                # redirection page après déconnexion
+                target:     /accueil
+                invalidate_session: false
+            remember_me:
+                key:        %secret%
+                # %secret% est un paramètre de parameters.yml
+
+    # with these settings you can restrict or allow access for different parts
+    # of your application based on roles, ip, host or methods
+    # sécurisation des pages admins
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN}

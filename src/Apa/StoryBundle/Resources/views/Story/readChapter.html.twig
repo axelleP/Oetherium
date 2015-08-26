@@ -1,0 +1,52 @@
+{% extends "::layout.html.twig" %}
+{% block titlePage %}Chapitre "{{ chapter.title }}" - Oetherium{% endblock %}
+
+{% block metaDescriptionPage %}
+    <meta name="description" content="Qu'allez vous découvrir dans ce nouveau chapitre...">
+{% endblock %}
+
+{% block descriptionMenu %}Bonne lecture{% endblock %}
+
+{% block body %}
+    <div itemscope itemtype="http://schema.org/CreativeWork">
+        <h1 id="title" class="uppercase" itemprop="headline">{{ chapter.title }} - Chapitre {{ chapter.number }}</h1>
+        
+        <div id="contentMiddleFrame" itemprop="text">
+            <div class="contentChapter">
+                {% for page in pagination %}
+                    {{ page.contents|raw }}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div id="pagination">{{ knp_pagination_render(pagination) }}</div>
+        <br>
+        {% if chapter.id != firstId %}
+            <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapter', {'numero': chapter.number-1}) }}">Chapitre précédent</a>
+        {% endif %}
+        
+        {% if chapter.id != lastId %}
+            <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapter', {'numero': chapter.number+1}) }}">Chapitre suivant</a>
+        {% endif %}
+        
+        - <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapters') }}">Retour aux chapitres</a><br><br>
+    </div>
+{% endblock %}
+
+{% block buttonTextDisplay %}
+    <a class="link" href="#" title="Afficher les textes cachés de l'histoire"><p class="button buttonTextDisplay centerPage">a</p></a>
+{% endblock %}
+
+{% block socialNetwork %}
+    <a class="buttonSocialNetworkFirst centerPage" target="_blank" title="Twitter" href="http://twitter.com/share?url={{ app.request.uri }}&amp;text=Chapitre%20«{{ chapter.title|replace({(' '):'%20'}) }}»%20-%20Oetherium">
+        <i class="fa fa-twitter fa-lg tw">t</i>
+    </a>
+    
+    <a class="buttonSocialNetwork centerPage" target="_blank" title="Facebook" href="http://www.facebook.com/sharer.php?u={{ app.request.uri }}&amp;t=Chapitre%20«{{ chapter.title|replace({(' '):'%20'}) }}»%20-%20Oetherium">
+        <i class="fa fa-facebook fa-lg fb">f</i>
+    </a>
+    
+    <a class="buttonSocialNetwork centerPage" target="_blank" title="Google Plus" href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url={{ app.request.uri }}">
+        <i class="fa fa-google-plus fa-lg google">g</i>
+    </a>
+{% endblock %}
