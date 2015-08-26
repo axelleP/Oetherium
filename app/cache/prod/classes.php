@@ -150,7 +150,9 @@ ini_set('session.cookie_lifetime', $lifetime);
 if ($destroy) {
 $this->metadataBag->stampNew();
 }
-return session_regenerate_id($destroy);
+$isRegenerated = session_regenerate_id($destroy);
+$this->loadSession();
+return $isRegenerated;
 }
 public function save()
 {
@@ -1625,14 +1627,13 @@ throw new \InvalidArgumentException(sprintf('The file "%s" does not exist.', $na
 }
 return $name;
 }
+$paths = $this->paths;
+if (null !== $currentPath) {
+array_unshift($paths, $currentPath);
+}
+$paths = array_unique($paths);
 $filepaths = array();
-if (null !== $currentPath && file_exists($file = $currentPath.DIRECTORY_SEPARATOR.$name)) {
-if (true === $first) {
-return $file;
-}
-$filepaths[] = $file;
-}
-foreach ($this->paths as $path) {
+foreach ($paths as $path) {
 if (file_exists($file = $path.DIRECTORY_SEPARATOR.$name)) {
 if (true === $first) {
 return $file;
@@ -1641,9 +1642,9 @@ $filepaths[] = $file;
 }
 }
 if (!$filepaths) {
-throw new \InvalidArgumentException(sprintf('The file "%s" does not exist (in: %s%s).', $name, null !== $currentPath ? $currentPath.', ':'', implode(', ', $this->paths)));
+throw new \InvalidArgumentException(sprintf('The file "%s" does not exist (in: %s).', $name, implode(', ', $paths)));
 }
-return array_values(array_unique($filepaths));
+return $filepaths;
 }
 private function isAbsolutePath($file)
 {
@@ -1663,8 +1664,8 @@ namespace Symfony\Component\Debug
 use Psr\Log\LogLevel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Debug\Exception\ContextErrorException;
-use Symfony\Component\Debug\Exception\FatalBaseException;
 use Symfony\Component\Debug\Exception\FatalErrorException;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\Debug\Exception\OutOfMemoryException;
 use Symfony\Component\Debug\FatalErrorHandler\UndefinedFunctionFatalErrorHandler;
 use Symfony\Component\Debug\FatalErrorHandler\UndefinedMethodFatalErrorHandler;
@@ -1848,7 +1849,7 @@ set_error_handler(array($this,'handleError'), $this->thrownErrors | $this->logge
 }
 }
 }
-public function handleError($type, $message, $file, $line, array $context)
+public function handleError($type, $message, $file, $line, array $context, array $backtrace = null)
 {
 $level = error_reporting() | E_RECOVERABLE_ERROR | E_USER_ERROR;
 $log = $this->loggedErrors & $type;
@@ -1859,6 +1860,10 @@ return $type && $log;
 }
 if (PHP_VERSION_ID < 50400 && isset($context['GLOBALS']) && ($this->scopedErrors & $type)) {
 $e = $context; unset($e['GLOBALS'], $context); $context = $e;
+}
+if (null !== $backtrace && $type & E_ERROR) {
+$this->handleFatalError(compact('type','message','file','line','backtrace'));
+return true;
 }
 if ($throw) {
 if (($this->scopedErrors & $type) && class_exists('Symfony\Component\Debug\Exception\ContextErrorException')) {
@@ -1883,15 +1888,22 @@ if ($type & $level) {
 if ($this->scopedErrors & $type) {
 $e['scope_vars'] = $context;
 if ($trace) {
-$e['stack'] = debug_backtrace(true); }
+$e['stack'] = $backtrace ?: debug_backtrace(true); }
 } elseif ($trace) {
+if (null === $backtrace) {
 $e['stack'] = debug_backtrace(PHP_VERSION_ID >= 50306 ? DEBUG_BACKTRACE_IGNORE_ARGS : false);
+} else {
+foreach ($backtrace as &$frame) {
+unset($frame['args'], $frame);
+}
+$e['stack'] = $backtrace;
+}
 }
 }
 if ($this->isRecursive) {
 $log = 0;
 } elseif (self::$stackedErrorLevels) {
-self::$stackedErrors[] = array($this->loggers[$type], $message, $e);
+self::$stackedErrors[] = array($this->loggers[$type][0], ($type & $level) ? $this->loggers[$type][1] : LogLevel::DEBUG, $message, $e);
 } else {
 try {
 $this->isRecursive = true;
@@ -1907,17 +1919,19 @@ return $type && $log;
 public function handleException($exception, array $error = null)
 {
 if (!$exception instanceof \Exception) {
-$exception = new FatalBaseException($exception);
+$exception = new FatalThrowableError($exception);
 }
 $type = $exception instanceof FatalErrorException ? $exception->getSeverity() : E_ERROR;
 if ($this->loggedErrors & $type) {
 $e = array('type'=> $type,'file'=> $exception->getFile(),'line'=> $exception->getLine(),'level'=> error_reporting(),'stack'=> $exception->getTrace(),
 );
-if ($exception instanceof FatalBaseException) {
+if ($exception instanceof FatalErrorException) {
+if ($exception instanceof FatalThrowableError) {
 $error = array('type'=> $type,'message'=> $message = $exception->getMessage(),'file'=> $e['file'],'line'=> $e['line'],
 );
-} elseif ($exception instanceof FatalErrorException) {
+} else {
 $message ='Fatal '.$exception->getMessage();
+}
 } elseif ($exception instanceof \ErrorException) {
 $message ='Uncaught '.$exception->getMessage();
 if ($exception instanceof ContextErrorException) {
@@ -1943,16 +1957,19 @@ throw $exception; }
 try {
 call_user_func($this->exceptionHandler, $exception);
 } catch (\Exception $handlerException) {
-$this->exceptionHandler = null;
-$this->handleException($handlerException);
-} catch (\BaseException $handlerException) {
+} catch (\Throwable $handlerException) {
+}
+if (isset($handlerException)) {
 $this->exceptionHandler = null;
 $this->handleException($handlerException);
 }
 }
 public static function handleFatalError(array $error = null)
 {
-self::$reservedMemory ='';
+if (null === self::$reservedMemory) {
+return;
+}
+self::$reservedMemory = null;
 $handler = set_error_handler('var_dump', 0);
 $handler = is_array($handler) ? $handler[0] : null;
 restore_error_handler();
@@ -1968,12 +1985,13 @@ static::unstackErrors();
 }
 } catch (\Exception $exception) {
 }
-if ($error && ($error['type'] & (E_PARSE | E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR))) {
+if ($error && $error['type'] &= E_PARSE | E_ERROR | E_CORE_ERROR | E_COMPILE_ERROR) {
 $handler->throwAt(0, true);
+$trace = isset($error['backtrace']) ? $error['backtrace'] : null;
 if (0 === strpos($error['message'],'Allowed memory') || 0 === strpos($error['message'],'Out of memory')) {
-$exception = new OutOfMemoryException($handler->levels[$error['type']].': '.$error['message'], 0, $error['type'], $error['file'], $error['line'], 2, false);
+$exception = new OutOfMemoryException($handler->levels[$error['type']].': '.$error['message'], 0, $error['type'], $error['file'], $error['line'], 2, false, $trace);
 } else {
-$exception = new FatalErrorException($handler->levels[$error['type']].': '.$error['message'], 0, $error['type'], $error['file'], $error['line'], 2, true);
+$exception = new FatalErrorException($handler->levels[$error['type']].': '.$error['message'], 0, $error['type'], $error['file'], $error['line'], 2, true, $trace);
 }
 } elseif (!isset($exception)) {
 return;
@@ -2000,7 +2018,7 @@ if (empty(self::$stackedErrorLevels)) {
 $errors = self::$stackedErrors;
 self::$stackedErrors = array();
 foreach ($errors as $e) {
-$e[0][0]->log($e[0][1], $e[1], $e[2]);
+$e[0]->log($e[1], $e[2], $e[3]);
 }
 }
 }
@@ -3461,7 +3479,7 @@ namespace
 {
 class Twig_Environment
 {
-const VERSION ='1.18.2';
+const VERSION ='1.21.1';
 protected $charset;
 protected $loader;
 protected $debug;
@@ -3478,20 +3496,22 @@ protected $filters;
 protected $tests;
 protected $functions;
 protected $globals;
-protected $runtimeInitialized;
-protected $extensionInitialized;
+protected $runtimeInitialized = false;
+protected $extensionInitialized = false;
 protected $loadedTemplates;
 protected $strictVariables;
 protected $unaryOperators;
 protected $binaryOperators;
 protected $templateClassPrefix ='__TwigTemplate_';
-protected $functionCallbacks;
-protected $filterCallbacks;
+protected $functionCallbacks = array();
+protected $filterCallbacks = array();
 protected $staging;
 public function __construct(Twig_LoaderInterface $loader = null, $options = array())
 {
 if (null !== $loader) {
 $this->setLoader($loader);
+} else {
+@trigger_error('Not passing a Twig_LoaderInterface as the first constructor argument of Twig_Environment is deprecated.', E_USER_DEPRECATED);
 }
 $options = array_merge(array('debug'=> false,'charset'=>'UTF-8','base_template_class'=>'Twig_Template','strict_variables'=> false,'autoescape'=>'html','cache'=> false,'auto_reload'=> null,'optimizations'=> -1,
 ), $options);
@@ -3500,14 +3520,10 @@ $this->charset = strtoupper($options['charset']);
 $this->baseTemplateClass = $options['base_template_class'];
 $this->autoReload = null === $options['auto_reload'] ? $this->debug : (bool) $options['auto_reload'];
 $this->strictVariables = (bool) $options['strict_variables'];
-$this->runtimeInitialized = false;
 $this->setCache($options['cache']);
-$this->functionCallbacks = array();
-$this->filterCallbacks = array();
 $this->addExtension(new Twig_Extension_Core());
 $this->addExtension(new Twig_Extension_Escaper($options['autoescape']));
 $this->addExtension(new Twig_Extension_Optimizer($options['optimizations']));
-$this->extensionInitialized = false;
 $this->staging = new Twig_Extension_Staging();
 }
 public function getBaseTemplateClass()
@@ -3655,6 +3671,7 @@ throw new Twig_Error_Loader(sprintf('Unable to find one of the following templat
 }
 public function clearTemplateCache()
 {
+@trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 $this->loadedTemplates = array();
 }
 public function clearCacheFiles()
@@ -3770,6 +3787,7 @@ $this->extensions[$extension->getName()] = $extension;
 }
 public function removeExtension($name)
 {
+@trigger_error(sprintf('The %s method is deprecated and will be removed in Twig 2.0.', __METHOD__), E_USER_DEPRECATED);
 if ($this->extensionInitialized) {
 throw new LogicException(sprintf('Unable to remove extension "%s" as extensions have already been initialized.', $name));
 }
@@ -3831,6 +3849,8 @@ throw new LogicException('A filter must be an instance of Twig_FilterInterface o
 if ($name instanceof Twig_SimpleFilter) {
 $filter = $name;
 $name = $filter->getName();
+} else {
+@trigger_error(sprintf('Passing a name as a first argument to the %s method is deprecated. Pass an instance of "Twig_SimpleFilter" instead when defining filter "%s".', __METHOD__, $name), E_USER_DEPRECATED);
 }
 if ($this->extensionInitialized) {
 throw new LogicException(sprintf('Unable to add filter "%s" as extensions have already been initialized.', $name));
@@ -3881,6 +3901,8 @@ throw new LogicException('A test must be an instance of Twig_TestInterface or Tw
 if ($name instanceof Twig_SimpleTest) {
 $test = $name;
 $name = $test->getName();
+} else {
+@trigger_error(sprintf('Passing a name as a first argument to the %s method is deprecated. Pass an instance of "Twig_SimpleTest" instead when defining test "%s".', __METHOD__, $name), E_USER_DEPRECATED);
 }
 if ($this->extensionInitialized) {
 throw new LogicException(sprintf('Unable to add test "%s" as extensions have already been initialized.', $name));
@@ -3912,6 +3934,8 @@ throw new LogicException('A function must be an instance of Twig_FunctionInterfa
 if ($name instanceof Twig_SimpleFunction) {
 $function = $name;
 $name = $function->getName();
+} else {
+@trigger_error(sprintf('Passing a name as a first argument to the %s method is deprecated. Pass an instance of "Twig_SimpleFunction" instead when defining function "%s".', __METHOD__, $name), E_USER_DEPRECATED);
 }
 if ($this->extensionInitialized) {
 throw new LogicException(sprintf('Unable to add function "%s" as extensions have already been initialized.', $name));
@@ -3959,6 +3983,9 @@ public function addGlobal($name, $value)
 if ($this->extensionInitialized || $this->runtimeInitialized) {
 if (null === $this->globals) {
 $this->globals = $this->initGlobals();
+}
+if (!array_key_exists($name, $this->globals)) {
+@trigger_error(sprintf('Registering global variable "%s" at runtime or when the extensions have already been initialized is deprecated.', $name), E_USER_DEPRECATED);
 }
 }
 if ($this->extensionInitialized || $this->runtimeInitialized) {
@@ -4031,7 +4058,7 @@ if ($this->extensionInitialized) {
 return;
 }
 $this->extensionInitialized = true;
-$this->parsers = new Twig_TokenParserBroker();
+$this->parsers = new Twig_TokenParserBroker(array(), array(), false);
 $this->filters = array();
 $this->functions = array();
 $this->tests = array();
@@ -4046,29 +4073,26 @@ $this->initExtension($this->staging);
 protected function initExtension(Twig_ExtensionInterface $extension)
 {
 foreach ($extension->getFilters() as $name => $filter) {
-if ($name instanceof Twig_SimpleFilter) {
-$filter = $name;
+if ($filter instanceof Twig_SimpleFilter) {
 $name = $filter->getName();
-} elseif ($filter instanceof Twig_SimpleFilter) {
-$name = $filter->getName();
+} else {
+@trigger_error(sprintf('Using an instance of "%s" for filter "%s" is deprecated. Use Twig_SimpleFilter instead.', get_class($filter), $name), E_USER_DEPRECATED);
 }
 $this->filters[$name] = $filter;
 }
 foreach ($extension->getFunctions() as $name => $function) {
-if ($name instanceof Twig_SimpleFunction) {
-$function = $name;
+if ($function instanceof Twig_SimpleFunction) {
 $name = $function->getName();
-} elseif ($function instanceof Twig_SimpleFunction) {
-$name = $function->getName();
+} else {
+@trigger_error(sprintf('Using an instance of "%s" for function "%s" is deprecated. Use Twig_SimpleFunction instead.', get_class($function), $name), E_USER_DEPRECATED);
 }
 $this->functions[$name] = $function;
 }
 foreach ($extension->getTests() as $name => $test) {
-if ($name instanceof Twig_SimpleTest) {
-$test = $name;
+if ($test instanceof Twig_SimpleTest) {
 $name = $test->getName();
-} elseif ($test instanceof Twig_SimpleTest) {
-$name = $test->getName();
+} else {
+@trigger_error(sprintf('Using an instance of "%s" for test "%s" is deprecated. Use Twig_SimpleTest instead.', get_class($test), $name), E_USER_DEPRECATED);
 }
 $this->tests[$name] = $test;
 }
@@ -4076,6 +4100,7 @@ foreach ($extension->getTokenParsers() as $parser) {
 if ($parser instanceof Twig_TokenParserInterface) {
 $this->parsers->addTokenParser($parser);
 } elseif ($parser instanceof Twig_TokenParserBrokerInterface) {
+@trigger_error('Registering a Twig_TokenParserBrokerInterface instance is deprecated.', E_USER_DEPRECATED);
 $this->parsers->addTokenParserBroker($parser);
 } else {
 throw new LogicException('getTokenParsers() must return an array of Twig_TokenParserInterface or Twig_TokenParserBrokerInterface instances');
@@ -4300,11 +4325,11 @@ return array(
 new Twig_SimpleTest('even', null, array('node_class'=>'Twig_Node_Expression_Test_Even')),
 new Twig_SimpleTest('odd', null, array('node_class'=>'Twig_Node_Expression_Test_Odd')),
 new Twig_SimpleTest('defined', null, array('node_class'=>'Twig_Node_Expression_Test_Defined')),
-new Twig_SimpleTest('sameas', null, array('node_class'=>'Twig_Node_Expression_Test_Sameas')),
+new Twig_SimpleTest('sameas', null, array('node_class'=>'Twig_Node_Expression_Test_Sameas','deprecated'=> true,'alternative'=>'same as')),
 new Twig_SimpleTest('same as', null, array('node_class'=>'Twig_Node_Expression_Test_Sameas')),
 new Twig_SimpleTest('none', null, array('node_class'=>'Twig_Node_Expression_Test_Null')),
 new Twig_SimpleTest('null', null, array('node_class'=>'Twig_Node_Expression_Test_Null')),
-new Twig_SimpleTest('divisibleby', null, array('node_class'=>'Twig_Node_Expression_Test_Divisibleby')),
+new Twig_SimpleTest('divisibleby', null, array('node_class'=>'Twig_Node_Expression_Test_Divisibleby','deprecated'=> true,'alternative'=>'divisible by')),
 new Twig_SimpleTest('divisible by', null, array('node_class'=>'Twig_Node_Expression_Test_Divisibleby')),
 new Twig_SimpleTest('constant', null, array('node_class'=>'Twig_Node_Expression_Test_Constant')),
 new Twig_SimpleTest('empty','twig_test_empty'),
@@ -4327,44 +4352,49 @@ return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($parser, $n
 public function parseTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
 {
 $stream = $parser->getStream();
-$name = $this->getTestName($parser, $node->getLine());
-$class = $this->getTestNodeClass($parser, $name);
+list($name, $test) = $this->getTest($parser, $node->getLine());
+if ($test instanceof Twig_SimpleTest && $test->isDeprecated()) {
+$message = sprintf('Twig Test "%s" is deprecated', $name);
+if ($test->getAlternative()) {
+$message .= sprintf('. Use "%s" instead', $test->getAlternative());
+}
+$message .= sprintf(' in %s at line %d.', $stream->getFilename(), $stream->getCurrent()->getLine());
+@trigger_error($message, E_USER_DEPRECATED);
+}
+$class = $this->getTestNodeClass($parser, $test);
 $arguments = null;
 if ($stream->test(Twig_Token::PUNCTUATION_TYPE,'(')) {
 $arguments = $parser->getExpressionParser()->parseArguments(true);
 }
 return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
 }
-protected function getTestName(Twig_Parser $parser, $line)
+protected function getTest(Twig_Parser $parser, $line)
 {
 $stream = $parser->getStream();
 $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
 $env = $parser->getEnvironment();
-$testMap = $env->getTests();
-if (isset($testMap[$name])) {
-return $name;
+if ($test = $env->getTest($name)) {
+return array($name, $test);
 }
 if ($stream->test(Twig_Token::NAME_TYPE)) {
 $name = $name.' '.$parser->getCurrentToken()->getValue();
-if (isset($testMap[$name])) {
+if ($test = $env->getTest($name)) {
 $parser->getStream()->next();
-return $name;
+return array($name, $test);
 }
 }
 $message = sprintf('The test "%s" does not exist', $name);
-if ($alternatives = $env->computeAlternatives($name, array_keys($testMap))) {
+if ($alternatives = $env->computeAlternatives($name, array_keys($env->getTests()))) {
 $message = sprintf('%s. Did you mean "%s"', $message, implode('", "', $alternatives));
 }
 throw new Twig_Error_Syntax($message, $line, $parser->getFilename());
 }
-protected function getTestNodeClass(Twig_Parser $parser, $name)
+protected function getTestNodeClass(Twig_Parser $parser, $test)
 {
-$env = $parser->getEnvironment();
-$testMap = $env->getTests();
-if ($testMap[$name] instanceof Twig_SimpleTest) {
-return $testMap[$name]->getNodeClass();
+if ($test instanceof Twig_SimpleTest) {
+return $test->getNodeClass();
 }
-return $testMap[$name] instanceof Twig_Test_Node ? $testMap[$name]->getClass() :'Twig_Node_Expression_Test';
+return $test instanceof Twig_Test_Node ? $test->getClass() :'Twig_Node_Expression_Test';
 }
 public function getName()
 {
@@ -4887,20 +4917,31 @@ if (!$alreadySandboxed = $sandbox->isSandboxed()) {
 $sandbox->enableSandbox();
 }
 }
+$result = null;
 try {
-return $env->resolveTemplate($template)->render($variables);
+$result = $env->resolveTemplate($template)->render($variables);
 } catch (Twig_Error_Loader $e) {
 if (!$ignoreMissing) {
+if ($isSandboxed && !$alreadySandboxed) {
+$sandbox->disableSandbox();
+}
 throw $e;
 }
 }
 if ($isSandboxed && !$alreadySandboxed) {
 $sandbox->disableSandbox();
 }
+return $result;
 }
-function twig_source(Twig_Environment $env, $name)
+function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
 {
+try {
 return $env->getLoader()->getSource($name);
+} catch (Twig_Error_Loader $e) {
+if (!$ignoreMissing) {
+throw $e;
+}
+}
 }
 function twig_constant($constant, $object = null)
 {
@@ -4916,7 +4957,7 @@ $items = iterator_to_array($items, false);
 }
 $size = ceil($size);
 $result = array_chunk($items, $size, true);
-if (null !== $fill) {
+if (null !== $fill && !empty($result)) {
 $last = count($result) - 1;
 if ($fillCount = $size - count($result[$last])) {
 $result[$last] = array_merge(
@@ -4954,6 +4995,7 @@ new Twig_SimpleFilter('raw','twig_raw_filter', array('is_safe'=> array('all'))),
 public function setDefaultStrategy($defaultStrategy)
 {
 if (true === $defaultStrategy) {
+@trigger_error('Using "true" as the default strategy is deprecated. Use "html" instead.', E_USER_DEPRECATED);
 $defaultStrategy ='html';
 }
 if ('filename'=== $defaultStrategy) {
@@ -4963,7 +5005,7 @@ $this->defaultStrategy = $defaultStrategy;
 }
 public function getDefaultStrategy($filename)
 {
-if (!is_string($this->defaultStrategy) && is_callable($this->defaultStrategy)) {
+if (!is_string($this->defaultStrategy) && false !== $this->defaultStrategy) {
 return call_user_func($this->defaultStrategy, $filename);
 }
 return $this->defaultStrategy;
@@ -5047,17 +5089,16 @@ protected static $cache = array();
 protected $parent;
 protected $parents = array();
 protected $env;
-protected $blocks;
-protected $traits;
+protected $blocks = array();
+protected $traits = array();
 public function __construct(Twig_Environment $env)
 {
 $this->env = $env;
-$this->blocks = array();
-$this->traits = array();
 }
 abstract public function getTemplateName();
 public function getEnvironment()
 {
+@trigger_error('The '.__METHOD__.' method is deprecated since version 1.20 and will be removed in 2.0.', E_USER_DEPRECATED);
 return $this->env;
 }
 public function getParent(array $context)
@@ -5116,9 +5157,19 @@ $template = null;
 $block = null;
 }
 if (null !== $template) {
+if (!$template instanceof self) {
+throw new LogicException('A block must be a method on a Twig_Template instance.');
+}
 try {
 $template->$block($context, $blocks);
 } catch (Twig_Error $e) {
+if (!$e->getTemplateFile()) {
+$e->setTemplateFile($template->getTemplateName());
+}
+if (false === $e->getTemplateLine()) {
+$e->setTemplateLine(-1);
+$e->guess();
+}
 throw $e;
 } catch (Exception $e) {
 throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the rendering of a template ("%s").', $e->getMessage()), -1, $template->getTemplateName(), $e);
@@ -5279,8 +5330,7 @@ $message = sprintf('Impossible to invoke a method ("%s") on a %s variable ("%s")
 }
 throw new Twig_Error_Runtime($message, -1, $this->getTemplateName());
 }
-if (self::METHOD_CALL !== $type) {
-if (isset($object->$item) || array_key_exists((string) $item, $object)) {
+if (self::METHOD_CALL !== $type && !$object instanceof self) { if (isset($object->$item) || array_key_exists((string) $item, $object)) {
 if ($isDefinedTest) {
 return true;
 }
@@ -5292,7 +5342,19 @@ return $object->$item;
 }
 $class = get_class($object);
 if (!isset(self::$cache[$class]['methods'])) {
+if ($object instanceof self) {
+$ref = new ReflectionClass($class);
+$methods = array();
+foreach ($ref->getMethods(ReflectionMethod::IS_PUBLIC) as $refMethod) {
+$methodName = strtolower($refMethod->name);
+if ('getenvironment'!== $methodName) {
+$methods[$methodName] = true;
+}
+}
+self::$cache[$class]['methods'] = $methods;
+} else {
 self::$cache[$class]['methods'] = array_change_key_case(array_flip(get_class_methods($object)));
+}
 }
 $call = false;
 $lcItem = strtolower($item);
@@ -5438,9 +5500,34 @@ return @json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 return @json_encode($data);
 }
 if (version_compare(PHP_VERSION,'5.4.0','>=')) {
-return json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+$json = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+} else {
+$json = json_encode($data);
 }
-return json_encode($data);
+if ($json === false) {
+$this->throwEncodeError(json_last_error(), $data);
+}
+return $json;
+}
+private function throwEncodeError($code, $data)
+{
+switch ($code) {
+case JSON_ERROR_DEPTH:
+$msg ='Maximum stack depth exceeded';
+break;
+case JSON_ERROR_STATE_MISMATCH:
+$msg ='Underflow or the modes mismatch';
+break;
+case JSON_ERROR_CTRL_CHAR:
+$msg ='Unexpected control character found';
+break;
+case JSON_ERROR_UTF8:
+$msg ='Malformed UTF-8 characters, possibly incorrectly encoded';
+break;
+default:
+$msg ='Unknown error';
+}
+throw new \RuntimeException('JSON encoding failed: '.$msg.'. Encoding: '.var_export($data, true));
 }
 }
 }
@@ -5688,6 +5775,7 @@ protected $url;
 private $errorMessage;
 protected $filePermission;
 protected $useLocking;
+private $dirCreated;
 public function __construct($stream, $level = Logger::DEBUG, $bubble = true, $filePermission = null, $useLocking = false)
 {
 parent::__construct($level, $bubble);
@@ -5714,6 +5802,7 @@ if (!is_resource($this->stream)) {
 if (!$this->url) {
 throw new \LogicException('Missing stream url, the stream can not be opened. This may be caused by a premature call to close().');
 }
+$this->createDir();
 $this->errorMessage = null;
 set_error_handler(array($this,'customErrorHandler'));
 $this->stream = fopen($this->url,'a');
@@ -5736,7 +5825,35 @@ flock($this->stream, LOCK_UN);
 }
 private function customErrorHandler($code, $msg)
 {
-$this->errorMessage = preg_replace('{^fopen\(.*?\): }','', $msg);
+$this->errorMessage = preg_replace('{^(fopen|mkdir)\(.*?\): }','', $msg);
+}
+private function getDirFromStream($stream)
+{
+$pos = strpos($stream,'://');
+if ($pos === false) {
+return dirname($stream);
+}
+if ('file://'=== substr($stream, 0, 7)) {
+return dirname(substr($stream, 7));
+}
+return;
+}
+private function createDir()
+{
+if ($this->dirCreated) {
+return;
+}
+$dir = $this->getDirFromStream($this->url);
+if (null !== $dir && !is_dir($dir)) {
+$this->errorMessage = null;
+set_error_handler(array($this,'customErrorHandler'));
+$status = mkdir($dir, 0777, true);
+restore_error_handler();
+if (false === $status) {
+throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and its not buildable: '.$this->errorMessage, $dir));
+}
+}
+$this->dirCreated = true;
 }
 }
 }
@@ -5903,7 +6020,6 @@ $this->handler->handleBatch($filtered);
 }
 namespace Monolog\Handler
 {
-use Monolog\Logger;
 class TestHandler extends AbstractProcessingHandler
 {
 protected $records = array();
@@ -5912,124 +6028,41 @@ public function getRecords()
 {
 return $this->records;
 }
-public function hasEmergency($record)
+protected function hasRecordRecords($level)
 {
-return $this->hasRecord($record, Logger::EMERGENCY);
-}
-public function hasAlert($record)
-{
-return $this->hasRecord($record, Logger::ALERT);
-}
-public function hasCritical($record)
-{
-return $this->hasRecord($record, Logger::CRITICAL);
-}
-public function hasError($record)
-{
-return $this->hasRecord($record, Logger::ERROR);
-}
-public function hasWarning($record)
-{
-return $this->hasRecord($record, Logger::WARNING);
-}
-public function hasNotice($record)
-{
-return $this->hasRecord($record, Logger::NOTICE);
-}
-public function hasInfo($record)
-{
-return $this->hasRecord($record, Logger::INFO);
-}
-public function hasDebug($record)
-{
-return $this->hasRecord($record, Logger::DEBUG);
-}
-public function hasEmergencyRecords()
-{
-return isset($this->recordsByLevel[Logger::EMERGENCY]);
-}
-public function hasAlertRecords()
-{
-return isset($this->recordsByLevel[Logger::ALERT]);
-}
-public function hasCriticalRecords()
-{
-return isset($this->recordsByLevel[Logger::CRITICAL]);
-}
-public function hasErrorRecords()
-{
-return isset($this->recordsByLevel[Logger::ERROR]);
-}
-public function hasWarningRecords()
-{
-return isset($this->recordsByLevel[Logger::WARNING]);
-}
-public function hasNoticeRecords()
-{
-return isset($this->recordsByLevel[Logger::NOTICE]);
-}
-public function hasInfoRecords()
-{
-return isset($this->recordsByLevel[Logger::INFO]);
-}
-public function hasDebugRecords()
-{
-return isset($this->recordsByLevel[Logger::DEBUG]);
+return isset($this->recordsByLevel[$level]);
 }
 protected function hasRecord($record, $level)
 {
-if (!isset($this->recordsByLevel[$level])) {
-return false;
-}
 if (is_array($record)) {
 $record = $record['message'];
 }
-foreach ($this->recordsByLevel[$level] as $rec) {
-if ($rec['message'] === $record) {
-return true;
-}
-}
-return false;
-}
-public function hasEmergencyThatContains($message)
-{
-return $this->hasRecordThatContains($message, Logger::EMERGENCY);
-}
-public function hasAlertThatContains($message)
-{
-return $this->hasRecordThatContains($message, Logger::ALERT);
-}
-public function hasCriticalThatContains($message)
-{
-return $this->hasRecordThatContains($message, Logger::CRITICAL);
-}
-public function hasErrorThatContains($message)
-{
-return $this->hasRecordThatContains($message, Logger::ERROR);
-}
-public function hasWarningThatContains($message)
-{
-return $this->hasRecordThatContains($message, Logger::WARNING);
-}
-public function hasNoticeThatContains($message)
-{
-return $this->hasRecordThatContains($message, Logger::NOTICE);
-}
-public function hasInfoThatContains($message)
-{
-return $this->hasRecordThatContains($message, Logger::INFO);
-}
-public function hasDebugThatContains($message)
-{
-return $this->hasRecordThatContains($message, Logger::DEBUG);
+return $this->hasRecordThatPasses(function ($rec) use ($record) {
+return $rec['message'] === $record;
+}, $level);
 }
 public function hasRecordThatContains($message, $level)
 {
+return $this->hasRecordThatPasses(function ($rec) use ($message) {
+return strpos($rec['message'], $message) !== false;
+}, $level);
+}
+public function hasRecordThatMatches($regex, $level)
+{
+return $this->hasRecordThatPasses(function ($rec) use ($regex) {
+return preg_match($regex, $rec['message']) > 0;
+}, $level);
+}
+public function hasRecordThatPasses($predicate, $level)
+{
+if (!is_callable($predicate)) {
+throw new \InvalidArgumentException("Expected a callable for hasRecordThatSucceeds");
+}
 if (!isset($this->recordsByLevel[$level])) {
 return false;
 }
-foreach ($this->recordsByLevel[$level] as $rec) {
-if (strpos($rec['message'], $message) !== false) {
+foreach ($this->recordsByLevel[$level] as $i => $rec) {
+if (call_user_func($predicate, $rec, $i)) {
 return true;
 }
 }
@@ -6039,6 +6072,18 @@ protected function write(array $record)
 {
 $this->recordsByLevel[$record['level']][] = $record;
 $this->records[] = $record;
+}
+public function __call($method, $args)
+{
+if (preg_match('/(.*)(Debug|Info|Notice|Warning|Error|Critical|Alert|Emergency)(.*)/', $method, $matches) > 0) {
+$genericMethod = $matches[1] .'Record'. $matches[3];
+$level = constant('Monolog\Logger::'. strtoupper($matches[2]));
+if (method_exists($this, $genericMethod)) {
+$args[] = $level;
+return call_user_func_array(array($this, $genericMethod), $args);
+}
+}
+throw new \BadMethodCallException('Call to undefined method '. get_class($this) .'::'. $method .'()');
 }
 }
 }
@@ -6109,6 +6154,14 @@ if (!$this->handlers) {
 throw new \LogicException('You tried to pop from an empty handler stack.');
 }
 return array_shift($this->handlers);
+}
+public function setHandlers(array $handlers)
+{
+$this->handlers = array();
+foreach (array_reverse($handlers) as $handler) {
+$this->pushHandler($handler);
+}
+return $this;
 }
 public function getHandlers()
 {
@@ -7441,8 +7494,10 @@ foreach ($annotations as $configuration) {
 if ($configuration instanceof ConfigurationInterface) {
 if ($configuration->allowArray()) {
 $configurations['_'.$configuration->getAliasName()][] = $configuration;
-} else {
+} elseif (!isset($configurations['_'.$configuration->getAliasName()])) {
 $configurations['_'.$configuration->getAliasName()] = $configuration;
+} else {
+throw new \LogicException(sprintf('Multiple "%s" annotations are not allowed.', $configuration->getAliasName()));
 }
 }
 }
@@ -7570,7 +7625,7 @@ public function supports(ParamConverter $configuration)
 if (null === $configuration->getClass()) {
 return false;
 }
-return"DateTime"=== $configuration->getClass();
+return'DateTime'=== $configuration->getClass();
 }
 }
 }
@@ -7729,7 +7784,7 @@ $em = $this->getManager($options['entity_manager'], $configuration->getClass());
 if (null === $em) {
 return false;
 }
-return ! $em->getMetadataFactory()->isTransient($configuration->getClass());
+return !$em->getMetadataFactory()->isTransient($configuration->getClass());
 }
 protected function getOptions(ParamConverter $configuration)
 {
@@ -7860,7 +7915,6 @@ public function onKernelView(GetResponseForControllerResultEvent $event)
 {
 $request = $event->getRequest();
 $parameters = $event->getControllerResult();
-$templating = $this->container->get('templating');
 if (null === $parameters) {
 if (!$vars = $request->attributes->get('_template_vars')) {
 if (!$vars = $request->attributes->get('_template_default_vars')) {
@@ -7878,6 +7932,7 @@ return $parameters;
 if (!$template = $request->attributes->get('_template')) {
 return $parameters;
 }
+$templating = $this->container->get('templating');
 if (!$request->attributes->get('_template_streamable')) {
 $event->setResponse($templating->renderResponse($template, $parameters));
 } else {
@@ -8048,6 +8103,9 @@ return;
 if (null === $this->tokenStorage || null === $this->trustResolver) {
 throw new \LogicException('To use the @Security tag, you need to install the Symfony Security bundle.');
 }
+if (null === $this->tokenStorage->getToken()) {
+throw new \LogicException('To use the @Security tag, your controller needs to be behind a firewall.');
+}
 if (null === $this->language) {
 throw new \LogicException('To use the @Security tag, you need to use the Security component 2.4 or newer and to install the ExpressionLanguage component.');
 }
@@ -8098,23 +8156,20 @@ $this->$name($v);
 }
 namespace Sonata\AdminBundle\Admin
 {
-use Sonata\AdminBundle\Admin\Pool;
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
+use Knp\Menu\FactoryInterface as MenuFactoryInterface;
+use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
 use Sonata\AdminBundle\Builder\FormContractorInterface;
 use Sonata\AdminBundle\Builder\ListBuilderInterface;
-use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
-use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
 use Sonata\AdminBundle\Builder\RouteBuilderInterface;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\AdminBundle\Route\RouteGeneratorInterface;
+use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
 use Sonata\AdminBundle\Translator\LabelTranslatorStrategyInterface;
 use Sonata\AdminBundle\Validator\ErrorElement;
-use Sonata\AdminBundle\Route\RouteGeneratorInterface;
-use Knp\Menu\FactoryInterface as MenuFactoryInterface;
-use Knp\Menu\ItemInterface as MenuItemInterface;
 use Sonata\CoreBundle\Model\Metadata;
-use Symfony\Component\Validator\ValidatorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\ValidatorInterface;
 interface AdminInterface
 {
 public function setFormContractor(FormContractorInterface $formContractor);
@@ -8212,7 +8267,7 @@ public function prePersist($object);
 public function postPersist($object);
 public function preRemove($object);
 public function postRemove($object);
-public function preBatchAction($actionName, ProxyQueryInterface $query, array & $idx, $allElements);
+public function preBatchAction($actionName, ProxyQueryInterface $query, array &$idx, $allElements);
 public function getFilterParameters();
 public function hasSubject();
 public function validate(ErrorElement $errorElement, $object);
@@ -8263,38 +8318,36 @@ public function getObjectIdentifier();
 }
 namespace Sonata\AdminBundle\Admin
 {
+use Doctrine\Common\Util\ClassUtils;
+use Knp\Menu\FactoryInterface as MenuFactoryInterface;
+use Knp\Menu\ItemInterface as MenuItemInterface;
+use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
+use Sonata\AdminBundle\Builder\FormContractorInterface;
+use Sonata\AdminBundle\Builder\ListBuilderInterface;
+use Sonata\AdminBundle\Builder\RouteBuilderInterface;
+use Sonata\AdminBundle\Builder\ShowBuilderInterface;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
-use Sonata\AdminBundle\Route\RoutesCache;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Model\ModelManagerInterface;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Route\RouteGeneratorInterface;
+use Sonata\AdminBundle\Security\Handler\AclSecurityHandlerInterface;
+use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
+use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\AdminBundle\Translator\LabelTranslatorStrategyInterface;
+use Sonata\AdminBundle\Validator\Constraints\InlineConstraint;
+use Sonata\AdminBundle\Validator\ErrorElement;
 use Sonata\CoreBundle\Model\Metadata;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\PropertyAccess\PropertyPath;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\Validator\ValidatorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\Security\Acl\Model\DomainObjectInterface;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Show\ShowMapper;
-use Sonata\AdminBundle\Admin\Pool;
-use Sonata\AdminBundle\Validator\ErrorElement;
-use Sonata\AdminBundle\Validator\Constraints\InlineConstraint;
-use Sonata\AdminBundle\Translator\LabelTranslatorStrategyInterface;
-use Sonata\AdminBundle\Builder\FormContractorInterface;
-use Sonata\AdminBundle\Builder\ListBuilderInterface;
-use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
-use Sonata\AdminBundle\Builder\ShowBuilderInterface;
-use Sonata\AdminBundle\Builder\RouteBuilderInterface;
-use Sonata\AdminBundle\Route\RouteGeneratorInterface;
-use Sonata\AdminBundle\Security\Handler\SecurityHandlerInterface;
-use Sonata\AdminBundle\Security\Handler\AclSecurityHandlerInterface;
-use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\AdminBundle\Model\ModelManagerInterface;
-use Knp\Menu\FactoryInterface as MenuFactoryInterface;
-use Knp\Menu\ItemInterface as MenuItemInterface;
-use Doctrine\Common\Util\ClassUtils;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\ValidatorInterface;
 abstract class Admin implements AdminInterface, DomainObjectInterface
 {
 const CONTEXT_MENU ='menu';
@@ -8388,7 +8441,8 @@ $this->configureSideMenu($menu, $action, $childAdmin);
 }
 public function getExportFormats()
 {
-return array('json','xml','csv','xls');
+return array('json','xml','csv','xls',
+);
 }
 public function getExportFields()
 {
@@ -8469,18 +8523,24 @@ $extension->postRemove($this, $object);
 }
 }
 public function preUpdate($object)
-{}
+{
+}
 public function postUpdate($object)
-{}
+{
+}
 public function prePersist($object)
-{}
+{
+}
 public function postPersist($object)
-{}
+{
+}
 public function preRemove($object)
-{}
+{
+}
 public function postRemove($object)
-{}
-public function preBatchAction($actionName, ProxyQueryInterface $query, array & $idx, $allElements)
+{
+}
+public function preBatchAction($actionName, ProxyQueryInterface $query, array &$idx, $allElements)
 {
 }
 protected function buildShow()
@@ -8503,7 +8563,7 @@ return;
 $this->list = $this->getListBuilder()->getBaseList();
 $mapper = new ListMapper($this->getListBuilder(), $this->list, $this);
 if (count($this->getBatchActions()) > 0) {
-$fieldDescription = $this->getModelManager()->getNewFieldDescriptionInstance($this->getClass(),'batch', array('label'=>'batch','code'=>'_batch','sortable'=> false
+$fieldDescription = $this->getModelManager()->getNewFieldDescriptionInstance($this->getClass(),'batch', array('label'=>'batch','code'=>'_batch','sortable'=> false,
 ));
 $fieldDescription->setAdmin($this);
 $fieldDescription->setTemplate($this->getTemplate('batch'));
@@ -8571,8 +8631,9 @@ $this->datagrid->getPager()->setMaxPageLinks($this->maxPageLinks);
 $mapper = new DatagridMapper($this->getDatagridBuilder(), $this->datagrid, $this);
 $this->configureDatagridFilters($mapper);
 if ($this->isChild() && $this->getParentAssociationMapping() && !$mapper->has($this->getParentAssociationMapping())) {
-$mapper->add($this->getParentAssociationMapping(), null, array('label'=> false,'field_type'=>'sonata_type_model_hidden','field_options'=> array('model_manager'=> $this->getModelManager()
-),'operator_type'=>'hidden'));
+$mapper->add($this->getParentAssociationMapping(), null, array('label'=> false,'field_type'=>'sonata_type_model_hidden','field_options'=> array('model_manager'=> $this->getModelManager(),
+),'operator_type'=>'hidden',
+));
 }
 foreach ($this->getExtensions() as $extension) {
 $extension->configureDatagridFilters($mapper);
@@ -8697,18 +8758,18 @@ return false;
 public function getActiveSubClass()
 {
 if (!$this->hasActiveSubClass()) {
-return null;
+return;
 }
 return $this->getClass();
 }
 public function getActiveSubclassCode()
 {
 if (!$this->hasActiveSubClass()) {
-return null;
+return;
 }
 $subClass = $this->getRequest()->query->get('subclass');
 if (!$this->hasSubClass($subClass)) {
-return null;
+return;
 }
 return $subClass;
 }
@@ -8769,7 +8830,7 @@ return $this->routeGenerator->generateUrl($this, $name, $parameters, $absolute);
 }
 public function generateMenuUrl($name, array $parameters = array(), $absolute = false)
 {
-return $this->routeGenerator->generateMenuUrl($this, $name,$parameters, $absolute);
+return $this->routeGenerator->generateMenuUrl($this, $name, $parameters, $absolute);
 }
 public function setTemplates(array $templates)
 {
@@ -8788,7 +8849,7 @@ public function getTemplate($name)
 if (isset($this->templates[$name])) {
 return $this->templates[$name];
 }
-return null;
+return;
 }
 public function getNewInstance()
 {
@@ -8821,7 +8882,7 @@ protected function attachInlineValidator()
 {
 $admin = $this;
 $metadata = $this->validator->getMetadataFactory()->getMetadataFor($this->getClass());
-$metadata->addConstraint(new InlineConstraint(array('service'=> $this,'method'=> function(ErrorElement $errorElement, $object) use ($admin) {
+$metadata->addConstraint(new InlineConstraint(array('service'=> $this,'method'=> function (ErrorElement $errorElement, $object) use ($admin) {
 if ($admin->hasSubject() && spl_object_hash($object) !== spl_object_hash($admin->getSubject())) {
 return;
 }
@@ -8829,7 +8890,7 @@ $admin->validate($errorElement, $object);
 foreach ($admin->getExtensions() as $extension) {
 $extension->validate($admin, $errorElement, $object);
 }
-}
+},
 )));
 }
 public function attachAdminClass(FieldDescriptionInterface $fieldDescription)
@@ -8888,7 +8949,7 @@ return;
 $this->loaded['tab_menu'] = true;
 $menu = $this->menuFactory->createItem('root');
 $menu->setChildrenAttribute('class','nav navbar-nav');
-if (method_exists($menu,"setCurrentUri")) {
+if (method_exists($menu,'setCurrentUri')) {
 $menu->setCurrentUri($this->getRequest()->getBaseUrl().$this->getRequest()->getPathInfo());
 }
 $this->configureTabMenu($menu, $action, $childAdmin);
@@ -9169,7 +9230,7 @@ $this->uniqid = $uniqid;
 public function getUniqid()
 {
 if (!$this->uniqid) {
-$this->uniqid ="s".uniqid();
+$this->uniqid ='s'.uniqid();
 }
 return $this->uniqid;
 }
@@ -9265,7 +9326,7 @@ if ($children->getCurrentChild()) {
 return $children;
 }
 }
-return null;
+return;
 }
 public function trans($id, array $parameters = array(), $domain = null, $locale = null)
 {
@@ -9441,7 +9502,7 @@ return $this->securityHandler;
 }
 public function isGranted($name, $object = null)
 {
-$key = md5(json_encode($name) . ($object ?'/'.spl_object_hash($object) :''));
+$key = md5(json_encode($name).($object ?'/'.spl_object_hash($object) :''));
 if (!array_key_exists($key, $this->cacheIsGranted)) {
 $this->cacheIsGranted[$key] = $this->securityHandler->isGranted($this, $name, $object ?: $this);
 }
@@ -9520,7 +9581,7 @@ return'';
 if (method_exists($object,'__toString') && null !== $object->__toString()) {
 return (string) $object;
 }
-return sprintf("%s:%s", ClassUtils::getClass($object), spl_object_hash($object));
+return sprintf('%s:%s', ClassUtils::getClass($object), spl_object_hash($object));
 }
 public function setLabelTranslatorStrategy(LabelTranslatorStrategyInterface $labelTranslatorStrategy)
 {
@@ -9564,15 +9625,14 @@ return new Metadata($this->toString($object));
 }
 namespace Sonata\AdminBundle\Admin
 {
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Show\ShowMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\AdminBundle\Validator\ErrorElement;
-use Sonata\AdminBundle\Admin\AdminInterface;
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Knp\Menu\ItemInterface as MenuItemInterface;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\AdminBundle\Validator\ErrorElement;
 interface AdminExtensionInterface
 {
 public function configureFormFields(FormMapper $form);
@@ -9597,69 +9657,83 @@ public function postRemove(AdminInterface $admin, $object);
 }
 namespace Sonata\AdminBundle\Admin
 {
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Show\ShowMapper;
-use Sonata\AdminBundle\Route\RouteCollection;
-use Sonata\AdminBundle\Validator\ErrorElement;
-use Sonata\AdminBundle\Admin\AdminInterface;
-use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
 use Knp\Menu\ItemInterface as MenuItemInterface;
+use Sonata\AdminBundle\Datagrid\DatagridMapper;
+use Sonata\AdminBundle\Datagrid\ListMapper;
+use Sonata\AdminBundle\Datagrid\ProxyQueryInterface;
+use Sonata\AdminBundle\Form\FormMapper;
+use Sonata\AdminBundle\Route\RouteCollection;
+use Sonata\AdminBundle\Show\ShowMapper;
+use Sonata\AdminBundle\Validator\ErrorElement;
 abstract class AdminExtension implements AdminExtensionInterface
 {
 public function configureFormFields(FormMapper $form)
-{}
+{
+}
 public function configureListFields(ListMapper $list)
-{}
+{
+}
 public function configureDatagridFilters(DatagridMapper $filter)
-{}
+{
+}
 public function configureShowFields(ShowMapper $filter)
-{}
+{
+}
 public function configureRoutes(AdminInterface $admin, RouteCollection $collection)
-{}
+{
+}
 public function configureSideMenu(AdminInterface $admin, MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
-{}
+{
+}
 public function configureTabMenu(AdminInterface $admin, MenuItemInterface $menu, $action, AdminInterface $childAdmin = null)
 {
 $this->configureSideMenu($admin, $menu, $action, $childAdmin);
 }
 public function validate(AdminInterface $admin, ErrorElement $errorElement, $object)
-{}
+{
+}
 public function configureQuery(AdminInterface $admin, ProxyQueryInterface $query, $context ='list')
-{}
+{
+}
 public function alterNewInstance(AdminInterface $admin, $object)
-{}
+{
+}
 public function alterObject(AdminInterface $admin, $object)
-{}
+{
+}
 public function getPersistentParameters(AdminInterface $admin)
 {
 return array();
 }
 public function preUpdate(AdminInterface $admin, $object)
-{}
+{
+}
 public function postUpdate(AdminInterface $admin, $object)
-{}
+{
+}
 public function prePersist(AdminInterface $admin, $object)
-{}
+{
+}
 public function postPersist(AdminInterface $admin, $object)
-{}
+{
+}
 public function preRemove(AdminInterface $admin, $object)
-{}
+{
+}
 public function postRemove(AdminInterface $admin, $object)
-{}
+{
+}
 }
 }
 namespace Sonata\AdminBundle\Admin
 {
 use Doctrine\Common\Inflector\Inflector;
 use Doctrine\Common\Util\ClassUtils;
+use Sonata\AdminBundle\Exception\NoValueException;
+use Sonata\AdminBundle\Util\FormBuilderIterator;
+use Sonata\AdminBundle\Util\FormViewIterator;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormView;
-use Sonata\AdminBundle\Exception\NoValueException;
-use Sonata\AdminBundle\Util\FormViewIterator;
-use Sonata\AdminBundle\Util\FormBuilderIterator;
-use Sonata\AdminBundle\Admin\BaseFieldDescription;
 class AdminHelper
 {
 protected $pool;
@@ -9674,7 +9748,7 @@ if ($name == $elementId) {
 return $formBuilder;
 }
 }
-return null;
+return;
 }
 public function getChildFormView(FormView $formView, $elementId)
 {
@@ -9683,7 +9757,7 @@ if ($name === $elementId) {
 return $formView;
 }
 }
-return null;
+return;
 }
 public function getAdmin($code)
 {
@@ -9715,7 +9789,7 @@ $value[$name] ='';
 }
 while ($objectCount < $postCount) {
 $this->addNewInstance($form->getData(), $fieldDescription);
-$objectCount++;
+++$objectCount;
 }
 $this->addNewInstance($form->getData(), $fieldDescription);
 $data[$childFormBuilder->getName()][] = $value;
@@ -9748,7 +9822,6 @@ return BaseFieldDescription::camelize($property);
 }
 namespace Sonata\AdminBundle\Admin
 {
-use Sonata\AdminBundle\Admin\AdminInterface;
 interface FieldDescriptionInterface
 {
 public function setFieldName($fieldName);
@@ -9792,9 +9865,7 @@ public function getFieldValue($object, $fieldName);
 }
 namespace Sonata\AdminBundle\Admin
 {
-use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Exception\NoValueException;
-use Symfony\Component\DependencyInjection\Container;
 abstract class BaseFieldDescription implements FieldDescriptionInterface
 {
 protected $name;
@@ -9822,7 +9893,7 @@ public function setName($name)
 {
 $this->name = $name;
 if (!$this->getFieldName()) {
-$this->setFieldName(substr(strrchr('.'. $name,'.'), 1));
+$this->setFieldName(substr(strrchr('.'.$name,'.'), 1));
 }
 }
 public function getName()
@@ -9923,8 +9994,8 @@ $getters[] = $this->getOption('code');
 if ($this->getOption('parameters')) {
 $parameters = $this->getOption('parameters');
 }
-$getters[] ='get'. $camelizedFieldName;
-$getters[] ='is'. $camelizedFieldName;
+$getters[] ='get'.$camelizedFieldName;
+$getters[] ='is'.$camelizedFieldName;
 foreach ($getters as $getter) {
 if (method_exists($object, $getter)) {
 return call_user_func_array(array($object, $getter), $parameters);
@@ -9968,7 +10039,7 @@ return $this->mappingType;
 public static function camelize($property)
 {
 return preg_replace_callback('/(^|[_. ])+(.)/', function ($match) {
-return ('.'=== $match[1] ?'_':'') . strtoupper($match[2]);
+return ('.'=== $match[1] ?'_':'').strtoupper($match[2]);
 }, $property);
 }
 public function setHelp($help)
@@ -9997,13 +10068,12 @@ return $this->getOption('sort_parent_association_mappings');
 }
 public function getTranslationDomain()
 {
-return $this->getOption('translation_domain') ? : $this->getAdmin()->getTranslationDomain();
+return $this->getOption('translation_domain') ?: $this->getAdmin()->getTranslationDomain();
 }
 }
 }
 namespace Sonata\AdminBundle\Admin
 {
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 class FieldDescriptionCollection implements \ArrayAccess, \Countable
 {
 protected $elements = array();
@@ -10133,13 +10203,13 @@ return $admins;
 public function getAdminByClass($class)
 {
 if (!$this->hasAdminByClass($class)) {
-return null;
+return;
 }
 if (!is_array($this->adminClasses[$class])) {
-throw new \RuntimeException("Invalid format for the Pool::adminClass property");
+throw new \RuntimeException('Invalid format for the Pool::adminClass property');
 }
 if (count($this->adminClasses[$class]) > 1) {
-throw new \RuntimeException(sprintf('Unable to found a valid admin for the class: %s, get too many admin registered: %s', $class, implode(",", $this->adminClasses[$class])));
+throw new \RuntimeException(sprintf('Unable to found a valid admin for the class: %s, get too many admin registered: %s', $class, implode(',', $this->adminClasses[$class])));
 }
 return $this->getInstance($this->adminClasses[$class][0]);
 }
@@ -10208,7 +10278,7 @@ public function getTemplate($name)
 if (isset($this->templates[$name])) {
 return $this->templates[$name];
 }
-return null;
+return;
 }
 public function getTitleLogo()
 {
@@ -10340,15 +10410,14 @@ public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
 }
 namespace Sonata\AdminBundle\Block
 {
-use Sonata\BlockBundle\Block\BlockContextInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Sonata\AdminBundle\Admin\Pool;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Validator\ErrorElement;
-use Sonata\AdminBundle\Admin\Pool;
-use Sonata\BlockBundle\Model\BlockInterface;
 use Sonata\BlockBundle\Block\BaseBlockService;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Sonata\BlockBundle\Block\BlockContextInterface;
+use Sonata\BlockBundle\Model\BlockInterface;
+use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class AdminListBlockService extends BaseBlockService
 {
@@ -10368,7 +10437,7 @@ if (!$settings['groups'] || in_array($name, $settings['groups'])) {
 $visibleGroups[] = $dashboardGroup;
 }
 }
-return $this->renderPrivateResponse($this->pool->getTemplate('list_block'), array('block'=> $blockContext->getBlock(),'settings'=> $settings,'admin_pool'=> $this->pool,'groups'=> $visibleGroups
+return $this->renderPrivateResponse($this->pool->getTemplate('list_block'), array('block'=> $blockContext->getBlock(),'settings'=> $settings,'admin_pool'=> $this->pool,'groups'=> $visibleGroups,
 ), $response);
 }
 public function validateBlock(ErrorElement $errorElement, BlockInterface $block)
@@ -10383,17 +10452,17 @@ return'Admin List';
 }
 public function setDefaultSettings(OptionsResolverInterface $resolver)
 {
-$resolver->setDefaults(array('groups'=> false
+$resolver->setDefaults(array('groups'=> false,
 ));
-$resolver->setAllowedTypes(array('groups'=> array('bool','array')
+$resolver->setAllowedTypes(array('groups'=> array('bool','array'),
 ));
 }
 }
 }
 namespace Sonata\AdminBundle\Builder
 {
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 interface BuilderInterface
 {
 public function fixFieldDescription(AdminInterface $admin, FieldDescriptionInterface $fieldDescription);
@@ -10401,8 +10470,8 @@ public function fixFieldDescription(AdminInterface $admin, FieldDescriptionInter
 }
 namespace Sonata\AdminBundle\Builder
 {
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Datagrid\DatagridInterface;
 interface DatagridBuilderInterface extends BuilderInterface
 {
@@ -10413,7 +10482,6 @@ public function getBaseDatagrid(AdminInterface $admin, array $values = array());
 namespace Sonata\AdminBundle\Builder
 {
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
-use Sonata\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormFactoryInterface;
 interface FormContractorInterface extends BuilderInterface
@@ -10425,9 +10493,9 @@ public function getDefaultOptions($type, FieldDescriptionInterface $fieldDescrip
 }
 namespace Sonata\AdminBundle\Builder
 {
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Admin\FieldDescriptionCollection;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 interface ListBuilderInterface extends BuilderInterface
 {
 public function getBaseList(array $options = array());
@@ -10446,9 +10514,9 @@ public function build(AdminInterface $admin, RouteCollection $collection);
 }
 namespace Sonata\AdminBundle\Builder
 {
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Admin\FieldDescriptionCollection;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 interface ShowBuilderInterface extends BuilderInterface
 {
 public function getBaseList(array $options = array());
@@ -10479,12 +10547,12 @@ public function hasActiveFilters();
 }
 namespace Sonata\AdminBundle\Datagrid
 {
-use Sonata\AdminBundle\Filter\FilterInterface;
 use Sonata\AdminBundle\Admin\FieldDescriptionCollection;
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
-use Symfony\Component\Form\FormBuilder;
-use Symfony\Component\Form\Exception\UnexpectedTypeException;
+use Sonata\AdminBundle\Filter\FilterInterface;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Exception\UnexpectedTypeException;
+use Symfony\Component\Form\FormBuilder;
 class Datagrid implements DatagridInterface
 {
 protected $filters = array();
@@ -10605,7 +10673,7 @@ return $this->values;
 }
 public function setValue($name, $operator, $value)
 {
-$this->values[$name] = array('type'=> $operator,'value'=> $value
+$this->values[$name] = array('type'=> $operator,'value'=> $value,
 );
 }
 public function hasActiveFilters()
@@ -10659,7 +10727,6 @@ namespace Sonata\AdminBundle\Datagrid
 {
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
-use Sonata\AdminBundle\Datagrid\DatagridInterface;
 use Sonata\AdminBundle\Builder\DatagridBuilderInterface;
 use Sonata\AdminBundle\Mapper\BaseMapper;
 class DatagridMapper extends BaseMapper
@@ -10720,8 +10787,8 @@ return $this;
 namespace Sonata\AdminBundle\Datagrid
 {
 use Sonata\AdminBundle\Admin\AdminInterface;
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Admin\FieldDescriptionCollection;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Builder\ListBuilderInterface;
 use Sonata\AdminBundle\Mapper\BaseMapper;
 class ListMapper extends BaseMapper
@@ -10748,7 +10815,7 @@ public function add($name, $type = null, array $fieldDescriptionOptions = array(
 {
 if ($name =='_action'&& $type =='actions') {
 if (isset($fieldDescriptionOptions['actions']['view'])) {
-trigger_error('Inline action "view" is deprecated since version 2.2.4. Use inline action "show" instead.', E_USER_DEPRECATED);
+@trigger_error('Inline action "view" is deprecated since version 2.2.4. Use inline action "show" instead.', E_USER_DEPRECATED);
 $fieldDescriptionOptions['actions']['show'] = $fieldDescriptionOptions['actions']['view'];
 unset($fieldDescriptionOptions['actions']['view']);
 }
@@ -10889,7 +10956,7 @@ return $this->retrieveObject($this->cursor);
 public function getNext()
 {
 if ($this->cursor + 1 > $this->nbResults) {
-return null;
+return;
 } else {
 return $this->retrieveObject($this->cursor + 1);
 }
@@ -10897,7 +10964,7 @@ return $this->retrieveObject($this->cursor + 1);
 public function getPrevious()
 {
 if ($this->cursor - 1 < 1) {
-return null;
+return;
 } else {
 return $this->retrieveObject($this->cursor - 1);
 }
@@ -11188,7 +11255,6 @@ return new StreamedResponse($callback, 200, array('Content-Type'=> $contentType,
 }
 namespace Sonata\AdminBundle\Export
 {
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Sonata\CoreBundle\Exporter\Exporter as BaseExporter;
 class Exporter extends BaseExporter
 {
@@ -11226,7 +11292,6 @@ public function getTranslationDomain();
 }
 namespace Sonata\AdminBundle\Filter
 {
-use Sonata\AdminBundle\Filter\FilterInterface;
 abstract class Filter implements FilterInterface
 {
 protected $name = null;
@@ -11322,7 +11387,7 @@ public function isActive()
 $values = $this->getValue();
 return isset($values['value'])
 && false !== $values['value']
-&&""!== $values['value'];
+&&''!== $values['value'];
 }
 public function setCondition($condition)
 {
@@ -11683,12 +11748,12 @@ return (string) $choice;
 namespace Sonata\AdminBundle\Form\ChoiceList
 {
 use Doctrine\Common\Util\ClassUtils;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyPath;
+use Sonata\AdminBundle\Model\ModelManagerInterface;
 use Symfony\Component\Form\Exception\InvalidArgumentException;
 use Symfony\Component\Form\Exception\RuntimeException;
 use Symfony\Component\Form\Extension\Core\ChoiceList\SimpleChoiceList;
-use Sonata\AdminBundle\Model\ModelManagerInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyPath;
 class ModelChoiceList extends SimpleChoiceList
 {
 private $modelManager;
@@ -11773,7 +11838,7 @@ public function getIdentifierValues($entity)
 try {
 return $this->modelManager->getIdentifierValues($entity);
 } catch (\Exception $e) {
-throw new InvalidArgumentException(sprintf("Unable to retrieve the identifier values for entity %s", ClassUtils::getClass($entity)), 0, $e);
+throw new InvalidArgumentException(sprintf('Unable to retrieve the identifier values for entity %s', ClassUtils::getClass($entity)), 0, $e);
 }
 }
 public function getModelManager()
@@ -11797,8 +11862,8 @@ public function reverseTransform($value);
 }
 namespace Sonata\AdminBundle\Form\DataTransformer
 {
-use Symfony\Component\Form\DataTransformerInterface;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
+use Symfony\Component\Form\DataTransformerInterface;
 class ArrayToModelTransformer implements DataTransformerInterface
 {
 protected $modelManager;
@@ -11813,7 +11878,7 @@ public function reverseTransform($array)
 if ($array instanceof $this->className) {
 return $array;
 }
-$instance = new $this->className;
+$instance = new $this->className();
 if (!is_array($array)) {
 return $instance;
 }
@@ -11827,16 +11892,23 @@ return $value;
 }
 namespace Sonata\AdminBundle\Form\DataTransformer
 {
-use Symfony\Component\Form\Exception\UnexpectedTypeException;
-use Symfony\Component\Form\Exception\TransformationFailedException;
-use Symfony\Component\Form\DataTransformerInterface;
 use Sonata\AdminBundle\Form\ChoiceList\ModelChoiceList;
+use Symfony\Component\Form\ChoiceList\LegacyChoiceListAdapter;
+use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Form\Exception\UnexpectedTypeException;
 class ModelsToArrayTransformer implements DataTransformerInterface
 {
 protected $choiceList;
-public function __construct(ModelChoiceList $choiceList)
+public function __construct($choiceList)
 {
+if ($choiceList instanceof LegacyChoiceListAdapter && $choiceList->getAdaptedList() instanceof ModelChoiceList) {
+$this->choiceList = $choiceList->getAdaptedList();
+} elseif ($choiceList instanceof ModelChoiceList) {
 $this->choiceList = $choiceList;
+} else {
+new \InvalidArgumentException('Argument 1 passed to '.__CLASS__.'::'.__METHOD__.' must be an instance of Sonata\AdminBundle\Form\ChoiceList\ModelChoiceList, instance of '.get_class($choiceList).' given');
+}
 }
 public function transform($collection)
 {
@@ -11888,8 +11960,8 @@ return $collection;
 }
 namespace Sonata\AdminBundle\Form\DataTransformer
 {
-use Symfony\Component\Form\DataTransformerInterface;
 use Sonata\AdminBundle\Model\ModelManagerInterface;
+use Symfony\Component\Form\DataTransformerInterface;
 class ModelToIdTransformer implements DataTransformerInterface
 {
 protected $modelManager;
@@ -11901,15 +11973,15 @@ $this->className = $className;
 }
 public function reverseTransform($newId)
 {
-if (empty($newId) && !in_array($newId, array("0", 0), true)) {
-return null;
+if (empty($newId) && !in_array($newId, array('0', 0), true)) {
+return;
 }
 return $this->modelManager->find($this->className, $newId);
 }
 public function transform($entity)
 {
 if (empty($entity)) {
-return null;
+return;
 }
 return $this->modelManager->getNormalizedIdentifier($entity);
 }
@@ -11917,10 +11989,10 @@ return $this->modelManager->getNormalizedIdentifier($entity);
 }
 namespace Sonata\AdminBundle\Form\EventListener
 {
+use Sonata\AdminBundle\Model\ModelManagerInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Sonata\AdminBundle\Model\ModelManagerInterface;
 class MergeCollectionListener implements EventSubscriberInterface
 {
 protected $modelManager;
@@ -11992,13 +12064,13 @@ public function setDefaultOptions(OptionsResolverInterface $resolver)
 }
 namespace Sonata\AdminBundle\Form\Extension\Field\Type
 {
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
+use Sonata\AdminBundle\Exception\NoValueException;
 use Symfony\Component\Form\AbstractTypeExtension;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
-use Sonata\AdminBundle\Exception\NoValueException;
 class FormTypeFieldExtension extends AbstractTypeExtension
 {
 protected $defaultClasses = array();
@@ -12008,7 +12080,7 @@ $this->defaultClasses = $defaultClasses;
 }
 public function buildForm(FormBuilderInterface $builder, array $options)
 {
-$sonataAdmin = array('name'=> null,'admin'=> null,'value'=> null,'edit'=>'standard','inline'=>'natural','field_description'=> null,'block_name'=> false
+$sonataAdmin = array('name'=> null,'admin'=> null,'value'=> null,'edit'=>'standard','inline'=>'natural','field_description'=> null,'block_name'=> false,
 );
 $builder->setAttribute('sonata_admin_enabled', false);
 $builder->setAttribute('sonata_help', false);
@@ -12051,7 +12123,7 @@ $sonataAdmin['value'] = $form->getData();
 $block_prefixes = $view->vars['block_prefixes'];
 $baseName = str_replace('.','_', $sonataAdmin['admin']->getCode());
 $baseType = $block_prefixes[count($block_prefixes) - 2];
-$blockSuffix = preg_replace("#^_([a-z0-9]{14})_(.++)$#","\$2", array_pop($block_prefixes));
+$blockSuffix = preg_replace('#^_([a-z0-9]{14})_(.++)$#','$2', array_pop($block_prefixes));
 $block_prefixes[] = sprintf('%s_%s', $baseName, $baseType);
 $block_prefixes[] = sprintf('%s_%s_%s', $baseName, $sonataAdmin['name'], $baseType);
 $block_prefixes[] = sprintf('%s_%s_%s_%s', $baseName, $sonataAdmin['name'], $baseType, $blockSuffix);
@@ -12078,7 +12150,7 @@ return'field';
 }
 public function setDefaultOptions(OptionsResolverInterface $resolver)
 {
-$resolver->setDefaults(array('sonata_admin'=> null,'sonata_field_description'=> null,'label_render'=> true,'sonata_help'=> null
+$resolver->setDefaults(array('sonata_admin'=> null,'sonata_field_description'=> null,'label_render'=> true,'sonata_help'=> null,
 ));
 }
 public function getValueFromFieldDescription($object, FieldDescriptionInterface $fieldDescription)
@@ -12135,7 +12207,7 @@ if ($this->currentGroup) {
 throw new \RuntimeException(sprintf('You should close previous group "%s" with end() before adding new tab "%s".', $this->currentGroup, $name));
 }
 if (!$this->currentTab) {
-$this->with('default', array('tab'=> true,'auto_created'=> true,'translation_domain'=> isset($options['translation_domain']) ? $options['translation_domain'] : null
+$this->with('default', array('tab'=> true,'auto_created'=> true,'translation_domain'=> isset($options['translation_domain']) ? $options['translation_domain'] : null,
 )); }
 if ($this->currentTab !=='default') {
 $code = $this->currentTab.'.'.$name; }
@@ -12189,10 +12261,10 @@ return $this->currentGroup;
 }
 namespace Sonata\AdminBundle\Form
 {
-use Sonata\AdminBundle\Builder\FormContractorInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
-use Symfony\Component\Form\FormBuilder;
+use Sonata\AdminBundle\Builder\FormContractorInterface;
 use Sonata\AdminBundle\Mapper\BaseGroupedMapper;
+use Symfony\Component\Form\FormBuilder;
 class FormMapper extends BaseGroupedMapper
 {
 protected $formBuilder;
@@ -12213,7 +12285,7 @@ $fieldName = $name->getName();
 } else {
 $fieldName = $name;
 }
-if (!$name instanceof FormBuilder && strpos($fieldName,'.')!==false && !isset($options['property_path'])) {
+if (!$name instanceof FormBuilder && strpos($fieldName,'.') !== false && !isset($options['property_path'])) {
 $options['property_path'] = $fieldName;
 $fieldName = str_replace('.','__', $fieldName);
 }
@@ -12348,14 +12420,13 @@ return'form';
 }
 namespace Sonata\AdminBundle\Form\Type
 {
+use Sonata\AdminBundle\Form\DataTransformer\ArrayToModelTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Form\ReversedTransformer;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Sonata\AdminBundle\Form\DataTransformer\ArrayToModelTransformer;
 class AdminType extends AbstractType
 {
 public function buildForm(FormBuilderInterface $builder, array $options)
@@ -12387,7 +12458,8 @@ $resolver->setDefaults(array('delete'=> function (Options $options) {
 return ($options['btn_delete'] !== false);
 },'delete_options'=> array('type'=>'checkbox','type_options'=> array('required'=> false,'mapped'=> false,
 ),
-),'auto_initialize'=> false,'btn_add'=>'link_add','btn_list'=>'link_list','btn_delete'=>'link_delete','btn_catalogue'=>'SonataAdminBundle'));
+),'auto_initialize'=> false,'btn_add'=>'link_add','btn_list'=>'link_list','btn_delete'=>'link_delete','btn_catalogue'=>'SonataAdminBundle',
+));
 }
 protected function getFieldDescription(array $options)
 {
@@ -12410,8 +12482,8 @@ namespace Sonata\AdminBundle\Form\Type\Filter
 {
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 class ChoiceType extends AbstractType
 {
 const TYPE_CONTAINS = 1;
@@ -12440,7 +12512,7 @@ $builder
 }
 public function setDefaultOptions(OptionsResolverInterface $resolver)
 {
-$resolver->setDefaults(array('field_type'=>'choice','field_options'=> array()
+$resolver->setDefaults(array('field_type'=>'choice','field_options'=> array(),
 ));
 }
 }
@@ -12449,8 +12521,8 @@ namespace Sonata\AdminBundle\Form\Type\Filter
 {
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 class DateRangeType extends AbstractType
 {
 const TYPE_BETWEEN = 1;
@@ -12477,7 +12549,7 @@ $builder
 }
 public function setDefaultOptions(OptionsResolverInterface $resolver)
 {
-$resolver->setDefaults(array('field_type'=>'sonata_type_date_range','field_options'=> array('format'=>'yyyy-MM-dd')
+$resolver->setDefaults(array('field_type'=>'sonata_type_date_range','field_options'=> array('format'=>'yyyy-MM-dd'),
 ));
 }
 }
@@ -12486,8 +12558,8 @@ namespace Sonata\AdminBundle\Form\Type\Filter
 {
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 class DateTimeRangeType extends AbstractType
 {
 const TYPE_BETWEEN = 1;
@@ -12514,7 +12586,7 @@ $builder
 }
 public function setDefaultOptions(OptionsResolverInterface $resolver)
 {
-$resolver->setDefaults(array('field_type'=>'sonata_type_datetime_range','field_options'=> array('date_format'=>'yyyy-MM-dd')
+$resolver->setDefaults(array('field_type'=>'sonata_type_datetime_range','field_options'=> array('date_format'=>'yyyy-MM-dd'),
 ));
 }
 }
@@ -12523,8 +12595,8 @@ namespace Sonata\AdminBundle\Form\Type\Filter
 {
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 class DateTimeType extends AbstractType
 {
 const TYPE_GREATER_EQUAL = 1;
@@ -12561,7 +12633,7 @@ $builder
 }
 public function setDefaultOptions(OptionsResolverInterface $resolver)
 {
-$resolver->setDefaults(array('field_type'=>'datetime','field_options'=> array('date_format'=>'yyyy-MM-dd')
+$resolver->setDefaults(array('field_type'=>'datetime','field_options'=> array('date_format'=>'yyyy-MM-dd'),
 ));
 }
 }
@@ -12570,8 +12642,8 @@ namespace Sonata\AdminBundle\Form\Type\Filter
 {
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Optionsresolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 class DateType extends AbstractType
 {
 const TYPE_GREATER_EQUAL = 1;
@@ -12608,7 +12680,7 @@ $builder
 }
 public function setDefaultOptions(OptionsResolverInterface $resolver)
 {
-$resolver->setDefaults(array('field_type'=>'date','field_options'=> array('date_format'=>'yyyy-MM-dd')
+$resolver->setDefaults(array('field_type'=>'date','field_options'=> array('date_format'=>'yyyy-MM-dd'),
 ));
 }
 }
@@ -12633,7 +12705,7 @@ $builder
 }
 public function setDefaultOptions(OptionsResolverInterface $resolver)
 {
-$resolver->setDefaults(array('operator_type'=>'hidden','operator_options'=> array(),'field_type'=>'text','field_options'=> array()
+$resolver->setDefaults(array('operator_type'=>'hidden','operator_options'=> array(),'field_type'=>'text','field_options'=> array(),
 ));
 }
 }
@@ -12642,8 +12714,8 @@ namespace Sonata\AdminBundle\Form\Type\Filter
 {
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 class NumberType extends AbstractType
 {
 const TYPE_GREATER_EQUAL = 1;
@@ -12683,11 +12755,10 @@ $resolver->setDefaults(array('field_type'=>'number','field_options'=> array(),
 }
 namespace Sonata\AdminBundle\Form\Type
 {
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\OptionsResolver\Options;
 use Sonata\AdminBundle\Form\DataTransformer\ModelToIdTransformer;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class ModelReferenceType extends AbstractType
 {
 public function buildForm(FormBuilderInterface $builder, array $options)
@@ -12711,17 +12782,17 @@ return'sonata_type_model_reference';
 }
 namespace Sonata\AdminBundle\Form\Type
 {
+use Sonata\AdminBundle\Form\ChoiceList\ModelChoiceList;
+use Sonata\AdminBundle\Form\DataTransformer\ModelsToArrayTransformer;
+use Sonata\AdminBundle\Form\DataTransformer\ModelToIdTransformer;
+use Sonata\AdminBundle\Form\EventListener\MergeCollectionListener;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceListInterface;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Sonata\AdminBundle\Form\EventListener\MergeCollectionListener;
-use Sonata\AdminBundle\Form\ChoiceList\ModelChoiceList;
-use Sonata\AdminBundle\Form\DataTransformer\ModelsToArrayTransformer;
-use Sonata\AdminBundle\Form\DataTransformer\ModelToIdTransformer;
 class ModelType extends AbstractType
 {
 public function buildForm(FormBuilderInterface $builder, array $options)
@@ -12767,7 +12838,7 @@ $options['property'],
 $options['query'],
 $options['choices']
 );
-}
+},
 ));
 }
 public function getParent()
@@ -12782,12 +12853,12 @@ return'sonata_type_model';
 }
 namespace Sonata\AdminBundle\Form\Type
 {
-use Symfony\Component\Form\FormBuilderInterface;
+use Sonata\AdminBundle\Form\DataTransformer\ModelToIdTransformer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Sonata\AdminBundle\Form\DataTransformer\ModelToIdTransformer;
 class ModelTypeList extends AbstractType
 {
 public function buildForm(FormBuilderInterface $builder, array $options)
@@ -12808,7 +12879,8 @@ $view->vars['btn_catalogue'] = $options['btn_catalogue'];
 }
 public function setDefaultOptions(OptionsResolverInterface $resolver)
 {
-$resolver->setDefaults(array('model_manager'=> null,'class'=> null,'btn_add'=>'link_add','btn_list'=>'link_list','btn_delete'=>'link_delete','btn_catalogue'=>'SonataAdminBundle'));
+$resolver->setDefaults(array('model_manager'=> null,'class'=> null,'btn_add'=>'link_add','btn_list'=>'link_list','btn_delete'=>'link_delete','btn_catalogue'=>'SonataAdminBundle',
+));
 }
 public function getParent()
 {
@@ -12830,10 +12902,9 @@ public function guessType($class, $property, ModelManagerInterface $modelManager
 }
 namespace Sonata\AdminBundle\Guesser
 {
-use Sonata\AdminBundle\Guesser\TypeGuesserInterface;
+use Sonata\AdminBundle\Model\ModelManagerInterface;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Form\Guess\Guess;
-use Sonata\AdminBundle\Model\ModelManagerInterface;
 class TypeGuesserChain implements TypeGuesserInterface
 {
 protected $guessers = array();
@@ -13069,12 +13140,11 @@ throw new FileLoaderLoadException($resource, $sourceResource, null, $e);
 }
 namespace Sonata\AdminBundle\Route
 {
-use Symfony\Component\Routing\RouteCollection as SymfonyRouteCollection;
-use Symfony\Component\Routing\Route;
+use Sonata\AdminBundle\Admin\Pool;
 use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Config\Resource\FileResource;
-use Sonata\AdminBundle\Admin\Pool;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Routing\RouteCollection as SymfonyRouteCollection;
 class AdminPoolLoader extends FileLoader
 {
 protected $pool;
@@ -13095,7 +13165,7 @@ return false;
 }
 public function load($resource, $type = null)
 {
-$collection = new SymfonyRouteCollection;
+$collection = new SymfonyRouteCollection();
 foreach ($this->adminServiceIds as $id) {
 $admin = $this->pool->getInstance($id);
 foreach ($admin->getRoutes()->getElements() as $code => $route) {
@@ -13172,7 +13242,7 @@ $code = $this->getCode($admin, $name);
 if (!array_key_exists($code, $this->caches)) {
 throw new \RuntimeException(sprintf('unable to find the route `%s`', $code));
 }
-return array('route'=> $this->caches[$code],'routeParameters'=> $parameters,'routeAbsolute'=> $absolute
+return array('route'=> $this->caches[$code],'routeParameters'=> $parameters,'routeAbsolute'=> $absolute,
 );
 }
 public function hasAdminRoute(AdminInterface $admin, $name)
@@ -13195,21 +13265,22 @@ return $admin->getCode().'.'.$name;
 }
 private function loadCache(AdminInterface $admin)
 {
+if ($admin->isChild()) {
+$this->loadCache($admin->getParent());
+} else {
 if (in_array($admin->getCode(), $this->loaded)) {
 return;
 }
 $this->caches = array_merge($this->cache->load($admin), $this->caches);
 $this->loaded[] = $admin->getCode();
-if ($admin->isChild()) {
-$this->loadCache($admin->getParent());
 }
 }
 }
 }
 namespace Sonata\AdminBundle\Route
 {
-use Sonata\AdminBundle\Builder\RouteBuilderInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\Builder\RouteBuilderInterface;
 use Sonata\AdminBundle\Model\AuditManagerInterface;
 class PathInfoBuilder implements RouteBuilderInterface
 {
@@ -13246,8 +13317,8 @@ $collection->addCollection($children->getRoutes());
 }
 namespace Sonata\AdminBundle\Route
 {
-use Sonata\AdminBundle\Builder\RouteBuilderInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Sonata\AdminBundle\Builder\RouteBuilderInterface;
 use Sonata\AdminBundle\Model\AuditManagerInterface;
 class QueryStringBuilder implements RouteBuilderInterface
 {
@@ -13301,17 +13372,17 @@ $this->baseControllerName = $baseControllerName;
 }
 public function add($name, $pattern = null, array $defaults = array(), array $requirements = array(), array $options = array())
 {
-$pattern = $this->baseRoutePattern .'/'. ($pattern ?: $name);
+$pattern = $this->baseRoutePattern.'/'.($pattern ?: $name);
 $code = $this->getCode($name);
-$routeName = $this->baseRouteName .'_'. $name;
+$routeName = $this->baseRouteName.'_'.$name;
 if (!isset($defaults['_controller'])) {
-$defaults['_controller'] = $this->baseControllerName .':'. $this->actionify($code);
+$defaults['_controller'] = $this->baseControllerName.':'.$this->actionify($code);
 }
 if (!isset($defaults['_sonata_admin'])) {
 $defaults['_sonata_admin'] = $this->baseCodeRoute;
 }
 $defaults['_sonata_name'] = $routeName;
-$this->elements[$this->getCode($name)] = function() use ($pattern, $defaults, $requirements, $options) {
+$this->elements[$this->getCode($name)] = function () use ($pattern, $defaults, $requirements, $options) {
 return new Route($pattern, $defaults, $requirements, $options);
 };
 return $this;
@@ -13321,7 +13392,7 @@ public function getCode($name)
 if (strrpos($name,'.') !== false) {
 return $name;
 }
-return $this->baseCodeRoute .'.'. $name;
+return $this->baseCodeRoute.'.'.$name;
 }
 public function addCollection(RouteCollection $collection)
 {
@@ -13407,7 +13478,8 @@ public function getBaseRoutePattern()
 {
 return $this->baseRoutePattern;
 }
-}}
+}
+}
 namespace Symfony\Component\Security\Acl\Permission
 {
 interface PermissionMapInterface
@@ -13438,48 +13510,48 @@ MaskBuilder::MASK_LIST,
 MaskBuilder::MASK_EDIT,
 MaskBuilder::MASK_OPERATOR,
 MaskBuilder::MASK_MASTER,
-MaskBuilder::MASK_OWNER
+MaskBuilder::MASK_OWNER,
 ),
 self::PERMISSION_EDIT => array(
 MaskBuilder::MASK_EDIT,
 MaskBuilder::MASK_OPERATOR,
 MaskBuilder::MASK_MASTER,
-MaskBuilder::MASK_OWNER
+MaskBuilder::MASK_OWNER,
 ),
 self::PERMISSION_CREATE => array(
 MaskBuilder::MASK_CREATE,
 MaskBuilder::MASK_OPERATOR,
 MaskBuilder::MASK_MASTER,
-MaskBuilder::MASK_OWNER
+MaskBuilder::MASK_OWNER,
 ),
 self::PERMISSION_DELETE => array(
 MaskBuilder::MASK_DELETE,
 MaskBuilder::MASK_OPERATOR,
 MaskBuilder::MASK_MASTER,
-MaskBuilder::MASK_OWNER
+MaskBuilder::MASK_OWNER,
 ),
 self::PERMISSION_UNDELETE => array(
 MaskBuilder::MASK_UNDELETE,
 MaskBuilder::MASK_OPERATOR,
 MaskBuilder::MASK_MASTER,
-MaskBuilder::MASK_OWNER
+MaskBuilder::MASK_OWNER,
 ),
 self::PERMISSION_LIST => array(
 MaskBuilder::MASK_LIST,
 MaskBuilder::MASK_OPERATOR,
 MaskBuilder::MASK_MASTER,
-MaskBuilder::MASK_OWNER
+MaskBuilder::MASK_OWNER,
 ),
 self::PERMISSION_EXPORT => array(
 MaskBuilder::MASK_EXPORT,
 MaskBuilder::MASK_OPERATOR,
 MaskBuilder::MASK_MASTER,
-MaskBuilder::MASK_OWNER
+MaskBuilder::MASK_OWNER,
 ),
 self::PERMISSION_OPERATOR => array(
 MaskBuilder::MASK_OPERATOR,
 MaskBuilder::MASK_MASTER,
-MaskBuilder::MASK_OWNER
+MaskBuilder::MASK_OWNER,
 ),
 self::PERMISSION_MASTER => array(
 MaskBuilder::MASK_MASTER,
@@ -13492,7 +13564,7 @@ MaskBuilder::MASK_OWNER,
 public function getMasks($permission, $object)
 {
 if (!isset($this->map[$permission])) {
-return null;
+return;
 }
 return $this->map[$permission];
 }
@@ -13544,7 +13616,7 @@ for ($i = $length - 1; $i >= 0; --$i) {
 if ('1'=== $bitmask[$i]) {
 try {
 $pattern[$i] = self::getCode(1 << ($length - $i - 1));
-} catch (\Exception $notPredefined) {
+} catch (\Exception $e) {
 $pattern[$i] = self::ON;
 }
 }
@@ -13639,17 +13711,17 @@ public function findClassAceIndexByUsername(AclInterface $acl, $username);
 }
 namespace Sonata\AdminBundle\Security\Handler
 {
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
-use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
-use Symfony\Component\Security\Acl\Model\AclInterface;
+use Sonata\AdminBundle\Admin\AdminInterface;
 use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
-use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Symfony\Component\Security\Acl\Exception\AclNotFoundException;
 use Symfony\Component\Security\Acl\Exception\NotAllAclsFoundException;
-use Sonata\AdminBundle\Admin\AdminInterface;
+use Symfony\Component\Security\Acl\Model\AclInterface;
+use Symfony\Component\Security\Acl\Model\MutableAclProviderInterface;
+use Symfony\Component\Security\Acl\Model\ObjectIdentityInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 class AclSecurityHandler implements AclSecurityHandlerInterface
 {
 protected $securityContext;
@@ -13696,7 +13768,7 @@ throw $e;
 }
 public function getBaseRole(AdminInterface $admin)
 {
-return'ROLE_'. str_replace('.','_', strtoupper($admin->getCode())) .'_%s';
+return'ROLE_'.str_replace('.','_', strtoupper($admin->getCode())).'_%s';
 }
 public function buildSecurityInformation(AdminInterface $admin)
 {
@@ -13730,7 +13802,7 @@ public function getObjectAcl(ObjectIdentityInterface $objectIdentity)
 try {
 $acl = $this->aclProvider->findAcl($objectIdentity);
 } catch (AclNotFoundException $e) {
-return null;
+return;
 }
 return $acl;
 }
@@ -13838,9 +13910,9 @@ public function deleteObjectSecurity(AdminInterface $admin, $object)
 }
 namespace Sonata\AdminBundle\Security\Handler
 {
-use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
+use Symfony\Component\Security\Core\SecurityContextInterface;
 class RoleSecurityHandler implements SecurityHandlerInterface
 {
 protected $securityContext;
@@ -13869,7 +13941,7 @@ throw $e;
 }
 public function getBaseRole(AdminInterface $admin)
 {
-return'ROLE_'. str_replace('.','_', strtoupper($admin->getCode())) .'_%s';
+return'ROLE_'.str_replace('.','_', strtoupper($admin->getCode())).'_%s';
 }
 public function buildSecurityInformation(AdminInterface $admin)
 {
@@ -13886,8 +13958,8 @@ public function deleteObjectSecurity(AdminInterface $admin, $object)
 namespace Sonata\AdminBundle\Show
 {
 use Sonata\AdminBundle\Admin\AdminInterface;
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Admin\FieldDescriptionCollection;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
 use Sonata\AdminBundle\Builder\ShowBuilderInterface;
 use Sonata\AdminBundle\Mapper\BaseGroupedMapper;
 class ShowMapper extends BaseGroupedMapper
@@ -14024,11 +14096,11 @@ return sprintf('%s.%s_%s', $context, $type, strtolower(preg_replace('~(?<=\\w)([
 namespace Sonata\AdminBundle\Twig\Extension
 {
 use Doctrine\Common\Util\ClassUtils;
-use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
-use Sonata\AdminBundle\Exception\NoValueException;
-use Sonata\AdminBundle\Admin\Pool;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Psr\Log\LoggerInterface;
+use Sonata\AdminBundle\Admin\FieldDescriptionInterface;
+use Sonata\AdminBundle\Admin\Pool;
+use Sonata\AdminBundle\Exception\NoValueException;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 class SonataAdminExtension extends \Twig_Extension
 {
 protected $environment;
@@ -14045,12 +14117,14 @@ $this->environment = $environment;
 }
 public function getFilters()
 {
-return array('render_list_element'=> new \Twig_Filter_Method($this,'renderListElement', array('is_safe'=> array('html'))),'render_view_element'=> new \Twig_Filter_Method($this,'renderViewElement', array('is_safe'=> array('html'))),'render_view_element_compare'=> new \Twig_Filter_Method($this,'renderViewElementCompare', array('is_safe'=> array('html'))),'render_relation_element'=> new \Twig_Filter_Method($this,'renderRelationElement'),'sonata_urlsafeid'=> new \Twig_Filter_Method($this,'getUrlsafeIdentifier'),'sonata_xeditable_type'=> new \Twig_Filter_Method($this,'getXEditableType'),
+return array(
+new \Twig_SimpleFilter('render_list_element', array($this,'renderListElement'), array('is_safe'=> array('html'))),
+new \Twig_SimpleFilter('render_view_element', array($this,'renderViewElement'), array('is_safe'=> array('html'))),
+new \Twig_SimpleFilter('render_view_element_compare', array($this,'renderViewElementCompare'), array('is_safe'=> array('html'))),
+new \Twig_SimpleFilter('render_relation_element', array($this,'renderRelationElement')),
+new \Twig_SimpleFilter('sonata_urlsafeid', array($this,'getUrlsafeIdentifier')),
+new \Twig_SimpleFilter('sonata_xeditable_type', array($this,'getXEditableType')),
 );
-}
-public function getTokenParsers()
-{
-return array();
 }
 public function getName()
 {
@@ -14072,10 +14146,10 @@ return $template;
 public function renderListElement($object, FieldDescriptionInterface $fieldDescription, $params = array())
 {
 $template = $this->getTemplate($fieldDescription, $fieldDescription->getAdmin()->getTemplate('base_list_field'));
-return $this->output($fieldDescription, $template, array_merge($params, array('admin'=> $fieldDescription->getAdmin(),'object'=> $object,'value'=> $this->getValueFromFieldDescription($object, $fieldDescription),'field_description'=> $fieldDescription
+return $this->output($fieldDescription, $template, array_merge($params, array('admin'=> $fieldDescription->getAdmin(),'object'=> $object,'value'=> $this->getValueFromFieldDescription($object, $fieldDescription),'field_description'=> $fieldDescription,
 )));
 }
-public function output(FieldDescriptionInterface $fieldDescription, \Twig_TemplateInterface $template, array $parameters = array())
+public function output(FieldDescriptionInterface $fieldDescription, \Twig_Template $template, array $parameters = array())
 {
 $content = $template->render($parameters);
 if ($this->environment->isDebug()) {
@@ -14112,7 +14186,7 @@ $value = $fieldDescription->getValue($object);
 } catch (NoValueException $e) {
 $value = null;
 }
-return $this->output($fieldDescription, $template, array('field_description'=> $fieldDescription,'object'=> $object,'value'=> $value,'admin'=> $fieldDescription->getAdmin()
+return $this->output($fieldDescription, $template, array('field_description'=> $fieldDescription,'object'=> $object,'value'=> $value,'admin'=> $fieldDescription->getAdmin(),
 ));
 }
 public function renderViewElementCompare(FieldDescriptionInterface $fieldDescription, $baseObject, $compareObject)
@@ -14128,12 +14202,12 @@ $compareValue = $fieldDescription->getValue($compareObject);
 } catch (NoValueException $e) {
 $compareValue = null;
 }
-$baseValueOutput = $template->render(array('admin'=> $fieldDescription->getAdmin(),'field_description'=> $fieldDescription,'value'=> $baseValue
+$baseValueOutput = $template->render(array('admin'=> $fieldDescription->getAdmin(),'field_description'=> $fieldDescription,'value'=> $baseValue,
 ));
-$compareValueOutput = $template->render(array('field_description'=> $fieldDescription,'admin'=> $fieldDescription->getAdmin(),'value'=> $compareValue
+$compareValueOutput = $template->render(array('field_description'=> $fieldDescription,'admin'=> $fieldDescription->getAdmin(),'value'=> $compareValue,
 ));
 $isDiff = $baseValueOutput !== $compareValueOutput;
-return $this->output($fieldDescription, $template, array('field_description'=> $fieldDescription,'value'=> $baseValue,'value_compare'=> $compareValue,'is_diff'=> $isDiff,'admin'=> $fieldDescription->getAdmin()
+return $this->output($fieldDescription, $template, array('field_description'=> $fieldDescription,'value'=> $baseValue,'value_compare'=> $compareValue,'is_diff'=> $isDiff,'admin'=> $fieldDescription->getAdmin(),
 ));
 }
 public function renderRelationElement($element, FieldDescriptionInterface $fieldDescription)
@@ -14157,9 +14231,7 @@ return PropertyAccess::createPropertyAccessor()->getValue($element, $propertyPat
 }
 public function getUrlsafeIdentifier($model)
 {
-$admin = $this->pool->getAdminByClass(
-ClassUtils::getClass($model)
-);
+$admin = $this->pool->getAdminByClass(ClassUtils::getClass($model));
 return $admin->getUrlsafeIdentifier($model);
 }
 public function getXEditableType($type)
@@ -14172,10 +14244,10 @@ return isset($mapping[$type]) ? $mapping[$type] : false;
 }
 namespace Sonata\AdminBundle\Util
 {
-use Symfony\Component\Security\Acl\Model\AclInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Security\Handler\AclSecurityHandlerInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Acl\Model\AclInterface;
 interface AdminAclManipulatorInterface
 {
 public function configureAcls(OutputInterface $output, AdminInterface $admin);
@@ -14184,12 +14256,12 @@ public function addAdminClassAces(OutputInterface $output, AclInterface $acl, Ac
 }
 namespace Sonata\AdminBundle\Util
 {
-use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
-use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
-use Symfony\Component\Security\Acl\Model\AclInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Security\Handler\AclSecurityHandlerInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Acl\Domain\ObjectIdentity;
+use Symfony\Component\Security\Acl\Domain\RoleSecurityIdentity;
+use Symfony\Component\Security\Acl\Model\AclInterface;
 class AdminAclManipulator implements AdminAclManipulatorInterface
 {
 protected $maskBuilderClass;
@@ -14324,7 +14396,7 @@ $this->iterator = $formView->getIterator();
 }
 public function getChildren()
 {
-return new FormViewIterator($this->current());
+return new self($this->current());
 }
 public function hasChildren()
 {
@@ -14354,9 +14426,9 @@ $this->iterator->rewind();
 }
 namespace Sonata\AdminBundle\Util
 {
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
-use Symfony\Component\Console\Output\OutputInterface;
 use Sonata\AdminBundle\Admin\AdminInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 interface ObjectAclManipulatorInterface
 {
 public function batchConfigureAcls(OutputInterface $output, AdminInterface $admin, UserSecurityIdentity $securityIdentity = null);
@@ -14364,10 +14436,10 @@ public function batchConfigureAcls(OutputInterface $output, AdminInterface $admi
 }
 namespace Sonata\AdminBundle\Util
 {
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Security\Handler\AclSecurityHandlerInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Security\Acl\Domain\UserSecurityIdentity;
 abstract class ObjectAclManipulator implements ObjectAclManipulatorInterface
 {
 public function configureAcls(OutputInterface $output, AdminInterface $admin, \Traversable $oids, UserSecurityIdentity $securityIdentity = null)
@@ -14383,10 +14455,10 @@ $acls = $securityHandler->findObjectAcls($oids);
 foreach ($oids as $oid) {
 if ($acls->contains($oid)) {
 $acl = $acls->offsetGet($oid);
-$countUpdated++;
+++$countUpdated;
 } else {
 $acl = $securityHandler->createAcl($oid);
-$countAdded++;
+++$countAdded;
 }
 if (!is_null($securityIdentity)) {
 $securityHandler->addObjectOwner($acl, $securityIdentity);
@@ -14540,7 +14612,8 @@ return self::CLASS_CONSTRAINT;
 }
 public function getRequiredOptions()
 {
-return array('service','method');
+return array('service','method',
+);
 }
 public function getMethod()
 {
@@ -14554,11 +14627,11 @@ return $this->service;
 }
 namespace Sonata\AdminBundle\Validator
 {
-use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
-use Symfony\Component\Validator\ExecutionContextInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
+use Symfony\Component\Validator\ExecutionContextInterface;
 class ErrorElement
 {
 protected $context;
@@ -14595,7 +14668,7 @@ return $this;
 }
 public function with($name, $key = false)
 {
-$key = $key ? $name .'.'. $key : $name;
+$key = $key ? $name.'.'.$key : $name;
 $this->stack[] = $key;
 $this->current = implode('.', $this->stack);
 if (!isset($this->propertyPaths[$this->current])) {
@@ -14639,14 +14712,14 @@ protected function newConstraint($name, array $options = array())
 if (strpos($name,'\\') !== false && class_exists($name)) {
 $className = (string) $name;
 } else {
-$className ='Symfony\\Component\\Validator\\Constraints\\'. $name;
+$className ='Symfony\\Component\\Validator\\Constraints\\'.$name;
 }
 return new $className($options);
 }
 protected function getCurrentPropertyPath()
 {
 if (!isset($this->propertyPaths[$this->current])) {
-return null; }
+return; }
 return $this->propertyPaths[$this->current];
 }
 public function addViolation($message, $parameters = array(), $value = null)
@@ -14761,10 +14834,9 @@ return implode(', ', $values);
 }
 namespace Sonata\AdminBundle\Validator
 {
-use Symfony\Component\Validator\ConstraintValidator;
-use Symfony\Component\Validator\Constraint;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Sonata\AdminBundle\Validator\ErrorElement;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\ConstraintValidatorFactoryInterface;
 class InlineValidator extends ConstraintValidator
 {
@@ -14819,7 +14891,7 @@ $this->configureOptions($resolver);
 }
 public function configureOptions(OptionsResolver $resolver)
 {
-$resolver->setDefaults(array('catalogue'=>'SonataCoreBundle','choices'=> array(
+$resolver->setDefaults(array('translation_domain'=>'SonataCoreBundle','choices'=> array(
 self::TYPE_YES =>'label_type_yes',
 self::TYPE_NO =>'label_type_no',
 ),'transform'=> false,

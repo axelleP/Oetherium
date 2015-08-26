@@ -3,21 +3,21 @@
 namespace Apa\StoryBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-//use Symfony\Component\HttpFoundation\Request;// à mettre pour recuperer les parametres de la page : exemple la route
-//use Symfony\Component\HttpFoundation\Response; // à mettre quand on utilise response au lieu de render
+//use Symfony\Component\HttpFoundation\Request;// Ã  mettre pour recuperer les parametres de la page : exemple la route
+//use Symfony\Component\HttpFoundation\Response; // Ã  mettre quand on utilise response au lieu de render
 
 class StoryController extends Controller
 {
     public function seeCharactersAction()
     {
-        //On appel les services dont on a besoin pour récupérer le repository page
+        //On appel les services dont on a besoin pour rÃ©cupÃ©rer le repository page
         $repository = $this->getDoctrine()
                    ->getManager()
                    ->getRepository('ApaStoryBundle:CharacterStory');
 
-        //On récupère les personnages
-        $mainCharacters = $repository->getMainCharacters(); //1ere méthode
-        $minorCharacters = $repository->findByMain('0'); //2eme méthode
+        //On rÃ©cupÃ¨re les personnages
+        $mainCharacters = $repository->getMainCharacters(); //1ere mÃ©thode
+        $minorCharacters = $repository->findByMain('0'); //2eme mÃ©thode
         
         return $this->render('ApaStoryBundle:Character:seeCharacters.html.twig',
                             array('mainCharacters' => $mainCharacters, 'minorCharacters' => $minorCharacters));
@@ -29,7 +29,7 @@ class StoryController extends Controller
                    ->getManager()
                    ->getRepository('ApaStoryBundle:CharacterStory');
 
-        //On récupère les informations du personnage
+        //On rÃ©cupÃ¨re les informations du personnage
         $characterProfile = $repository->findOneBy(array('firstname' => $firstname, 'name' => $name));
         $images = $characterProfile->getImages();
         
@@ -44,7 +44,7 @@ class StoryController extends Controller
                    ->getManager()
                    ->getRepository('ApaStoryBundle:Chapter');
 
-        //On récupère les chapitres
+        //On rÃ©cupÃ¨re les chapitres
         $chapters = $repository->findAll();
         
         return $this->render('ApaStoryBundle:Story:menuChapter.html.twig', array('listChapters' => $chapters));
@@ -56,7 +56,7 @@ class StoryController extends Controller
                    ->getManager()
                    ->getRepository('ApaStoryBundle:Chapter');
 
-        //On récupère les chapitres
+        //On rÃ©cupÃ¨re les chapitres
         $chapters = $repository->findAll();
         
         //pagination
@@ -80,7 +80,7 @@ class StoryController extends Controller
                    ->getManager()
                    ->getRepository('ApaStoryBundle:PageBook');
 
-        //On récupère les informations du chapitre et de ses pages
+        //On rÃ©cupÃ¨re les informations du chapitre et de ses pages
         $chapter = $rep_chapter->findOneBy(array('id' => $numero));
 
         $pages = $rep_pagesBook->findBy(array('chapter' => $chapter));
@@ -107,7 +107,7 @@ class StoryController extends Controller
                    ->getManager()
                    ->getRepository('ApaStoryBundle:AnnexText');
 
-        //On récupère les textes annexes
+        //On rÃ©cupÃ¨re les textes annexes
         $annexTexts = $repository->findBy(array(), array('id' => 'desc'));
         
         //pagination
@@ -127,7 +127,7 @@ class StoryController extends Controller
                    ->getManager()
                    ->getRepository('ApaStoryBundle:AnnexText');
 
-        //On récupère les informations du texte annexe
+        //On rÃ©cupÃ¨re les informations du texte annexe
         $annexText = $repository->findOneBy(array('id' => $numero));
         
         //1er et dernier id en base

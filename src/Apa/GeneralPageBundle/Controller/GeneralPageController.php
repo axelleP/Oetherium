@@ -8,12 +8,12 @@ class GeneralPageController extends Controller
 {
     public function seePageAction($page, $errorConnexion)
     {
-        //On appel les services dont on a besoin pour récupérer le repository page
+        //On appel les services dont on a besoin pour rÃ©cupÃ©rer le repository page
         $repository = $this->getDoctrine()
                    ->getManager()
                    ->getRepository('ApaGeneralPageBundle:Page');
 
-        //On récupère la page par la méthode getPage($name) du repository
+        //On rÃ©cupÃ¨re la page par la mÃ©thode getPage($name) du repository
         $selectedPage = $repository->getPage($page);
         
         $errorC = $errorConnexion;
