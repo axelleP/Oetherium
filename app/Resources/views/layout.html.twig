@@ -4,7 +4,7 @@
         <title>{% block titlePage %}{% endblock %}</title>
         <meta charset="UTF-8">
         {% block metaDescriptionPage %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('img/logo-oetherium.png') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.gif') }}">
 	{% block stylesheets %}
             <!-- pour que ça marche en mode prod : php app/console cache:clear --env=prod ET php app/console assetic:dump --env=prod -->
             {% stylesheets 'css/site.css' 'css/menu.css' filter='cssrewrite, ?yui_css' %}
@@ -31,23 +31,23 @@
             
 	    <nav id="navigation"> 
 		<ul class="firstUl">
-		   <li><a href="{{ path('apa_generalPage_homepage') }}" title="L'Oetherium">Oetherium</a></li>
-                   <li><a href="{{ path('apa_generalPage_author') }}" title="Les auteurs de l'Oetherium">Auteurs</a></li>
+		   <li><a class="imgMenu"  href="{{ path('apa_generalPage_homepage') }}" title="L'Oetherium">Œtherium</a></li>
+                   <li><a class="imgMenu" href="{{ path('apa_generalPage_author') }}" title="Les auteurs de l'Oetherium">Auteurs</a></li>
 		   <li>
-                        <a href="{{ path('apa_story_chapter',{'numero':'1'}) }}" title="L'histoire de l'Oetherium">Histoire</a>
+                        <a class="imgMenu imgMenu2 " href="{{ path('apa_story_chapter',{'numero':'1'}) }}" title="L'histoire de l'Oetherium">Histoire</a>
                         <ul>
                             <li>
-                                <a href="{{ path('apa_story_chapters') }}" title="Les chapitres de l'Oetherium">Chapitres</a>
+                                <a class="imgMenu" href="{{ path('apa_story_chapters') }}" title="Les chapitres de l'Oetherium">Chapitres</a>
                             </li>
                             <li>
-                                <a href="{{ path('apa_story_annexTexts',{'page':1}) }}" title="Les textes annexes de l'Oetherium">Textes annexes</a>
+                                <a class="imgMenu" href="{{ path('apa_story_annexTexts',{'page':1}) }}" title="Les textes annexes de l'Oetherium">Textes annexes</a>
                             </li>
                         </ul>
                         <!-- exemple sans les { ! sinon ça exécute : render(controller('ApaStoryBundle:Story:listChapter')) -->
                    </li>
-		   <li><a href="{{ path('apa_story_characters') }}" title="Les personnages de l'Oetherium">Personnages</a></li>
-		   <li><a href="{{ path('apa_generalPage_faq') }}" title="L'Oetherium répond à vos questions">F.A.Q</a></li>
-		   <li><a href="{{ path('apa_generalPage_link') }}" title="Les sites affiliés à l'Oetherium">Liens</a></li>
+		   <li><a class="imgMenu imgMenu3" href="{{ path('apa_story_characters') }}" title="Les personnages de l'Oetherium">Personnages</a></li>
+		   <li><a class="imgMenu" href="{{ path('apa_generalPage_faq') }}" title="L'Oetherium répond à vos questions">F.A.Q</a></li>
+		   <li><a class="imgMenu" href="{{ path('apa_generalPage_link') }}" title="Les sites affiliés à l'Oetherium">Liens</a></li>
 		</ul>
             </nav>
 	</div>
@@ -76,27 +76,25 @@
         
         <footer>
             <div id="leftCorner">
-                <ul><li>Contactez nous : <br> mail helly et lucile?...</li></ul>
+                <ul>
+                    <li>Contact : hellypse@gmail.com</li>
+                    <li>Réalisation : Axelle Palermo, Hellypse, K.Zlovetch</li>
+                        <!-- Si on est connecté-->
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                            <!-- Si on est un admin-->
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <li><a class="link" href="{{ path('sonata_admin_dashboard') }}">Panneau d'administration</a><a class="link" href="{{ path('fos_user_security_logout') }}"> - Déconnexion</a></li>
+                            {% endif %}
+                        <!-- Sinon-->
+                        {% else %}
+                        <li id="administration">Administration</li>
+                </ul>
             </div>
             
             <div id="rightCorner">
                 <ul>
                     <li><a class="underline" href="{{ path('apa_generalPage_legalMention') }}" title="Mentions légales">Mentions légales</a></li>
-                    <li id="copyright">© 2015, Héloïse Palermo – <span class="bold">Tous droits réservés</span></li>
-                    <li>Réalisation : Axelle Palermo, Héloïse Palermo, Lucile???</li>
-    
-                    <!-- Si on est connecté-->
-                    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                        <!-- Si on est un admin-->
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <li><a class="link" href="{{ path('sonata_admin_dashboard') }}">Panneau d'administration</a><a class="link" href="{{ path('fos_user_security_logout') }}"> - Déconnexion</a></li>
-                        {% endif %}
-                        
-                        
-            
-                        <!-- Sinon-->
-                        {% else %}
-                        <li id="administration">Administration</li>
+                    <li id="copyright">© 2015, Héloïse Palermo – <span class="bold">Tous droits réservés</span></li>                   
                {% endif %}
                </ul>
             </div>

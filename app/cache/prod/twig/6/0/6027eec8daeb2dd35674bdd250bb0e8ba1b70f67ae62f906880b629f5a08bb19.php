@@ -37,7 +37,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         $this->displayBlock('metaDescriptionPage', $context, $blocks);
         // line 7
         echo "        <link rel=\"icon\" type=\"image/x-icon\" href=\"";
-        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("img/logo-oetherium.png"), "html", null, true);
+        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("img/favicon.gif"), "html", null, true);
         echo "\">
 \t";
         // line 8
@@ -73,28 +73,28 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
             
 \t    <nav id=\"navigation\"> 
 \t\t<ul class=\"firstUl\">
-\t\t   <li><a href=\"";
+\t\t   <li><a class=\"imgMenu\"  href=\"";
         // line 34
         echo $this->env->getExtension('routing')->getPath("apa_generalPage_homepage");
-        echo "\" title=\"L'Oetherium\">Oetherium</a></li>
-                   <li><a href=\"";
+        echo "\" title=\"L'Oetherium\">Œtherium</a></li>
+                   <li><a class=\"imgMenu\" href=\"";
         // line 35
         echo $this->env->getExtension('routing')->getPath("apa_generalPage_author");
         echo "\" title=\"Les auteurs de l'Oetherium\">Auteurs</a></li>
 \t\t   <li>
-                        <a href=\"";
+                        <a class=\"imgMenu imgMenu2 \" href=\"";
         // line 37
         echo $this->env->getExtension('routing')->getPath("apa_story_chapter", array("numero" => "1"));
         echo "\" title=\"L'histoire de l'Oetherium\">Histoire</a>
                         <ul>
                             <li>
-                                <a href=\"";
+                                <a class=\"imgMenu\" href=\"";
         // line 40
         echo $this->env->getExtension('routing')->getPath("apa_story_chapters");
         echo "\" title=\"Les chapitres de l'Oetherium\">Chapitres</a>
                             </li>
                             <li>
-                                <a href=\"";
+                                <a class=\"imgMenu\" href=\"";
         // line 43
         echo $this->env->getExtension('routing')->getPath("apa_story_annexTexts", array("page" => 1));
         echo "\" title=\"Les textes annexes de l'Oetherium\">Textes annexes</a>
@@ -102,15 +102,15 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
                         </ul>
                         <!-- exemple sans les { ! sinon ça exécute : render(controller('ApaStoryBundle:Story:listChapter')) -->
                    </li>
-\t\t   <li><a href=\"";
+\t\t   <li><a class=\"imgMenu imgMenu3\" href=\"";
         // line 48
         echo $this->env->getExtension('routing')->getPath("apa_story_characters");
         echo "\" title=\"Les personnages de l'Oetherium\">Personnages</a></li>
-\t\t   <li><a href=\"";
+\t\t   <li><a class=\"imgMenu\" href=\"";
         // line 49
         echo $this->env->getExtension('routing')->getPath("apa_generalPage_faq");
         echo "\" title=\"L'Oetherium répond à vos questions\">F.A.Q</a></li>
-\t\t   <li><a href=\"";
+\t\t   <li><a class=\"imgMenu\" href=\"";
         // line 50
         echo $this->env->getExtension('routing')->getPath("apa_generalPage_link");
         echo "\" title=\"Les sites affiliés à l'Oetherium\">Liens</a></li>
@@ -153,47 +153,45 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         
         <footer>
             <div id=\"leftCorner\">
-                <ul><li>Contactez nous : <br> mail helly et lucile?...</li></ul>
+                <ul>
+                    <li>Contact : hellypse@gmail.com</li>
+                    <li>Réalisation : Axelle Palermo, Hellypse, K.Zlovetch</li>
+                        <!-- Si on est connecté-->
+                        ";
+        // line 83
+        if ($this->env->getExtension('security')->isGranted("IS_AUTHENTICATED_REMEMBERED")) {
+            // line 84
+            echo "                            <!-- Si on est un admin-->
+                            ";
+            // line 85
+            if ($this->env->getExtension('security')->isGranted("ROLE_ADMIN")) {
+                // line 86
+                echo "                                <li><a class=\"link\" href=\"";
+                echo $this->env->getExtension('routing')->getPath("sonata_admin_dashboard");
+                echo "\">Panneau d'administration</a><a class=\"link\" href=\"";
+                echo $this->env->getExtension('routing')->getPath("fos_user_security_logout");
+                echo "\"> - Déconnexion</a></li>
+                            ";
+            }
+            // line 88
+            echo "                        <!-- Sinon-->
+                        ";
+        } else {
+            // line 90
+            echo "                        <li id=\"administration\">Administration</li>
+                </ul>
             </div>
             
             <div id=\"rightCorner\">
                 <ul>
                     <li><a class=\"underline\" href=\"";
-        // line 84
-        echo $this->env->getExtension('routing')->getPath("apa_generalPage_legalMention");
-        echo "\" title=\"Mentions légales\">Mentions légales</a></li>
-                    <li id=\"copyright\">© 2015, Héloïse Palermo – <span class=\"bold\">Tous droits réservés</span></li>
-                    <li>Réalisation : Axelle Palermo, Héloïse Palermo, Lucile???</li>
-    
-                    <!-- Si on est connecté-->
-                    ";
-        // line 89
-        if ($this->env->getExtension('security')->isGranted("IS_AUTHENTICATED_REMEMBERED")) {
-            // line 90
-            echo "                        <!-- Si on est un admin-->
-                        ";
-            // line 91
-            if ($this->env->getExtension('security')->isGranted("ROLE_ADMIN")) {
-                // line 92
-                echo "                            <li><a class=\"link\" href=\"";
-                echo $this->env->getExtension('routing')->getPath("sonata_admin_dashboard");
-                echo "\">Panneau d'administration</a><a class=\"link\" href=\"";
-                echo $this->env->getExtension('routing')->getPath("fos_user_security_logout");
-                echo "\"> - Déconnexion</a></li>
-                        ";
-            }
-            // line 94
-            echo "                        
-                        
-            
-                        <!-- Sinon-->
-                        ";
-        } else {
-            // line 99
-            echo "                        <li id=\"administration\">Administration</li>
+            // line 96
+            echo $this->env->getExtension('routing')->getPath("apa_generalPage_legalMention");
+            echo "\" title=\"Mentions légales\">Mentions légales</a></li>
+                    <li id=\"copyright\">© 2015, Héloïse Palermo – <span class=\"bold\">Tous droits réservés</span></li>                   
                ";
         }
-        // line 101
+        // line 99
         echo "               </ul>
             </div>
             <div class=\"clear\"></div>
@@ -201,11 +199,11 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         <!--on met le javascript à la fin si possible (performance)-->
         <!-- pour que ça marche en mode prod : php app/console cache:clear --env=prod ET php app/console assetic:dump --env=prod -->
         ";
-        // line 107
+        // line 105
         if (isset($context['assetic']['debug']) && $context['assetic']['debug']) {
             // asset "7a81978_0"
             $context["asset_url"] = isset($context['assetic']['use_controller']) && $context['assetic']['use_controller'] ? $this->env->getExtension('routing')->getPath("_assetic_7a81978_0") : $this->env->getExtension('assets')->getAssetUrl("js/7a81978_init_1.js");
-            // line 108
+            // line 106
             echo "            <script type=\"text/javascript\" src=\"";
             echo twig_escape_filter($this->env, (isset($context["asset_url"]) ? $context["asset_url"] : null), "html", null, true);
             echo "\"></script>
@@ -225,7 +223,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         ";
         }
         unset($context["asset_url"]);
-        // line 110
+        // line 108
         echo "    </body>
 </html>
 ";
@@ -315,6 +313,6 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
 
     public function getDebugInfo()
     {
-        return array (  302 => 71,  297 => 70,  292 => 62,  287 => 29,  282 => 16,  279 => 15,  275 => 13,  255 => 11,  251 => 10,  248 => 9,  245 => 8,  240 => 6,  235 => 4,  229 => 110,  209 => 108,  205 => 107,  197 => 101,  193 => 99,  186 => 94,  178 => 92,  176 => 91,  173 => 90,  171 => 89,  163 => 84,  149 => 72,  146 => 71,  144 => 70,  133 => 62,  128 => 60,  115 => 50,  111 => 49,  107 => 48,  99 => 43,  93 => 40,  87 => 37,  82 => 35,  78 => 34,  72 => 30,  70 => 29,  63 => 25,  59 => 24,  51 => 18,  49 => 15,  46 => 14,  44 => 8,  39 => 7,  37 => 6,  32 => 4,  27 => 1,);
+        return array (  300 => 71,  295 => 70,  290 => 62,  285 => 29,  280 => 16,  277 => 15,  273 => 13,  253 => 11,  249 => 10,  246 => 9,  243 => 8,  238 => 6,  233 => 4,  227 => 108,  207 => 106,  203 => 105,  195 => 99,  189 => 96,  181 => 90,  177 => 88,  169 => 86,  167 => 85,  164 => 84,  162 => 83,  149 => 72,  146 => 71,  144 => 70,  133 => 62,  128 => 60,  115 => 50,  111 => 49,  107 => 48,  99 => 43,  93 => 40,  87 => 37,  82 => 35,  78 => 34,  72 => 30,  70 => 29,  63 => 25,  59 => 24,  51 => 18,  49 => 15,  46 => 14,  44 => 8,  39 => 7,  37 => 6,  32 => 4,  27 => 1,);
     }
 }

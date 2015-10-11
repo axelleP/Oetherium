@@ -21,9 +21,9 @@ html, body {
 
 /* GENERALITE */
 #logo{
-    margin-top: 15%;
-    width: 250px;
-    height: 205px;
+    margin-top: 10%;
+    width: 214px;
+    height: 175px;
     max-width: 100%;
     background-position: center;
 }
@@ -127,6 +127,7 @@ hr{
     width: 22%;
     min-width: 10%; /* Permet de réduire la fenêtre sans conflit css */    
     min-height: 100%;
+    height: 129%;
     margin: 0 2% 0 3%;
     background-color: #231d18;
     
@@ -142,23 +143,54 @@ hr{
 
 #borderLeftBook{
     background-image: url('../img/border-left-book.png');
+    background-repeat: repeat; 
     float: left;
     width: 7%;
-    height: 101%;
+    height: 130%;
+    margin-right: -1%;
 }
 #borderRightBook{
     background-image: url('../img/border-right-book.png');
+    background-repeat: repeat-y;
     float: left;
-    width: 5%;
-    height: 101%;
+    width: 6%;
+    height: 130%;
+    margin-left: -1%;
 }
 #middleFrame{
     float: left;
     overflow-y : auto;
     width: 50%;
-    height: 101%;
+    height: 130%;
     min-width: 50%; /* Permet de réduire la fenêtre sans conflit css */ 
     background-image:  url('../img/background-book.png');
+}
+
+#middleFrame::-webkit-scrollbar-track{
+    -webkit-box-shadow: inset 0 0 6px #a1714d;
+    background-color: #f2ddb0;
+}
+
+#middleFrame::-webkit-scrollbar{
+    width: 1.2%;
+    background-color: #F5F5F5;
+}
+
+#middleFrame::-webkit-scrollbar-thumb{
+    background-color: #d0b38b;
+}
+#middleFrame::-moz-scrollbar-track{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+#middleFrame::-moz-scrollbar{
+    width: 1.2%;
+    background-color: #F5F5F5;
+}
+
+#middleFrame::-moz-scrollbar-thumb{
+    background-color: #000000;
 }
 /* à mettre dans le responsive design */
 #middleFrame2{
@@ -183,7 +215,7 @@ hr{
 #rightFrame{
     float: left;
     width: 3%;
-    height: 100%;
+    height: 129%;
     min-width: 3%; /* Permet de réduire la fenêtre sans conflit css */
     right: 0;
     margin: 0 0 0 3.7%;
@@ -413,38 +445,112 @@ ul.zoom{
 /* RIGHT */
 .firstButton{
     margin-top: 130%;
-    background-color : #f8e8c0;
-    border: outset 1px white;
     height: auto;
     width: 20px;
     cursor: pointer;
     padding: 1%;
+    /* cacher le texte */
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    /* fin cacher le texte */
 }
 .button {
     margin-top: 30%;
-    background-color : #f8e8c0;
-    border: outset 1px white;
     height: auto;
     width: 20px;
     cursor: pointer;
     padding: 1%;
+    /* cacher le texte */
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    /* fin cacher le texte */
 }
-.button2:active {
-    border: inset 1px white;
+.buttonFontSize{
+    background-image:  url('../img/reseaux-sociaux/txtSize-button.gif');
+    height: 30px;
+    width: 30px;
 }
+.buttonFontSize:hover{
+    background-image:  url('../img/reseaux-sociaux/txtSize-button-hover.gif');
+    height: 30px;
+    width: 30px;
+}
+.buttonTextColor{
+    background-image:  url('../img/reseaux-sociaux/color-button.gif');
+    height: 30px;
+    width: 30px;
+}
+.buttonTextColor:hover{
+    background-image:  url('../img/reseaux-sociaux/color-button-hover.gif');
+    height: 30px;
+    width: 30px;
+}
+
+.buttonTextDisplay{
+    background-image:  url('../img/reseaux-sociaux/txtCache-button.gif');
+    height: 30px;
+    width: 30px;
+}
+.buttonTextDisplay:hover{
+    background-image:  url('../img/reseaux-sociaux/txtCache-button-hover.gif');
+    height: 30px;
+    width: 30px;
+}
+
+/* social network*/
 .buttonSocialNetwork{
     display: block;
     width: 25px;
     height: 25px;
-    background-color: white;
     margin-top : 30%;
+    /* cacher le texte */
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    /* fin cacher le texte */
 }
 .buttonSocialNetworkFirst{
     display: block;
     width: 25px;
     height: 25px;
-    background-color: white;
     margin-top: 200%;
+    /* cacher le texte */
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    /* fin cacher le texte */
+}
+.twitterButton{
+    background-image:  url('../img/reseaux-sociaux/twitter-button.gif');
+    height: 30px;
+    width: 30px;
+}
+.twitterButton:hover{
+    background-image:  url('../img/reseaux-sociaux/twitter-button-hover.gif');
+    height: 30px;
+    width: 30px;
+}
+.facebookButton{
+    background-image:  url('../img/reseaux-sociaux/fb-button.gif');
+    height: 30px;
+    width: 30px;
+}
+.facebookButton:hover{
+    background-image:  url('../img/reseaux-sociaux/fb-button-hover.gif');
+    height: 30px;
+    width: 30px;
+}
+.googleButton{
+    background-image:  url('../img/reseaux-sociaux/google-button.gif');
+    height: 30px;
+    width: 30px;
+}
+.googleButton:hover{
+    background-image:  url('../img/reseaux-sociaux/google-button-hover.gif');
+    height: 30px;
+    width: 30px;
 }
 /* END RIGHT */
 
@@ -452,6 +558,7 @@ ul.zoom{
 footer{
     border: solid 1px #40382b;
     background-color: #231d18;
+    font-size: 0.8em;
 }
 footer .link{  
     color : #f8e8c0;
@@ -461,9 +568,8 @@ footer .link:hover{
 }
 #rightCorner{
     float: left;
-    width: 35%;
-    margin-left: 15%;
-     text-align: left;
+    width: 25%;
+    text-align: left;
     list-style: none;
     color : #f8e8c0;
 }
@@ -478,8 +584,8 @@ footer .link:hover{
 }
 #leftCorner{  
     float: left;
-    width: 15%;
-    margin-left: 30%;
+    width: 35%;
+    margin-left: 25%;
     text-align: left;
     font-size: 1.15em;
     list-style: none;
@@ -492,7 +598,6 @@ footer .link:hover{
 }
 /* Copyright */
 #copyright {
-    font-size: 0.9em;
     color: #f8e8c0;
 }
 /* FIN BOTTOM */

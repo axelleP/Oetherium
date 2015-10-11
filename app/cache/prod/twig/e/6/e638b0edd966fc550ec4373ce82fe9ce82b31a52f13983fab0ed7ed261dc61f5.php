@@ -105,20 +105,20 @@ class __TwigTemplate_e638b0edd966fc550ec4373ce82fe9ce82b31a52f13983fab0ed7ed261d
     public function block_socialNetwork($context, array $blocks = array())
     {
         // line 33
-        echo "    <a class=\"buttonSocialNetworkFirst centerPage\" target=\"_blank\" title=\"Twitter\" href=\"http://twitter.com/share?url=";
+        echo "    <a class=\"buttonSocialNetworkFirst centerPage twitterButton\" target=\"_blank\" title=\"Twitter\" href=\"http://twitter.com/share?url=";
         echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : null), "request", array()), "uri", array()), "html", null, true);
         echo "&amp;text=Les%20chapitres%20de%20l'Oetherium\">
         <i class=\"fa fa-twitter fa-lg tw\">t</i>
     </a>
     
-    <a class=\"buttonSocialNetwork centerPage\" target=\"_blank\" title=\"Facebook\" href=\"http://www.facebook.com/sharer.php?u=";
+    <a class=\"buttonSocialNetwork centerPage facebookButton\" target=\"_blank\" title=\"Facebook\" href=\"http://www.facebook.com/sharer.php?u=";
         // line 37
         echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : null), "request", array()), "uri", array()), "html", null, true);
         echo "&amp;t=Les%20chapitres%20de%20l'Oetherium\">
         <i class=\"fa fa-facebook fa-lg fb\">f</i>
     </a>
     
-    <a class=\"buttonSocialNetwork centerPage\" target=\"_blank\" title=\"Google Plus\" href=\"https://plusone.google.com/_/+1/confirm?hl=en&amp;url=";
+    <a class=\"buttonSocialNetwork centerPage googleButton\" target=\"_blank\" title=\"Google Plus\" href=\"https://plusone.google.com/_/+1/confirm?hl=en&amp;url=";
         // line 41
         echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : null), "request", array()), "uri", array()), "html", null, true);
         echo "\">

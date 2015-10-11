@@ -70,17 +70,16 @@
 
 {% block socialNetwork %}
     {% for page in selectedPage %}
-        <a class="buttonSocialNetworkFirst centerPage" target="_blank" title="Twitter" href="http://twitter.com/share?url={{ app.request.uri }}&amp;text={{ page.title|replace({(' '):'%20'}) }}">
+        <a class="buttonSocialNetworkFirst centerPage twitterButton" target="_blank" title="Twitter" href="http://twitter.com/share?url={{ app.request.uri }}&amp;text={{ page.title|replace({(' '):'%20'}) }}">
             <i class="fa fa-twitter fa-lg tw">t</i>
         </a>
         
-        <a class="buttonSocialNetwork centerPage" target="_blank" title="Facebook" href="http://www.facebook.com/sharer.php?u={{ app.request.uri }}&amp;t={{ page.title|replace({(' '):'%20'}) }}">
+        <a class="buttonSocialNetwork centerPage facebookButton" target="_blank" title="Facebook" href="http://www.facebook.com/sharer.php?u={{ app.request.uri }}&amp;t={{ page.title|replace({(' '):'%20'}) }}">
             <i class="fa fa-facebook fa-lg fb">f</i>
         </a>
         
-        <a class="buttonSocialNetwork centerPage" target="_blank" title="Google Plus" href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url={{ app.request.uri }}">
+        <a class="buttonSocialNetwork centerPage googleButton" target="_blank" title="Google Plus" href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url={{ app.request.uri }}">
             <i class="fa fa-google-plus fa-lg google">g</i>
         </a>
-        
     {% endfor %}
 {% endblock %}

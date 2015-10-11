@@ -560,7 +560,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getAssetic_Filter_YuiCssService()
     {
-        $this->services['assetic.filter.yui_css'] = $instance = new \Assetic\Filter\Yui\CssCompressorFilter(($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'), 'C:\\Program Files (x86)\\Java\\jre1.8.0_51\\bin\\java.exe');
+        $this->services['assetic.filter.yui_css'] = $instance = new \Assetic\Filter\Yui\CssCompressorFilter(($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'), 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe');
 
         $instance->setCharset('UTF-8');
         $instance->setTimeout(NULL);
@@ -580,7 +580,7 @@ class appDevDebugProjectContainer extends Container
      */
     protected function getAssetic_Filter_YuiJsService()
     {
-        $this->services['assetic.filter.yui_js'] = $instance = new \Assetic\Filter\Yui\JsCompressorFilter(($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'), 'C:\\Program Files (x86)\\Java\\jre1.8.0_51\\bin\\java.exe');
+        $this->services['assetic.filter.yui_js'] = $instance = new \Assetic\Filter\Yui\JsCompressorFilter(($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'), 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe');
 
         $instance->setCharset('UTF-8');
         $instance->setTimeout(NULL);
@@ -886,7 +886,7 @@ class appDevDebugProjectContainer extends Container
         $c->addEventSubscriber(new \FOS\UserBundle\Doctrine\Orm\UserListener($this));
         $c->addEventListener(array(0 => 'loadClassMetadata'), $this->get('doctrine.orm.default_listeners.attach_entity_listeners'));
 
-        return $this->services['doctrine.dbal.default_connection'] = $this->get('doctrine.dbal.connection_factory')->createConnection(array('driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => NULL, 'dbname' => 'oetherium', 'user' => 'root', 'password' => NULL, 'charset' => 'UTF8', 'driverOptions' => array()), $b, $c, array());
+        return $this->services['doctrine.dbal.default_connection'] = $this->get('doctrine.dbal.connection_factory')->createConnection(array('driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'port' => NULL, 'dbname' => 'oetherium', 'user' => 'admin_oetherium', 'password' => 'admin', 'charset' => 'UTF8', 'driverOptions' => array()), $b, $c, array());
     }
 
     /**
@@ -3304,7 +3304,7 @@ class appDevDebugProjectContainer extends Container
         $p = new \Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener($b, $g, $this->get('security.authentication.session_strategy'), $k, 'main', $n, $o, array('check_path' => 'fos_user_security_check', 'use_forward' => false, 'require_previous_session' => true, 'username_parameter' => '_username', 'password_parameter' => '_password', 'csrf_parameter' => '_csrf_token', 'intention' => 'authenticate', 'post_only' => true), $a, $d, NULL);
         $p->setRememberMeServices($l);
 
-        return $this->services['security.firewall.map.context.main'] = new \Symfony\Bundle\SecurityBundle\Security\FirewallContext(array(0 => new \Symfony\Component\Security\Http\Firewall\ChannelListener($i, new \Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint(80, 443), $a), 1 => new \Symfony\Component\Security\Http\Firewall\ContextListener($b, array(0 => $j, 1 => $c), 'main', $a, $d), 2 => $m, 3 => $p, 4 => new \Symfony\Component\Security\Http\Firewall\RememberMeListener($b, $l, $g, $a, $d, true), 5 => new \Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener($b, '55de19c63c7be5.00589067', $a, $g), 6 => new \Symfony\Component\Security\Http\Firewall\AccessListener($b, $this->get('security.access.decision_manager'), $i, $g)), new \Symfony\Component\Security\Http\Firewall\ExceptionListener($b, $this->get('security.authentication.trust_resolver'), $k, 'main', new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint($f, $k, 'fos_user_security_login', false), NULL, NULL, $a));
+        return $this->services['security.firewall.map.context.main'] = new \Symfony\Bundle\SecurityBundle\Security\FirewallContext(array(0 => new \Symfony\Component\Security\Http\Firewall\ChannelListener($i, new \Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint(80, 443), $a), 1 => new \Symfony\Component\Security\Http\Firewall\ContextListener($b, array(0 => $j, 1 => $c), 'main', $a, $d), 2 => $m, 3 => $p, 4 => new \Symfony\Component\Security\Http\Firewall\RememberMeListener($b, $l, $g, $a, $d, true), 5 => new \Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener($b, '560939e5deef75.70592908', $a, $g), 6 => new \Symfony\Component\Security\Http\Firewall\AccessListener($b, $this->get('security.access.decision_manager'), $i, $g)), new \Symfony\Component\Security\Http\Firewall\ExceptionListener($b, $this->get('security.authentication.trust_resolver'), $k, 'main', new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint($f, $k, 'fos_user_security_login', false), NULL, NULL, $a));
     }
 
     /**
@@ -6842,7 +6842,7 @@ class appDevDebugProjectContainer extends Container
     {
         $a = $this->get('security.user_checker');
 
-        $this->services['security.authentication.manager'] = $instance = new \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager(array(0 => new \Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider($this->get('fos_user.user_provider.username'), $a, 'main', $this->get('security.encoder_factory'), true), 1 => new \Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider($a, 'chouchou', 'main'), 2 => new \Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider('55de19c63c7be5.00589067')), true);
+        $this->services['security.authentication.manager'] = $instance = new \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager(array(0 => new \Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider($this->get('fos_user.user_provider.username'), $a, 'main', $this->get('security.encoder_factory'), true), 1 => new \Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider($a, 'chouchou', 'main'), 2 => new \Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider('560939e5deef75.70592908')), true);
 
         $instance->setEventDispatcher($this->get('debug.event_dispatcher'));
 
@@ -7106,8 +7106,8 @@ class appDevDebugProjectContainer extends Container
             'database_host' => '127.0.0.1',
             'database_port' => NULL,
             'database_name' => 'oetherium',
-            'database_user' => 'root',
-            'database_password' => NULL,
+            'database_user' => 'admin_oetherium',
+            'database_password' => 'admin',
             'mailer_transport' => 'smtp',
             'mailer_host' => '127.0.0.1',
             'mailer_user' => NULL,
@@ -7556,13 +7556,13 @@ class appDevDebugProjectContainer extends Container
             'assetic.variables' => array(
 
             ),
-            'assetic.java.bin' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_51\\bin\\java.exe',
+            'assetic.java.bin' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe',
             'assetic.node.bin' => '/usr/bin/node',
             'assetic.ruby.bin' => '/usr/bin/ruby',
             'assetic.sass.bin' => '/usr/bin/sass',
             'assetic.filter.cssrewrite.class' => 'Assetic\\Filter\\CssRewriteFilter',
             'assetic.filter.yui_js.class' => 'Assetic\\Filter\\Yui\\JsCompressorFilter',
-            'assetic.filter.yui_js.java' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_51\\bin\\java.exe',
+            'assetic.filter.yui_js.java' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe',
             'assetic.filter.yui_js.jar' => ($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'),
             'assetic.filter.yui_js.charset' => 'UTF-8',
             'assetic.filter.yui_js.stacksize' => NULL,
@@ -7572,7 +7572,7 @@ class appDevDebugProjectContainer extends Container
             'assetic.filter.yui_js.disable_optimizations' => NULL,
             'assetic.filter.yui_js.linebreak' => NULL,
             'assetic.filter.yui_css.class' => 'Assetic\\Filter\\Yui\\CssCompressorFilter',
-            'assetic.filter.yui_css.java' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_51\\bin\\java.exe',
+            'assetic.filter.yui_css.java' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe',
             'assetic.filter.yui_css.jar' => ($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'),
             'assetic.filter.yui_css.charset' => 'UTF-8',
             'assetic.filter.yui_css.stacksize' => NULL,

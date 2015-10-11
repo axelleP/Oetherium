@@ -17,4 +17,12 @@ $(document).ready(function() {
      $('.buttonFontSize').bind('click',(changeFontSize));
      $('.buttonTextColor').bind('click',(changeTextColor));
      $('.buttonTextDisplay').bind('click',(changeTextDisplay));
+        
+     $( "#navigation ul.firstUl li a" ).each(function() {
+       if(this.href == window.location.href){
+            $target = $(this).attr('class');
+            $(this).removeClass($(this).attr('class'))
+            $(this).addClass($target + "Current");
+       }
+     });
 });

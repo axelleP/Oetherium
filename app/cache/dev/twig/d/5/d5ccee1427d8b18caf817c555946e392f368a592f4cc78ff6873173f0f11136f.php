@@ -206,7 +206,7 @@ $context["page"], "title", array()) == "Liens")) {
         $context['_seq'] = twig_ensure_traversable((isset($context["selectedPage"]) ? $context["selectedPage"] : $this->getContext($context, "selectedPage")));
         foreach ($context['_seq'] as $context["_key"] => $context["page"]) {
             // line 73
-            echo "        <a class=\"buttonSocialNetworkFirst centerPage\" target=\"_blank\" title=\"Twitter\" href=\"http://twitter.com/share?url=";
+            echo "        <a class=\"buttonSocialNetworkFirst centerPage twitterButton\" target=\"_blank\" title=\"Twitter\" href=\"http://twitter.com/share?url=";
             echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : $this->getContext($context, "app")), "request", array()), "uri", array()), "html", null, true);
             echo "&amp;text=";
             echo twig_escape_filter($this->env, strtr($this->getAttribute($context["page"], "title", array()), array(" " => "%20")), "html", null, true);
@@ -214,7 +214,7 @@ $context["page"], "title", array()) == "Liens")) {
             <i class=\"fa fa-twitter fa-lg tw\">t</i>
         </a>
         
-        <a class=\"buttonSocialNetwork centerPage\" target=\"_blank\" title=\"Facebook\" href=\"http://www.facebook.com/sharer.php?u=";
+        <a class=\"buttonSocialNetwork centerPage facebookButton\" target=\"_blank\" title=\"Facebook\" href=\"http://www.facebook.com/sharer.php?u=";
             // line 77
             echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : $this->getContext($context, "app")), "request", array()), "uri", array()), "html", null, true);
             echo "&amp;t=";
@@ -223,13 +223,12 @@ $context["page"], "title", array()) == "Liens")) {
             <i class=\"fa fa-facebook fa-lg fb\">f</i>
         </a>
         
-        <a class=\"buttonSocialNetwork centerPage\" target=\"_blank\" title=\"Google Plus\" href=\"https://plusone.google.com/_/+1/confirm?hl=en&amp;url=";
+        <a class=\"buttonSocialNetwork centerPage googleButton\" target=\"_blank\" title=\"Google Plus\" href=\"https://plusone.google.com/_/+1/confirm?hl=en&amp;url=";
             // line 81
             echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : $this->getContext($context, "app")), "request", array()), "uri", array()), "html", null, true);
             echo "\">
             <i class=\"fa fa-google-plus fa-lg google\">g</i>
         </a>
-        
     ";
         }
         $_parent = $context['_parent'];

@@ -10,29 +10,41 @@
     list-style-type : none;
 }
 
-/* Blocs  */
-#navigation ul li{
-    margin-top: 5%;
-}
-
-/* Liens */
-#navigation ul a{
-    font-size: 1.3em;
+/* Blocs - Textes */
+#navigation ul li a{
+    display: block;
+    background-position: center;
+    height: 49px;
+    width: auto;
+    line-height: 223%;
+    margin-bottom: 3%;
+    font-size: 1.75em;
+    font-family: Georgia, "Arial", "Trebuchet MS", serif;
     color: #5c4f37; 
     text-decoration: none;
-    border: solid 1px #5c4f37;
-    background-color: #f8e8c0;
-    padding: 2%;
-    display: block;
-    width: auto;
-    margin: 1% 17.5% 0 17.5%;
+    text-indent: 0.6em;   
+}
+/* bloc visible du sous menu */
+#navigation ul a.imgMenu2{
+    margin-bottom: 0;
+}
+/* bloc apres le bloc visible du sous menu */
+#navigation ul a.imgMenu3{
+    margin-top: 3%;
 }
 
-#navigation ul a:hover{
-    color: #f8e8c0;
-    border: outset 1px #f8e8c0;
-    background-color: #231d18;
-
+/* Images  */
+#navigation .imgMenu{
+    background-image: url('../img/nav-close.png');
+    background-repeat: no-repeat;
+}
+#navigation .imgMenu:hover{
+    background-image: url('../img/nav-open.png');
+    background-repeat: no-repeat;
+}
+#navigation .imgMenuCurrent{
+    background-image: url('../img/nav-open.png');
+    background-repeat: no-repeat;
 }
 
 /* SOUS MENU */
@@ -45,16 +57,19 @@
     transition: 1s max-height 0.1s;
 }
 
-/* Enleve le margin de trop */
-#navigation ul.firstUl li ul li {
-    margin: -2% 0 0 0;
-}
-
 /* Affiche le sous menu */
 #navigation ul li:hover ul {
     display: block;
     position: relative;
     max-height: 13em;
+}
+
+/* Blocs */
+#navigation ul.firstUl li ul li {
+    display: block;
+    background-position: center;
+    height: 49px;
+    width: auto;
 }
 /* FIN SOUS MENU */
 

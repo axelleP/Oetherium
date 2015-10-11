@@ -105,7 +105,7 @@ class __TwigTemplate_4913ea8685bc1dd69d28fb3ff7e4ba8f404c1f37a848a06886be44ee5c5
     public function block_socialNetwork($context, array $blocks = array())
     {
         // line 35
-        echo "    <a class=\"buttonSocialNetworkFirst centerPage\" target=\"_blank\" title=\"Twitter\" href=\"http://twitter.com/share?url=";
+        echo "    <a class=\"buttonSocialNetworkFirst centerPage twitterButton\" target=\"_blank\" title=\"Twitter\" href=\"http://twitter.com/share?url=";
         echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : null), "request", array()), "uri", array()), "html", null, true);
         echo "&amp;text=Texte%20annexe%20«";
         echo twig_escape_filter($this->env, strtr($this->getAttribute((isset($context["annexText"]) ? $context["annexText"] : null), "title", array()), array(" " => "%20")), "html", null, true);
@@ -113,7 +113,7 @@ class __TwigTemplate_4913ea8685bc1dd69d28fb3ff7e4ba8f404c1f37a848a06886be44ee5c5
         <i class=\"fa fa-twitter fa-lg tw\">t</i>
     </a>
     
-    <a class=\"buttonSocialNetwork centerPage\" target=\"_blank\" title=\"Facebook\" href=\"http://www.facebook.com/sharer.php?u=";
+    <a class=\"buttonSocialNetwork centerPage facebookButton\" target=\"_blank\" title=\"Facebook\" href=\"http://www.facebook.com/sharer.php?u=";
         // line 39
         echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : null), "request", array()), "uri", array()), "html", null, true);
         echo "&amp;t=Texte%20annexe%20«";
@@ -122,7 +122,7 @@ class __TwigTemplate_4913ea8685bc1dd69d28fb3ff7e4ba8f404c1f37a848a06886be44ee5c5
         <i class=\"fa fa-facebook fa-lg fb\">f</i>
     </a>
     
-    <a class=\"buttonSocialNetwork centerPage\" target=\"_blank\" title=\"Google Plus\" href=\"https://plusone.google.com/_/+1/confirm?hl=en&amp;url=";
+    <a class=\"buttonSocialNetwork centerPage googleButton\" target=\"_blank\" title=\"Google Plus\" href=\"https://plusone.google.com/_/+1/confirm?hl=en&amp;url=";
         // line 43
         echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : null), "request", array()), "uri", array()), "html", null, true);
         echo "\">
