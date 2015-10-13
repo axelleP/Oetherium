@@ -141,26 +141,31 @@ hr{
     border-left: double #40382b 8px;
 }
 
+#book{
+    float: left;
+    width: 63%;
+    height: 100%;
+}
 #borderLeftBook{
     background-image: url('../img/border-left-book.png');
-    background-repeat: repeat; 
+    background-repeat: no-repeat;
     float: left;
-    width: 7%;
+    width: 9%;
     height: 130%;
-    margin-right: -1%;
+    margin-right: -1px;
 }
 #borderRightBook{
     background-image: url('../img/border-right-book.png');
-    background-repeat: repeat-y;
+    background-repeat: no-repeat;
     float: left;
-    width: 6%;
+    width: 9%;
     height: 130%;
-    margin-left: -1%;
+    margin-left: -1px;
 }
 #middleFrame{
     float: left;
     overflow-y : auto;
-    width: 50%;
+    width: 82%;
     height: 130%;
     min-width: 50%; /* Permet de réduire la fenêtre sans conflit css */ 
     background-image:  url('../img/background-book.png');

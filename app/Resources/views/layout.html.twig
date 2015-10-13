@@ -37,10 +37,10 @@
                         <a class="imgMenu imgMenu2 " href="{{ path('apa_story_chapter',{'numero':'1'}) }}" title="L'histoire de l'Oetherium">Histoire</a>
                         <ul>
                             <li>
-                                <a class="imgMenu" href="{{ path('apa_story_chapters') }}" title="Les chapitres de l'Oetherium">Chapitres</a>
+                                <a class="imgSubMenu" href="{{ path('apa_story_chapters') }}" title="Les chapitres de l'Oetherium">Chapitres</a>
                             </li>
                             <li>
-                                <a class="imgMenu" href="{{ path('apa_story_annexTexts',{'page':1}) }}" title="Les textes annexes de l'Oetherium">Textes annexes</a>
+                                <a class="imgSubMenu" href="{{ path('apa_story_annexTexts',{'page':1}) }}" title="Les textes annexes de l'Oetherium">Textes annexes</a>
                             </li>
                         </ul>
                         <!-- exemple sans les { ! sinon ça exécute : render(controller('ApaStoryBundle:Story:listChapter')) -->
@@ -52,16 +52,18 @@
             </nav>
 	</div>
 	
-        <div id="borderLeftBook"></div>
-	<div id="middleFrame">
-            <div id="formLogin">
-                <input type="button" class="closeForm" value="X">
-                <div class="clear"></div>
-                {{ render(controller('FOSUserBundle:Security:login')) }}
+        <div id="book">
+            <div id="borderLeftBook"></div>
+            <div id="middleFrame">
+                <div id="formLogin">
+                    <input type="button" class="closeForm" value="X">
+                    <div class="clear"></div>
+                    {{ render(controller('FOSUserBundle:Security:login')) }}
+                </div>
+                {% block body %}{% endblock %}  
             </div>
-	    {% block body %}{% endblock %}  
+            <div id="borderRightBook"></div>
         </div>
-        <div id="borderRightBook"></div>
 	
 	<div id="rightFrame">
             <a class="link" href="#" title="Grossir la police"><p class="firstButton buttonFontSize centerPage">p</p></a>
@@ -88,6 +90,7 @@
                         <!-- Sinon-->
                         {% else %}
                         <li id="administration">Administration</li>
+                        {% endif %}
                 </ul>
             </div>
             
@@ -95,7 +98,6 @@
                 <ul>
                     <li><a class="underline" href="{{ path('apa_generalPage_legalMention') }}" title="Mentions légales">Mentions légales</a></li>
                     <li id="copyright">© 2015, Héloïse Palermo – <span class="bold">Tous droits réservés</span></li>                   
-               {% endif %}
                </ul>
             </div>
             <div class="clear"></div>

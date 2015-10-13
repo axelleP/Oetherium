@@ -46,6 +46,14 @@
     background-image: url('../img/nav-open.png');
     background-repeat: no-repeat;
 }
+#navigation .imgSubMenu{
+    background-image: url('../img/sub-nav.png');
+    background-repeat: no-repeat;
+}
+#navigation .imgSubMenuCurrent{
+    background-image: url('../img/sub-nav.png');
+    background-repeat: no-repeat;
+}
 
 /* SOUS MENU */
 /* Cache le sous menu */
@@ -68,8 +76,9 @@
 #navigation ul.firstUl li ul li {
     display: block;
     background-position: center;
-    height: 49px;
+    height: 38px;
     width: auto;
+    margin-bottom: 2%;
 }
 /* FIN SOUS MENU */
 
