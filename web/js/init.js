@@ -20,8 +20,8 @@ $(document).ready(function() {
         
      $( "#navigation ul.firstUl li a" ).each(function() {
        if(this.href == window.location.href){
-            $target = $(this).attr('class');
-            $(this).removeClass($(this).attr('class'))
+            $target = 'imgMenu';
+            $(this).removeClass('imgMenu')
             $(this).addClass($target + "Current");
        }
      });

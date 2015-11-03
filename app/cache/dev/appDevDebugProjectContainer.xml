@@ -478,13 +478,13 @@
     <parameter key="assetic.read_from">C:\wamp\www\Oetherium\app/../web</parameter>
     <parameter key="assetic.write_to">C:\wamp\www\Oetherium\app/../web</parameter>
     <parameter key="assetic.variables" type="collection"/>
-    <parameter key="assetic.java.bin">C:\Program Files (x86)\Java\jre1.8.0_60\bin\java.exe</parameter>
+    <parameter key="assetic.java.bin">C:\Program Files (x86)\Java\jre1.8.0_65\bin\java.exe</parameter>
     <parameter key="assetic.node.bin">/usr/bin/node</parameter>
     <parameter key="assetic.ruby.bin">/usr/bin/ruby</parameter>
     <parameter key="assetic.sass.bin">/usr/bin/sass</parameter>
     <parameter key="assetic.filter.cssrewrite.class">Assetic\Filter\CssRewriteFilter</parameter>
     <parameter key="assetic.filter.yui_js.class">Assetic\Filter\Yui\JsCompressorFilter</parameter>
-    <parameter key="assetic.filter.yui_js.java">C:\Program Files (x86)\Java\jre1.8.0_60\bin\java.exe</parameter>
+    <parameter key="assetic.filter.yui_js.java">C:\Program Files (x86)\Java\jre1.8.0_65\bin\java.exe</parameter>
     <parameter key="assetic.filter.yui_js.jar">C:\wamp\www\Oetherium\app/Resources/java/yuicompressor-2.4.7.jar</parameter>
     <parameter key="assetic.filter.yui_js.charset">UTF-8</parameter>
     <parameter key="assetic.filter.yui_js.stacksize">null</parameter>
@@ -494,7 +494,7 @@
     <parameter key="assetic.filter.yui_js.disable_optimizations">null</parameter>
     <parameter key="assetic.filter.yui_js.linebreak">null</parameter>
     <parameter key="assetic.filter.yui_css.class">Assetic\Filter\Yui\CssCompressorFilter</parameter>
-    <parameter key="assetic.filter.yui_css.java">C:\Program Files (x86)\Java\jre1.8.0_60\bin\java.exe</parameter>
+    <parameter key="assetic.filter.yui_css.java">C:\Program Files (x86)\Java\jre1.8.0_65\bin\java.exe</parameter>
     <parameter key="assetic.filter.yui_css.jar">C:\wamp\www\Oetherium\app/Resources/java/yuicompressor-2.4.7.jar</parameter>
     <parameter key="assetic.filter.yui_css.charset">UTF-8</parameter>
     <parameter key="assetic.filter.yui_css.stacksize">null</parameter>
@@ -3896,7 +3896,7 @@
         </argument>
         <argument type="service">
           <service class="Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider" public="false">
-            <argument>560939e5deef75.70592908</argument>
+            <argument>5638b68752fe12.25403456</argument>
           </service>
         </argument>
       </argument>
@@ -4247,7 +4247,7 @@
         <argument type="service">
           <service class="Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener" public="false">
             <argument type="service" id="security.context"/>
-            <argument>560939e5deef75.70592908</argument>
+            <argument>5638b68752fe12.25403456</argument>
             <argument type="service" id="monolog.logger.security" on-invalid="null"/>
             <argument type="service" id="security.authentication.manager"/>
           </service>
@@ -4697,7 +4697,7 @@
     <service id="assetic.filter.yui_js" class="Assetic\Filter\Yui\JsCompressorFilter">
       <tag name="assetic.filter" alias="yui_js"/>
       <argument>C:\wamp\www\Oetherium\app/Resources/java/yuicompressor-2.4.7.jar</argument>
-      <argument>C:\Program Files (x86)\Java\jre1.8.0_60\bin\java.exe</argument>
+      <argument>C:\Program Files (x86)\Java\jre1.8.0_65\bin\java.exe</argument>
       <call method="setCharset">
         <argument>UTF-8</argument>
       </call>
@@ -4723,7 +4723,7 @@
     <service id="assetic.filter.yui_css" class="Assetic\Filter\Yui\CssCompressorFilter">
       <tag name="assetic.filter" alias="yui_css"/>
       <argument>C:\wamp\www\Oetherium\app/Resources/java/yuicompressor-2.4.7.jar</argument>
-      <argument>C:\Program Files (x86)\Java\jre1.8.0_60\bin\java.exe</argument>
+      <argument>C:\Program Files (x86)\Java\jre1.8.0_65\bin\java.exe</argument>
       <call method="setCharset">
         <argument>UTF-8</argument>
       </call>

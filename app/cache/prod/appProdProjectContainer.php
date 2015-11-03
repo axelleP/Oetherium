@@ -461,7 +461,7 @@ class appProdProjectContainer extends Container
     }
     protected function getAssetic_Filter_YuiCssService()
     {
-        $this->services['assetic.filter.yui_css'] = $instance = new \Assetic\Filter\Yui\CssCompressorFilter(($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'), 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe');
+        $this->services['assetic.filter.yui_css'] = $instance = new \Assetic\Filter\Yui\CssCompressorFilter(($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'), 'C:\\Program Files (x86)\\Java\\jre1.8.0_65\\bin\\java.exe');
         $instance->setCharset('UTF-8');
         $instance->setTimeout(NULL);
         $instance->setStackSize(NULL);
@@ -470,7 +470,7 @@ class appProdProjectContainer extends Container
     }
     protected function getAssetic_Filter_YuiJsService()
     {
-        $this->services['assetic.filter.yui_js'] = $instance = new \Assetic\Filter\Yui\JsCompressorFilter(($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'), 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe');
+        $this->services['assetic.filter.yui_js'] = $instance = new \Assetic\Filter\Yui\JsCompressorFilter(($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'), 'C:\\Program Files (x86)\\Java\\jre1.8.0_65\\bin\\java.exe');
         $instance->setCharset('UTF-8');
         $instance->setTimeout(NULL);
         $instance->setStackSize(NULL);
@@ -1322,7 +1322,7 @@ class appProdProjectContainer extends Container
         $o->setOptions(array('login_path' => 'fos_user_security_login', 'failure_path' => NULL, 'failure_forward' => false, 'failure_path_parameter' => '_failure_path'));
         $p = new \Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener($b, $g, $this->get('security.authentication.session_strategy'), $k, 'main', $n, $o, array('check_path' => 'fos_user_security_check', 'use_forward' => false, 'require_previous_session' => true, 'username_parameter' => '_username', 'password_parameter' => '_password', 'csrf_parameter' => '_csrf_token', 'intention' => 'authenticate', 'post_only' => true), $a, $d, NULL);
         $p->setRememberMeServices($l);
-        return $this->services['security.firewall.map.context.main'] = new \Symfony\Bundle\SecurityBundle\Security\FirewallContext(array(0 => new \Symfony\Component\Security\Http\Firewall\ChannelListener($i, new \Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint(80, 443), $a), 1 => new \Symfony\Component\Security\Http\Firewall\ContextListener($b, array(0 => $j, 1 => $c), 'main', $a, $d), 2 => $m, 3 => $p, 4 => new \Symfony\Component\Security\Http\Firewall\RememberMeListener($b, $l, $g, $a, $d, true), 5 => new \Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener($b, '560939fb4f7d51.39819694', $a, $g), 6 => new \Symfony\Component\Security\Http\Firewall\AccessListener($b, $this->get('security.access.decision_manager'), $i, $g)), new \Symfony\Component\Security\Http\Firewall\ExceptionListener($b, $this->get('security.authentication.trust_resolver'), $k, 'main', new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint($f, $k, 'fos_user_security_login', false), NULL, NULL, $a));
+        return $this->services['security.firewall.map.context.main'] = new \Symfony\Bundle\SecurityBundle\Security\FirewallContext(array(0 => new \Symfony\Component\Security\Http\Firewall\ChannelListener($i, new \Symfony\Component\Security\Http\EntryPoint\RetryAuthenticationEntryPoint(80, 443), $a), 1 => new \Symfony\Component\Security\Http\Firewall\ContextListener($b, array(0 => $j, 1 => $c), 'main', $a, $d), 2 => $m, 3 => $p, 4 => new \Symfony\Component\Security\Http\Firewall\RememberMeListener($b, $l, $g, $a, $d, true), 5 => new \Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener($b, '5638b663aa0283.33037473', $a, $g), 6 => new \Symfony\Component\Security\Http\Firewall\AccessListener($b, $this->get('security.access.decision_manager'), $i, $g)), new \Symfony\Component\Security\Http\Firewall\ExceptionListener($b, $this->get('security.authentication.trust_resolver'), $k, 'main', new \Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint($f, $k, 'fos_user_security_login', false), NULL, NULL, $a));
     }
     protected function getSecurity_PasswordEncoderService()
     {
@@ -2717,7 +2717,7 @@ class appProdProjectContainer extends Container
     protected function getSecurity_Authentication_ManagerService()
     {
         $a = $this->get('security.user_checker');
-        $this->services['security.authentication.manager'] = $instance = new \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager(array(0 => new \Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider($this->get('fos_user.user_provider.username'), $a, 'main', $this->get('security.encoder_factory'), true), 1 => new \Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider($a, 'chouchou', 'main'), 2 => new \Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider('560939fb4f7d51.39819694')), true);
+        $this->services['security.authentication.manager'] = $instance = new \Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager(array(0 => new \Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider($this->get('fos_user.user_provider.username'), $a, 'main', $this->get('security.encoder_factory'), true), 1 => new \Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider($a, 'chouchou', 'main'), 2 => new \Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider('5638b663aa0283.33037473')), true);
         $instance->setEventDispatcher($this->get('event_dispatcher'));
         return $instance;
     }
@@ -3239,13 +3239,13 @@ class appProdProjectContainer extends Container
             'assetic.write_to' => ($this->targetDirs[2].'/../web'),
             'assetic.variables' => array(
             ),
-            'assetic.java.bin' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe',
+            'assetic.java.bin' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_65\\bin\\java.exe',
             'assetic.node.bin' => '/usr/bin/node',
             'assetic.ruby.bin' => '/usr/bin/ruby',
             'assetic.sass.bin' => '/usr/bin/sass',
             'assetic.filter.cssrewrite.class' => 'Assetic\\Filter\\CssRewriteFilter',
             'assetic.filter.yui_js.class' => 'Assetic\\Filter\\Yui\\JsCompressorFilter',
-            'assetic.filter.yui_js.java' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe',
+            'assetic.filter.yui_js.java' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_65\\bin\\java.exe',
             'assetic.filter.yui_js.jar' => ($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'),
             'assetic.filter.yui_js.charset' => 'UTF-8',
             'assetic.filter.yui_js.stacksize' => NULL,
@@ -3255,7 +3255,7 @@ class appProdProjectContainer extends Container
             'assetic.filter.yui_js.disable_optimizations' => NULL,
             'assetic.filter.yui_js.linebreak' => NULL,
             'assetic.filter.yui_css.class' => 'Assetic\\Filter\\Yui\\CssCompressorFilter',
-            'assetic.filter.yui_css.java' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_60\\bin\\java.exe',
+            'assetic.filter.yui_css.java' => 'C:\\Program Files (x86)\\Java\\jre1.8.0_65\\bin\\java.exe',
             'assetic.filter.yui_css.jar' => ($this->targetDirs[2].'/Resources/java/yuicompressor-2.4.7.jar'),
             'assetic.filter.yui_css.charset' => 'UTF-8',
             'assetic.filter.yui_css.stacksize' => NULL,

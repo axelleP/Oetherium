@@ -88,13 +88,13 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         echo "\" title=\"L'histoire de l'Oetherium\">Histoire</a>
                         <ul>
                             <li>
-                                <a class=\"imgMenu\" href=\"";
+                                <a class=\"imgSubMenu\" href=\"";
         // line 40
         echo $this->env->getExtension('routing')->getPath("apa_story_chapters");
         echo "\" title=\"Les chapitres de l'Oetherium\">Chapitres</a>
                             </li>
                             <li>
-                                <a class=\"imgMenu\" href=\"";
+                                <a class=\"imgSubMenu\" href=\"";
         // line 43
         echo $this->env->getExtension('routing')->getPath("apa_story_annexTexts", array("page" => 1));
         echo "\" title=\"Les textes annexes de l'Oetherium\">Textes annexes</a>
@@ -118,34 +118,36 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
             </nav>
 \t</div>
 \t
-        <div id=\"borderLeftBook\"></div>
-\t<div id=\"middleFrame\">
-            <div id=\"formLogin\">
-                <input type=\"button\" class=\"closeForm\" value=\"X\">
-                <div class=\"clear\"></div>
-                ";
-        // line 60
+        <div id=\"book\">
+            <div id=\"borderLeftBook\"></div>
+            <div id=\"middleFrame\">
+                <div id=\"formLogin\">
+                    <input type=\"button\" class=\"closeForm\" value=\"X\">
+                    <div class=\"clear\"></div>
+                    ";
+        // line 61
         echo $this->env->getExtension('http_kernel')->renderFragment($this->env->getExtension('http_kernel')->controller("FOSUserBundle:Security:login"));
         echo "
-            </div>
-\t    ";
-        // line 62
+                </div>
+                ";
+        // line 63
         $this->displayBlock('body', $context, $blocks);
         echo "  
+            </div>
+            <div id=\"borderRightBook\"></div>
         </div>
-        <div id=\"borderRightBook\"></div>
 \t
 \t<div id=\"rightFrame\">
             <a class=\"link\" href=\"#\" title=\"Grossir la police\"><p class=\"firstButton buttonFontSize centerPage\">p</p></a>
             <a class=\"link\" href=\"#\" title=\"Changer l'apparence du texte\"> <p class=\"button buttonTextColor centerPage\">c</p></a>
             
             ";
-        // line 70
+        // line 72
         $this->displayBlock('buttonTextDisplay', $context, $blocks);
-        // line 71
+        // line 73
         echo "            ";
         $this->displayBlock('socialNetwork', $context, $blocks);
-        // line 72
+        // line 74
         echo "        </div>
             
         <!-- A mettre aprés l'utilisation de div(s) avec float-->
@@ -158,14 +160,14 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
                     <li>Réalisation : Axelle Palermo, Hellypse, K.Zlovetch</li>
                         <!-- Si on est connecté-->
                         ";
-        // line 83
+        // line 85
         if ($this->env->getExtension('security')->isGranted("IS_AUTHENTICATED_REMEMBERED")) {
-            // line 84
+            // line 86
             echo "                            <!-- Si on est un admin-->
                             ";
-            // line 85
+            // line 87
             if ($this->env->getExtension('security')->isGranted("ROLE_ADMIN")) {
-                // line 86
+                // line 88
                 echo "                                <li><a class=\"link\" href=\"";
                 echo $this->env->getExtension('routing')->getPath("sonata_admin_dashboard");
                 echo "\">Panneau d'administration</a><a class=\"link\" href=\"";
@@ -173,37 +175,37 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
                 echo "\"> - Déconnexion</a></li>
                             ";
             }
-            // line 88
+            // line 90
             echo "                        <!-- Sinon-->
                         ";
         } else {
-            // line 90
+            // line 92
             echo "                        <li id=\"administration\">Administration</li>
-                </ul>
+                        ";
+        }
+        // line 94
+        echo "                </ul>
             </div>
             
             <div id=\"rightCorner\">
                 <ul>
                     <li><a class=\"underline\" href=\"";
-            // line 96
-            echo $this->env->getExtension('routing')->getPath("apa_generalPage_legalMention");
-            echo "\" title=\"Mentions légales\">Mentions légales</a></li>
-                    <li id=\"copyright\">© 2015, Héloïse Palermo – <span class=\"bold\">Tous droits réservés</span></li>                   
-               ";
-        }
         // line 99
-        echo "               </ul>
+        echo $this->env->getExtension('routing')->getPath("apa_generalPage_legalMention");
+        echo "\" title=\"Mentions légales\">Mentions légales</a></li>
+                    <li id=\"copyright\">© 2015, Héloïse Palermo – <span class=\"bold\">Tous droits réservés</span></li>                   
+               </ul>
             </div>
             <div class=\"clear\"></div>
         </footer>
         <!--on met le javascript à la fin si possible (performance)-->
         <!-- pour que ça marche en mode prod : php app/console cache:clear --env=prod ET php app/console assetic:dump --env=prod -->
         ";
-        // line 105
+        // line 107
         if (isset($context['assetic']['debug']) && $context['assetic']['debug']) {
             // asset "7a81978_0"
             $context["asset_url"] = isset($context['assetic']['use_controller']) && $context['assetic']['use_controller'] ? $this->env->getExtension('routing')->getPath("_assetic_7a81978_0") : $this->env->getExtension('assets')->getAssetUrl("js/7a81978_init_1.js");
-            // line 106
+            // line 108
             echo "            <script type=\"text/javascript\" src=\"";
             echo twig_escape_filter($this->env, (isset($context["asset_url"]) ? $context["asset_url"] : null), "html", null, true);
             echo "\"></script>
@@ -223,7 +225,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         ";
         }
         unset($context["asset_url"]);
-        // line 108
+        // line 110
         echo "    </body>
 </html>
 ";
@@ -286,17 +288,17 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
     {
     }
 
-    // line 62
+    // line 63
     public function block_body($context, array $blocks = array())
     {
     }
 
-    // line 70
+    // line 72
     public function block_buttonTextDisplay($context, array $blocks = array())
     {
     }
 
-    // line 71
+    // line 73
     public function block_socialNetwork($context, array $blocks = array())
     {
     }
@@ -313,6 +315,6 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
 
     public function getDebugInfo()
     {
-        return array (  300 => 71,  295 => 70,  290 => 62,  285 => 29,  280 => 16,  277 => 15,  273 => 13,  253 => 11,  249 => 10,  246 => 9,  243 => 8,  238 => 6,  233 => 4,  227 => 108,  207 => 106,  203 => 105,  195 => 99,  189 => 96,  181 => 90,  177 => 88,  169 => 86,  167 => 85,  164 => 84,  162 => 83,  149 => 72,  146 => 71,  144 => 70,  133 => 62,  128 => 60,  115 => 50,  111 => 49,  107 => 48,  99 => 43,  93 => 40,  87 => 37,  82 => 35,  78 => 34,  72 => 30,  70 => 29,  63 => 25,  59 => 24,  51 => 18,  49 => 15,  46 => 14,  44 => 8,  39 => 7,  37 => 6,  32 => 4,  27 => 1,);
+        return array (  302 => 73,  297 => 72,  292 => 63,  287 => 29,  282 => 16,  279 => 15,  275 => 13,  255 => 11,  251 => 10,  248 => 9,  245 => 8,  240 => 6,  235 => 4,  229 => 110,  209 => 108,  205 => 107,  194 => 99,  187 => 94,  183 => 92,  179 => 90,  171 => 88,  169 => 87,  166 => 86,  164 => 85,  151 => 74,  148 => 73,  146 => 72,  134 => 63,  129 => 61,  115 => 50,  111 => 49,  107 => 48,  99 => 43,  93 => 40,  87 => 37,  82 => 35,  78 => 34,  72 => 30,  70 => 29,  63 => 25,  59 => 24,  51 => 18,  49 => 15,  46 => 14,  44 => 8,  39 => 7,  37 => 6,  32 => 4,  27 => 1,);
     }
 }

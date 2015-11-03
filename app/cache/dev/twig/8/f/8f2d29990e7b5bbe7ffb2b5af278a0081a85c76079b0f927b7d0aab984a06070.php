@@ -1,6 +1,6 @@
 <?php
 
-/* FOSUserBundle:Security:login.html.twig */
+/* ApaUserBundle:Security:login.html.twig */
 class __TwigTemplate_8f2d29990e7b5bbe7ffb2b5af278a0081a85c76079b0f927b7d0aab984a06070 extends Twig_Template
 {
     public function __construct(Twig_Environment $env)
@@ -66,7 +66,7 @@ class __TwigTemplate_8f2d29990e7b5bbe7ffb2b5af278a0081a85c76079b0f927b7d0aab984a
 
     public function getTemplateName()
     {
-        return "FOSUserBundle:Security:login.html.twig";
+        return "ApaUserBundle:Security:login.html.twig";
     }
 
     public function getDebugInfo()
