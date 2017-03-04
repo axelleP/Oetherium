@@ -13,7 +13,7 @@
 
 {% block body %}
     <div id="contentMiddleFrameUntitled" itemscope itemtype="http://schema.org/Person">   
-        <div id="characterAvatar">
+        <div oncontextmenu="return false;" id="characterAvatar">
             {% if characterProfile.avatar == 'avatarByDefault.png' %}
                 <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~characterProfile.avatar ) | imagine_filter('normalAvatar')) }}" alt="Avatar de {{characterProfile.firstname}} {{characterProfile.name}}"/>
             {% else %}
@@ -39,8 +39,8 @@
             <div class="portfolio-area">
                 {% for image in images %}
                     <span class="image-block">
-                        <a class="image-zoom" data-lightbox="image" itemprop="url" href="{{ asset('uploads/apastory/images/' ~characterProfile.firstname ~'-' ~characterProfile.name ~'/' ~image.path)}}" >
-                            <img itemprop="image" height="130" src="{{ asset('uploads/apastory/images/' ~characterProfile.firstname ~'-' ~characterProfile.name ~'/' ~image.path)}}" alt="{{ image.description }}"/>                    
+                        <a oncontextmenu="return false;" class="image-zoom" data-lightbox="image" itemprop="url" href="{{ asset('uploads/apastory/images/' ~characterProfile.firstname ~'-' ~characterProfile.name ~'/' ~image.path)}}" >
+                            <img itemprop="image" height="130" src="{{ asset('uploads/apastory/images/' ~characterProfile.firstname ~'-' ~characterProfile.name ~'/' ~image.path)}}" alt="{{ image.description }}"/>
                         </a>
                     </span>                        	
                 {% endfor %}

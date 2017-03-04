@@ -82,7 +82,7 @@ class StoryController extends Controller
 
         //On récupère les informations du chapitre et de ses pages
         $chapter = $rep_chapter->findOneBy(array('id' => $numero));
-        $pages = $rep_pagesBook->findBy(array('chapter' => $chapter));
+        $pages = $rep_pagesBook->findBy(array('chapter' => $chapter), array('number' => 'asc'));
         
         //1er et dernier id en base
         $firstId = $rep_chapter->getIdByOrder('asc');

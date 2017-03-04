@@ -68,7 +68,7 @@ class __TwigTemplate_2c39831a29cd292575a3c1feadc83529fc3e4664d10e3d987944a32cedd
             $context['_seq'] = twig_ensure_traversable((isset($context["mainCharacters"]) ? $context["mainCharacters"] : $this->getContext($context, "mainCharacters")));
             foreach ($context['_seq'] as $context["_key"] => $context["character"]) {
                 // line 20
-                echo "                        <div class=\"vignetteCharacter\" itemscope itemtype=\"http://schema.org/Person\">
+                echo "                        <div oncontextmenu=\"return false;\" class=\"vignetteCharacter\" itemscope itemtype=\"http://schema.org/Person\">
                             <ul class=\"zoom\">
                                 <li>
                                     <a class=\"link\" itemprop=\"url\" href=\"";
@@ -139,7 +139,7 @@ class __TwigTemplate_2c39831a29cd292575a3c1feadc83529fc3e4664d10e3d987944a32cedd
             $context['_seq'] = twig_ensure_traversable((isset($context["minorCharacters"]) ? $context["minorCharacters"] : $this->getContext($context, "minorCharacters")));
             foreach ($context['_seq'] as $context["_key"] => $context["character"]) {
                 // line 48
-                echo "                        <div class=\"vignetteCharacter\" itemscope itemtype=\"http://schema.org/Person\">
+                echo "                        <div oncontextmenu=\"return false;\" class=\"vignetteCharacter\" itemscope itemtype=\"http://schema.org/Person\">
                             <ul class=\"zoom\">
                                 <li>
                                     <a class=\"link\" itemprop=\"url\" href=\"";

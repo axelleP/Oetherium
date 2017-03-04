@@ -75,7 +75,7 @@ class __TwigTemplate_e7c931b50e0a2fde041cbc877b43a599e5737b4147f626fdd9935767c80
     {
         // line 15
         echo "    <div id=\"contentMiddleFrameUntitled\" itemscope itemtype=\"http://schema.org/Person\">   
-        <div id=\"characterAvatar\">
+        <div oncontextmenu=\"return false;\" id=\"characterAvatar\">
             ";
         // line 17
         if (($this->getAttribute((isset($context["characterProfile"]) ? $context["characterProfile"] : $this->getContext($context, "characterProfile")), "avatar", array()) == "avatarByDefault.png")) {
@@ -147,7 +147,7 @@ class __TwigTemplate_e7c931b50e0a2fde041cbc877b43a599e5737b4147f626fdd9935767c80
         foreach ($context['_seq'] as $context["_key"] => $context["image"]) {
             // line 41
             echo "                    <span class=\"image-block\">
-                        <a class=\"image-zoom\" data-lightbox=\"image\" itemprop=\"url\" href=\"";
+                        <a oncontextmenu=\"return false;\" class=\"image-zoom\" data-lightbox=\"image\" itemprop=\"url\" href=\"";
             // line 42
             echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl(((((("uploads/apastory/images/" . $this->getAttribute((isset($context["characterProfile"]) ? $context["characterProfile"] : $this->getContext($context, "characterProfile")), "firstname", array())) . "-") . $this->getAttribute((isset($context["characterProfile"]) ? $context["characterProfile"] : $this->getContext($context, "characterProfile")), "name", array())) . "/") . $this->getAttribute($context["image"], "path", array()))), "html", null, true);
             echo "\" >
@@ -156,7 +156,7 @@ class __TwigTemplate_e7c931b50e0a2fde041cbc877b43a599e5737b4147f626fdd9935767c80
             echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl(((((("uploads/apastory/images/" . $this->getAttribute((isset($context["characterProfile"]) ? $context["characterProfile"] : $this->getContext($context, "characterProfile")), "firstname", array())) . "-") . $this->getAttribute((isset($context["characterProfile"]) ? $context["characterProfile"] : $this->getContext($context, "characterProfile")), "name", array())) . "/") . $this->getAttribute($context["image"], "path", array()))), "html", null, true);
             echo "\" alt=\"";
             echo twig_escape_filter($this->env, $this->getAttribute($context["image"], "description", array()), "html", null, true);
-            echo "\"/>                    
+            echo "\"/>
                         </a>
                     </span>                        \t
                 ";

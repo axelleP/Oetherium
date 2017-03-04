@@ -21,7 +21,7 @@
         <div id="grayBackground"></div>
         
         <div id="leftFrame">
-            <a href="{{ path('apa_generalPage_homepage') }}" title="Accueil de l'Oetherium">
+            <a oncontextmenu="return false;" href="{{ path('apa_generalPage_homepage') }}" title="Accueil de l'Oetherium">
                 <img id="logo" class="centerPage" src="{{ asset('img/logo-oetherium.png') }}" alt="logo de l'Oetherium">
             </a>
             
@@ -29,7 +29,7 @@
                 {% block descriptionMenu %}{% endblock %}
 	    </div>
             
-	    <nav id="navigation"> 
+	    <nav oncontextmenu="return false;" id="navigation"> 
 		<ul class="firstUl">
 		   <li><a class="imgMenu"  href="{{ path('apa_generalPage_homepage') }}" title="L'Oetherium">Œtherium</a></li>
                    <li><a class="imgMenu" href="{{ path('apa_generalPage_author') }}" title="Les auteurs de l'Oetherium">Auteurs</a></li>
@@ -65,7 +65,7 @@
             <div id="borderRightBook"></div>
         </div>
 	
-	<div id="rightFrame">
+	<div oncontextmenu="return false;" id="rightFrame">
             <a class="link" href="#" title="Grossir la police"><p class="firstButton buttonFontSize centerPage">p</p></a>
             <a class="link" href="#" title="Changer l'apparence du texte"> <p class="button buttonTextColor centerPage">c</p></a>
             

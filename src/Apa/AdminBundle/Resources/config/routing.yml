@@ -1,4 +1,6 @@
-apa_admin_checkChapterNumber:
-    path:     /admin/checkChapterNumber
-    defaults: { _controller: ApaAdminBundle:Admin:checkChapterNumber }
-   # methods: [post]
+# route javaScript pour l'administration
+apa_admin_getLastChapterNumber:
+    path:     /admin/getLastChapterNumber
+    defaults: { _controller: ApaAdminBundle:Admin:getLastChapterNumber }
+    options:
+        expose: true

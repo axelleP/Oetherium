@@ -17,7 +17,7 @@
             <div class="centerText">
                 {% if mainCharacters %}
                     {% for character in mainCharacters %}
-                        <div class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
+                        <div oncontextmenu="return false;" class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
                             <ul class="zoom">
                                 <li>
                                     <a class="link" itemprop="url" href="{{ path('apa_story_characterProfile',{'firstname':character.firstname, 'name':character.name}) }}">
@@ -45,7 +45,7 @@
             <div class="centerText">
                 {% if minorCharacters %}
                     {% for character in minorCharacters %}
-                        <div class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
+                        <div oncontextmenu="return false;" class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
                             <ul class="zoom">
                                 <li>
                                     <a class="link" itemprop="url" href="{{ path('apa_story_characterProfile',{'firstname':character.firstname, 'name':character.name}) }}">

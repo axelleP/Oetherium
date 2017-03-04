@@ -17,6 +17,7 @@ class GeneralPageAdmin extends Admin
         $formMapper
             ->add('title', 'text', array('label' => 'Titre', 'disabled'  => true))
             ->add('contents', 'ckeditor', array(
+                    'label' => 'Contenu',
                     'config' => array(
                         'toolbar' => array(
                             array(

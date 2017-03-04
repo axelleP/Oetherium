@@ -1,14 +1,12 @@
-function chapterNumberCheck(){
-    chapterNumber = $('input[id$="_number"]').val();
-    path = "{{ path('apa_admin_checkChapterNumber') }}";//mauvais chemin
-    //alert('ok');
+function putChapterNumber(){
+    path = Routing.generate('apa_admin_getLastChapterNumber');
+
     $.ajax({
        url : path,
        type : 'GET',
        dataType : 'json',
-       success : function(data, statut){
-           alert('ok3');
+       success : function(lastChapterNumber, statut){
+            $('input[id$="_number"]').val(parseInt(lastChapterNumber)+1);
        }
     });
-    
 }

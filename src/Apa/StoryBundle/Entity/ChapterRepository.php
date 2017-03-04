@@ -23,4 +23,12 @@ class ChapterRepository extends EntityRepository
                 ->setMaxResults(1)
                 ->getResult();
     }
+    
+    public function getLastNumber(){
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('MAX(c.number) as lastNumber')
+           ->from('ApaStoryBundle:Chapter', 'c');
+        
+        return $qb->getQuery()->getSingleResult() ;
+    }
 }

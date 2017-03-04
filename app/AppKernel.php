@@ -41,6 +41,8 @@ class AppKernel extends Kernel
             new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
             // Sonata user
             //new Sonata\UserBundle\SonataUserBundle('FOSUserBundle'),
+            // Route javaScript
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

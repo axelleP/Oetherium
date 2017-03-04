@@ -10,6 +10,9 @@
  * Gestion des événements
  */
 $(document).ready(function() {
-     //Contrôle la saisie dans l'administration (à finir)
-     $('input[id$="_number"]').bind('change',(chapterNumberCheck));
+     //si l'id existe dans le formulaire et qu'il n'y a pas déjà de valeur (=création)
+     if($('input[id$="_number"]').length && $('input[id$="_number"]').val() == ''){
+          //met dynamiquement le numéro du nouveau chapitre
+          putChapterNumber();
+     }
 });

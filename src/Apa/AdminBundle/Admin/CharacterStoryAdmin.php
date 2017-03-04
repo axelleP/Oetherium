@@ -63,13 +63,21 @@ class CharacterStoryAdmin extends Admin
             ->add('citation', 'text', array('label' => 'Citation'))
             ->add('description', 'textarea', array('label' => 'Description'))
             ->add('main', 'choice', array('label' => 'Statut', 'choices' => array('1' => 'Principal', '0' => 'Secondaire')))
-            ->add('images', 'sonata_type_collection', array('required' => false,'label' => 'Images (Attention : Ajouter une nouvelle
-                                                        image supprime les fichiers choisis précédemment! Cliquez sur le bouton Ajouter * le nombre d\'images à ajouter)')
+            ->add('images', 'sonata_type_collection',
+                array(
+                    'required' => false,
+                    'label' => 'Images',
+                    'help' => '<div style="color:red;"><b>Attention :</b> Ajouter une nouvelle
+                    image supprime les fichiers choisis précédemment!
+                    <br/>Il est préférable de cliquer sur le bouton Ajouter autant de fois que nécessaire puis de choisir les images voulu(s).</div>'
+                
+                )
                 , array(
-                'edit' => 'inline',
-                'inline' => 'table',
-                'targetEntity' => 'Apa\StoryBundle\Entity\Image' 
-            ))
+                    'edit' => 'inline',
+                    'inline' => 'table',
+                    'targetEntity' => 'Apa\StoryBundle\Entity\Image' 
+                )
+            )
         ;
         
         /*foreach($galerie as $img ) {

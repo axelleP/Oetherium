@@ -17,14 +17,19 @@ class ChapterAdmin extends Admin
         $formMapper
         ->add('number','number',
             array(
-                  'label' => 'Numéro (Attention : Si les numéros de chapitres ne se suivent pas (chap. 1,2,3), il y aura des erreurs de liens!)',
-                  //'read_only' => true,
+                  'label' => 'Numéro',
+                  'read_only' => true,
             )
 
         )                             
         ->add('title', 'text', array('label' => 'Titre'))
-        ->add('pagesBook', 'sonata_type_collection', array('required' => false,'label' => 'Pages du chapitre (Attention : Ajouter une nouvelle
-                                                    page supprime les nouveaux contenus précédent! Cliquez sur le bouton Ajouter * le nombre de pages à ajouter)')
+        ->add('pagesBook', 'sonata_type_collection',
+            array('required' => false,
+                'label' => 'Pages du chapitre',
+                'help' => '<div style="color:red;"><b>Attention :</b> Ajouter une nouvelle page supprime le texte des pages inséré précédemment!
+                <br/>Il est préférable de cliquer sur le bouton Ajouter autant de fois que nécessaire puis d\'insérer le(s) texte(s) voulu(s).</div>'
+            )
+            
             , array(
             'edit' => 'inline',
             'inline' => 'table',

@@ -39,39 +39,51 @@ class __TwigTemplate_67347cc8edc3032bfc5248899bcb955b399d9f746a9a4af13aaed2d6437
         // line 5
         echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("css/admin.css"), "html", null, true);
         echo "\"/>
+    <link rel=\"icon\" type=\"image/x-icon\" href=\"";
+        // line 6
+        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("img/favicon.png"), "html", null, true);
+        echo "\">
 ";
     }
 
-    // line 8
+    // line 9
     public function block_javascripts($context, array $blocks = array())
     {
-        // line 9
+        // line 10
         echo "    ";
         $this->displayParentBlock("javascripts", $context, $blocks);
         echo "
     <script src=\"";
-        // line 10
+        // line 11
         echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("bundles/ivoryckeditor/ckeditor.js"), "html", null, true);
         echo "\" type=\"text/javascript\"></script>
     <script src=\"";
-        // line 11
+        // line 12
         echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("js/admin/init.js"), "html", null, true);
         echo "\" type=\"text/javascript\"></script>
     <script src=\"";
-        // line 12
+        // line 13
         echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("js/admin/functions.js"), "html", null, true);
         echo "\" type=\"text/javascript\"></script>
+    <script src=\"";
+        // line 14
+        echo twig_escape_filter($this->env, $this->env->getExtension('assets')->getAssetUrl("bundles/fosjsrouting/js/router.js"), "html", null, true);
+        echo "\"></script>
+    <script src=\"";
+        // line 15
+        echo $this->env->getExtension('routing')->getPath("fos_js_routing_js", array("callback" => "fos.Router.setData"));
+        echo "\"></script>
 ";
     }
 
-    // line 16
+    // line 19
     public function block_side_bar_after_nav($context, array $blocks = array())
     {
-        // line 17
+        // line 20
         echo "    <nav id=\"navigation\"> 
         <ul>
             <li class=\"menuLink\"><a href=\"";
-        // line 19
+        // line 22
         echo $this->env->getExtension('routing')->getPath("apa_generalPage_homepage");
         echo "\" title=\"Oetherium\">Retour au site</a></li>
             <li><a href=\"/Oetherium/web/app_dev.php/admin/apa/story/chapter/list\" title=\"Liste des chapitres\">Chapitres</a></li>
@@ -79,7 +91,7 @@ class __TwigTemplate_67347cc8edc3032bfc5248899bcb955b399d9f746a9a4af13aaed2d6437
             <li><a href=\"/Oetherium/web/app_dev.php/admin/apa/story/characterstory/list\" title=\"Liste des personnages\">Personnages</a></li>
             <li><a href=\"/Oetherium/web/app_dev.php/admin/apa/generalpage/page/list\" title=\"Liste des pages du site\">Pages générales</a></li>
             <li class=\"menuLink\"><a href=\"";
-        // line 24
+        // line 27
         echo $this->env->getExtension('routing')->getPath("fos_user_security_logout");
         echo "\">Déconnexion</a></li>
         </ul>
@@ -87,20 +99,20 @@ class __TwigTemplate_67347cc8edc3032bfc5248899bcb955b399d9f746a9a4af13aaed2d6437
 ";
     }
 
-    // line 29
+    // line 32
     public function block_sonata_wrapper($context, array $blocks = array())
     {
-        // line 30
+        // line 33
         echo "    ";
         $this->displayParentBlock("sonata_wrapper", $context, $blocks);
         echo "
     ";
-        // line 32
+        // line 35
         echo "    ";
         $this->displayBlock('sonata_top_nav_menu', $context, $blocks);
-        // line 46
+        // line 49
         echo "    ";
-        // line 47
+        // line 50
         echo "    <script type=\"text/javascript\">
         var blockManagement = document.getElementsByClassName('box');
         
@@ -116,10 +128,10 @@ class __TwigTemplate_67347cc8edc3032bfc5248899bcb955b399d9f746a9a4af13aaed2d6437
 ";
     }
 
-    // line 32
+    // line 35
     public function block_sonata_top_nav_menu($context, array $blocks = array())
     {
-        // line 33
+        // line 36
         echo "        <!--<div class=\"navbar-right\">
             <ul class=\"nav navbar-nav\">
                 <li class=\"dropdown user-menu\">
@@ -128,9 +140,9 @@ class __TwigTemplate_67347cc8edc3032bfc5248899bcb955b399d9f746a9a4af13aaed2d6437
                     </a>
                     <ul class=\"dropdown-menu dropdown-user\">
                         ";
-        // line 40
-        $this->loadTemplate($this->getAttribute((isset($context["admin_pool"]) ? $context["admin_pool"] : $this->getContext($context, "admin_pool")), "getTemplate", array(0 => "user_block"), "method"), "SonataAdminBundle::layout.html.twig", 40)->display($context);
-        // line 41
+        // line 43
+        $this->loadTemplate($this->getAttribute((isset($context["admin_pool"]) ? $context["admin_pool"] : $this->getContext($context, "admin_pool")), "getTemplate", array(0 => "user_block"), "method"), "SonataAdminBundle::layout.html.twig", 43)->display($context);
+        // line 44
         echo "                    </ul>
                 </li>
             </ul>
@@ -150,6 +162,6 @@ class __TwigTemplate_67347cc8edc3032bfc5248899bcb955b399d9f746a9a4af13aaed2d6437
 
     public function getDebugInfo()
     {
-        return array (  134 => 41,  132 => 40,  123 => 33,  120 => 32,  104 => 47,  102 => 46,  99 => 32,  94 => 30,  91 => 29,  83 => 24,  75 => 19,  71 => 17,  68 => 16,  62 => 12,  58 => 11,  54 => 10,  49 => 9,  46 => 8,  40 => 5,  35 => 4,  32 => 3,  11 => 1,);
+        return array (  146 => 44,  144 => 43,  135 => 36,  132 => 35,  116 => 50,  114 => 49,  111 => 35,  106 => 33,  103 => 32,  95 => 27,  87 => 22,  83 => 20,  80 => 19,  74 => 15,  70 => 14,  66 => 13,  62 => 12,  58 => 11,  53 => 10,  50 => 9,  44 => 6,  40 => 5,  35 => 4,  32 => 3,  11 => 1,);
     }
 }

@@ -54,7 +54,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         <div id=\"grayBackground\"></div>
         
         <div id=\"leftFrame\">
-            <a href=\"";
+            <a oncontextmenu=\"return false;\" href=\"";
         // line 24
         echo $this->env->getExtension('routing')->getPath("apa_generalPage_homepage");
         echo "\" title=\"Accueil de l'Oetherium\">
@@ -71,7 +71,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         // line 30
         echo "\t    </div>
             
-\t    <nav id=\"navigation\"> 
+\t    <nav oncontextmenu=\"return false;\" id=\"navigation\"> 
 \t\t<ul class=\"firstUl\">
 \t\t   <li><a class=\"imgMenu\"  href=\"";
         // line 34
@@ -137,7 +137,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
             <div id=\"borderRightBook\"></div>
         </div>
 \t
-\t<div id=\"rightFrame\">
+\t<div oncontextmenu=\"return false;\" id=\"rightFrame\">
             <a class=\"link\" href=\"#\" title=\"Grossir la police\"><p class=\"firstButton buttonFontSize centerPage\">p</p></a>
             <a class=\"link\" href=\"#\" title=\"Changer l'apparence du texte\"> <p class=\"button buttonTextColor centerPage\">c</p></a>
             
