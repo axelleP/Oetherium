@@ -1,0 +1,4 @@
+apa_admin_checkChapterNumber:
+    path:     /admin/checkChapterNumber
+    defaults: { _controller: ApaAdminBundle:Admin:checkChapterNumber }
+   # methods: [post]

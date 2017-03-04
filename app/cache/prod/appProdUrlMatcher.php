@@ -99,6 +99,11 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
 
         }
 
+        // apa_admin_checkChapterNumber
+        if ($pathinfo === '/admin/checkChapterNumber') {
+            return array (  '_controller' => 'Apa\\AdminBundle\\Controller\\AdminController::checkChapterNumberAction',  '_route' => 'apa_admin_checkChapterNumber',);
+        }
+
         if (0 === strpos($pathinfo, '/media/cache/resolve')) {
             // liip_imagine_filter_runtime
             if (preg_match('#^/media/cache/resolve/(?P<filter>[A-z0-9_\\-]*)/rc/(?P<hash>[^/]++)/(?P<path>.+)$#s', $pathinfo, $matches)) {

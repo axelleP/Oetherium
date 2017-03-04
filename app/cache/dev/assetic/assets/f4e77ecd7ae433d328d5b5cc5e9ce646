@@ -1,0 +1,94 @@
+#descriptionMenu{
+    color: #f8e8c0;
+    margin: 5% 7% 0 7%;
+}
+
+/* Menu vertical */
+#navigation ul.firstUl {
+    margin-top: 7%;
+    padding: 0;
+    list-style-type : none;
+}
+
+/* Blocs - Textes */
+#navigation ul li a{
+    display: block;
+    background-position: center;
+    height: 49px;
+    width: auto;
+    line-height: 223%;
+    margin-bottom: 3%;
+    font-size: 1.75em;
+    font-family: Georgia, "Arial", "Trebuchet MS", serif;
+    color: #5c4f37; 
+    text-decoration: none;
+    text-indent: 0.6em;   
+}
+/* bloc visible du sous menu */
+#navigation ul a.imgMenu2{
+    margin-bottom: 0;
+}
+/* bloc apres le bloc visible du sous menu */
+#navigation ul a.imgMenu3{
+    margin-top: 3%;
+}
+
+/* Images  */
+#navigation .imgMenu{
+    background-image: url('../../img/nav-close.png');
+    background-repeat: no-repeat;
+}
+#navigation .imgMenu:hover{
+    background-image: url('../../img/nav-open.png');
+    background-repeat: no-repeat;
+}
+#navigation .imgMenuCurrent{
+    background-image: url('../../img/nav-open.png');
+    background-repeat: no-repeat;
+}
+#navigation .imgSubMenu{
+    background-image: url('../../img/sub-nav.png');
+    background-repeat: no-repeat;
+}
+#navigation .imgSubMenuCurrent{
+    background-image: url('../../img/sub-nav.png');
+    background-repeat: no-repeat;
+}
+
+/* SOUS MENU */
+/* Cache le sous menu */
+#navigation ul li ul {
+    list-style-type : none;
+    padding: 0;
+    max-height: 0em;
+    overflow: hidden;
+    transition: 1s max-height 0.1s;
+}
+
+/* Affiche le sous menu */
+#navigation ul li:hover ul {
+    display: block;
+    position: relative;
+    max-height: 13em;
+}
+
+/* Blocs */
+#navigation ul.firstUl li ul li {
+    display: block;
+    background-position: center;
+    height: 38px;
+    width: auto;
+    margin-bottom: 2%;
+}
+/* FIN SOUS MENU */
+
+/* RESOLUTION */
+@media (max-width: 650px) {
+    #navigation { font-size: 77%; }
+}
+
+@media screen and (max-width:500px){
+    #navigation ul a{
+        margin: 1% 20% 0 20%;
+    }
+}

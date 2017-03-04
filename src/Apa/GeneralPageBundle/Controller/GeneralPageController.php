@@ -16,11 +16,7 @@ class GeneralPageController extends Controller
         //On récupère la page par la méthode getPage($name) du repository
         $selectedPage = $repository->getPage($page);
         
-        $errorC = $errorConnexion;
-        
-        //var_dump($errorC);exit;
-        
         return $this->render('ApaGeneralPageBundle:GeneralPage:seePage.html.twig',
-                            array('selectedPage' => $selectedPage, 'errorC' => $errorC));
+                            array('selectedPage' => $selectedPage, 'errorC' => $errorConnexion));
     }
 }

@@ -10,14 +10,14 @@ class StoryController extends Controller
 {
     public function seeCharactersAction()
     {
-        //On appel les services dont on a besoin pour récupérer le repository page
+        //On appel les services dont on a besoin pour récupérer le repository CharacterStory
         $repository = $this->getDoctrine()
                    ->getManager()
                    ->getRepository('ApaStoryBundle:CharacterStory');
 
         //On récupère les personnages
         $mainCharacters = $repository->getMainCharacters(); //1ere méthode
-        $minorCharacters = $repository->findByMain('0'); //2eme méthode
+        $minorCharacters = $repository->findByMain('0'); //2eme méthode (main étant un attribut)
         
         return $this->render('ApaStoryBundle:Character:seeCharacters.html.twig',
                             array('mainCharacters' => $mainCharacters, 'minorCharacters' => $minorCharacters));
@@ -37,7 +37,7 @@ class StoryController extends Controller
                              array('characterProfile' => $characterProfile, 'images' => $images));
     }
     
-    // Sert d'exemple pour un menu dynamique
+    //Sert d'exemple pour un menu dynamique
     public function listChapterAction()
     {
         $repository = $this->getDoctrine()
@@ -59,7 +59,7 @@ class StoryController extends Controller
         //On récupère les chapitres
         $chapters = $repository->findAll();
         
-        //pagination
+        //Pagination
         $paginator  = $this->get('knp_paginator'); //on se sert du bundle KnpPaginatorBundle
         $pagination = $paginator->paginate(
                       $chapters,
@@ -82,14 +82,13 @@ class StoryController extends Controller
 
         //On récupère les informations du chapitre et de ses pages
         $chapter = $rep_chapter->findOneBy(array('id' => $numero));
-
         $pages = $rep_pagesBook->findBy(array('chapter' => $chapter));
         
         //1er et dernier id en base
         $firstId = $rep_chapter->getIdByOrder('asc');
         $lastId = $rep_chapter->getIdByOrder('desc');
         
-        //pagination
+        //Pagination
         $paginator  = $this->get('knp_paginator'); //on se sert du bundle KnpPaginatorBundle
         $pagination = $paginator->paginate(
                       $pages,
@@ -110,7 +109,7 @@ class StoryController extends Controller
         //On récupère les textes annexes
         $annexTexts = $repository->findBy(array(), array('id' => 'desc'));
         
-        //pagination
+        //Pagination
         $paginator  = $this->get('knp_paginator'); //on se sert du bundle KnpPaginatorBundle
         $pagination = $paginator->paginate(
                       $annexTexts,

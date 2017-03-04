@@ -1,7 +1,8 @@
 {% extends "::layout.html.twig" %}
+
 {% block titlePage %}
     {% for page in selectedPage %}
-        {% if page.title == 'Oetherium' %}
+        {% if page.title == 'Œtherium' %}
             L'histoire de l'Oetherium
         {% elseif page.title == 'Auteurs' %}
             Les auteurs de l'Oetherium
@@ -17,7 +18,7 @@
 
 {% block metaDescriptionPage %}
     {% for page in selectedPage %}
-        {% if page.title == 'Oetherium' %}
+        {% if page.title == 'Œtherium' %}
             <meta name="description" content="Venez découvrir <strong>l'univers de l'Otherium</strong> et de ses nombreux personnages!">
         {% elseif page.title == 'Auteurs' %}
             <meta name="description" content="Bianca et kikile sont les auteurs de l'Oetherium.">
@@ -33,7 +34,7 @@
     
 {% block descriptionMenu %}
     {% for page in selectedPage %}
-        {% if page.title == 'Oetherium' %}
+        {% if page.title == 'Œtherium' %}
             Accueil
         {% elseif page.title == 'Auteurs' %}
             Inventeurs de l'Oetherium

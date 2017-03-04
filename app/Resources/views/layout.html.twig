@@ -4,7 +4,7 @@
         <title>{% block titlePage %}{% endblock %}</title>
         <meta charset="UTF-8">
         {% block metaDescriptionPage %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.gif') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('img/favicon.png') }}">
 	{% block stylesheets %}
             <!-- pour que ça marche en mode prod : php app/console cache:clear --env=prod ET php app/console assetic:dump --env=prod -->
             {% stylesheets 'css/site.css' 'css/menu.css' filter='cssrewrite, ?yui_css' %}

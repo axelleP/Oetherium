@@ -13,17 +13,25 @@ class ChapterAdmin extends Admin
     // Fields to be shown on create/edit forms (ajout et modification d'objet)
     protected function configureFormFields(FormMapper $formMapper)
     {
+
         $formMapper
-            ->add('number', 'number', array('label' => 'Numéro (Attention : Si les numéros de chapitres ne se suivent pas (chap. 1,2,3), il y aura des erreurs de liens!)'))
-            ->add('title', 'text', array('label' => 'Titre'))
-            ->add('pagesBook', 'sonata_type_collection', array('required' => false,'label' => 'Pages du chapitre (Attention : Ajouter une nouvelle
-                                                        page supprime les nouveaux contenus précédent! Cliquez sur le bouton Ajouter * le nombre de pages à ajouter)')
-                , array(
-                'edit' => 'inline',
-                'inline' => 'table',
-                'targetEntity' => 'Apa\StoryBundle\Entity\PageBook' 
-            ))
-        ;
+        ->add('number','number',
+            array(
+                  'label' => 'Numéro (Attention : Si les numéros de chapitres ne se suivent pas (chap. 1,2,3), il y aura des erreurs de liens!)',
+                  //'read_only' => true,
+            )
+
+        )                             
+        ->add('title', 'text', array('label' => 'Titre'))
+        ->add('pagesBook', 'sonata_type_collection', array('required' => false,'label' => 'Pages du chapitre (Attention : Ajouter une nouvelle
+                                                    page supprime les nouveaux contenus précédent! Cliquez sur le bouton Ajouter * le nombre de pages à ajouter)')
+            , array(
+            'edit' => 'inline',
+            'inline' => 'table',
+            'targetEntity' => 'Apa\StoryBundle\Entity\PageBook' 
+        ));
+        
+        //var_dump($formMapper);exit;
     }
 
     // Fields to be shown on filter forms (filtre pour rechercher rapidemment un objet)
@@ -39,9 +47,8 @@ class ChapterAdmin extends Admin
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
-            ->add('number', 'number', array('label' => 'Numéro'))
-            ->addIdentifier('title', 'text', array('label' => 'Titre'))
-            
+            ->add('number', 'number', array('label' => 'Numéro', 'class' => 'test'))
+            ->addIdentifier('title', 'text', array('label' => 'Titre'))  
         ;
     }
     

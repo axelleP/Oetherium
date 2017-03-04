@@ -149,6 +149,8 @@ hr{
 #borderLeftBook{
     background-image: url('../img/border-left-book.png');
     background-repeat: no-repeat;
+    /*background: linear-gradient(to right, rgba(255,255,255,0), #f5e6bd), url('../img/border-left-book3.png');*/
+    /*background: linear-gradient(to bottom right, url('../img/border-left-book.png'), rgba(0,0,0,0));*/
     float: left;
     width: 9%;
     height: 130%;
@@ -326,8 +328,14 @@ ul.zoom{
 /* End Character */
 
 /* Author page */
-.authorAvatar{
+#authorAvatar{
     text-align: center;
+}
+#descriptionHelly{
+    display:none;
+}
+#descriptionKikile{
+    display:none;
 }
 /* End Author page */
 

@@ -41,6 +41,7 @@ class AnnexTextAdmin extends Admin
                         ),
                         'uiColor' => '#ffffff',
                     ),
+                    'label' => 'Contenu',
             ));
     }
 
