@@ -99,9 +99,9 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
 
         }
 
-        // apa_admin_checkChapterNumber
-        if ($pathinfo === '/admin/checkChapterNumber') {
-            return array (  '_controller' => 'Apa\\AdminBundle\\Controller\\AdminController::checkChapterNumberAction',  '_route' => 'apa_admin_checkChapterNumber',);
+        // apa_admin_getLastChapterNumber
+        if ($pathinfo === '/admin/getLastChapterNumber') {
+            return array (  '_controller' => 'Apa\\AdminBundle\\Controller\\AdminController::getLastChapterNumberAction',  '_route' => 'apa_admin_getLastChapterNumber',);
         }
 
         if (0 === strpos($pathinfo, '/media/cache/resolve')) {
@@ -580,6 +580,11 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
 
             }
 
+        }
+
+        // fos_js_routing_js
+        if (0 === strpos($pathinfo, '/js/routing') && preg_match('#^/js/routing(?:\\.(?P<_format>js|json))?$#s', $pathinfo, $matches)) {
+            return $this->mergeDefaults(array_replace($matches, array('_route' => 'fos_js_routing_js')), array (  '_controller' => 'fos_js_routing.controller:indexAction',  '_format' => 'js',));
         }
 
         throw 0 < count($allow) ? new MethodNotAllowedException(array_unique($allow)) : new ResourceNotFoundException();

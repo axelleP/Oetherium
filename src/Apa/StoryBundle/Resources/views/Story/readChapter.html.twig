@@ -10,7 +10,7 @@
 {% block body %}
     <div itemscope itemtype="http://schema.org/CreativeWork">
         <h1 id="title" class="uppercase" itemprop="headline">{{ chapter.title }} - Chapitre {{ chapter.number }}</h1>
-        
+
         <div id="contentMiddleFrame" itemprop="text">
             <div class="contentChapter">
                 {% for page in pagination %}
@@ -18,18 +18,18 @@
                 {% endfor %}
             </div>
         </div>
-        
+
         <div id="pagination">{{ knp_pagination_render(pagination) }}</div>
         <br>
         {% if chapter.id != firstId %}
-            <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapter', {'numero': chapter.number-1}) }}">Chapitre précédent</a>
+            <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapter', {'numero': chapter.number-1}) }}">Chapitre précédent</a>&nbsp;-
         {% endif %}
-        
+
         {% if chapter.id != lastId %}
-            <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapter', {'numero': chapter.number+1}) }}">Chapitre suivant</a>
+            <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapter', {'numero': chapter.number+1}) }}">Chapitre suivant</a>&nbsp;-
         {% endif %}
-        
-        - <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapters') }}">Retour aux chapitres</a><br><br>
+
+        <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapters') }}">Retour aux chapitres</a><br><br>
     </div>
 {% endblock %}
 
@@ -41,11 +41,11 @@
     <a class="buttonSocialNetworkFirst centerPage twitterButton" target="_blank" title="Twitter" href="http://twitter.com/share?url={{ app.request.uri }}&amp;text=Chapitre%20«{{ chapter.title|replace({(' '):'%20'}) }}»%20-%20Oetherium">
         <i class="fa fa-twitter fa-lg tw">t</i>
     </a>
-    
+
     <a class="buttonSocialNetwork centerPage facebookButton" target="_blank" title="Facebook" href="http://www.facebook.com/sharer.php?u={{ app.request.uri }}&amp;t=Chapitre%20«{{ chapter.title|replace({(' '):'%20'}) }}»%20-%20Oetherium">
         <i class="fa fa-facebook fa-lg fb">f</i>
     </a>
-    
+
     <a class="buttonSocialNetwork centerPage googleButton" target="_blank" title="Google Plus" href="https://plusone.google.com/_/+1/confirm?hl=en&amp;url={{ app.request.uri }}">
         <i class="fa fa-google-plus fa-lg google">g</i>
     </a>
