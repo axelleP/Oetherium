@@ -167,9 +167,18 @@ hr{
     margin-left: -1px;
 }
 #middleFrame{
-    float: left;
+    /* 09/07/2017 : remplacement des bordures du livre */
+    /*float: left; */
+    border-image: url(../img/border-left.jpg) 0 100% 0 100% round round;
+    -webkit-border-image: url(../img/border-left.jpg)  0 100% 0 100% round round;
+    -moz-border-image: url(../img/border-left.jpg)  0 100% 0 100% round round;
+    -o-border-image: url(../img/border-left.jpg) 0 100% 0 100% round round;
+    /* si border-image n'est pas pris en charge */
+    border-right: double #40382b 8px;
+    border-left: double #40382b 8px;
+    
     overflow-y : auto;
-    width: 82%;
+    width: 100%;/* 09/07/2017 : 82% */
     height: 129%;
     min-width: 50%; /* Permet de r�duire la fen�tre sans conflit css */
     background-image:  url('../img/background-book.png');
@@ -333,14 +342,17 @@ ul.zoom{
 #authorAvatar{
     text-align: center;
 }
-#descriptionHelly{
-    display:none;
-}
-#descriptionKikile{
+#descriptionHelly, #descriptionKikile{
     display:none;
 }
 #avatarHelly, #avatarKikile{
     cursor: pointer;
+}
+#avatarHelly:hover{
+    border: 2px solid black;
+}
+#avatarKikile:hover{
+    border: 3px solid white;
 }
 /* End Author page */
 
