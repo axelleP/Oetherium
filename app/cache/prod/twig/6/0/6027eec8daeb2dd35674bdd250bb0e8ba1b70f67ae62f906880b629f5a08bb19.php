@@ -54,7 +54,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         <div id=\"grayBackground\"></div>
         
         <div id=\"leftFrame\">
-            <a href=\"";
+            <a oncontextmenu=\"return false;\" href=\"";
         // line 24
         echo $this->env->getExtension('routing')->getPath("apa_generalPage_homepage");
         echo "\" title=\"Accueil de l'Oetherium\">
@@ -71,7 +71,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         // line 30
         echo "\t    </div>
             
-\t    <nav id=\"navigation\"> 
+\t    <nav oncontextmenu=\"return false;\" id=\"navigation\"> 
 \t\t<ul class=\"firstUl\">
 \t\t   <li><a class=\"imgMenu\"  href=\"";
         // line 34
@@ -119,35 +119,39 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
 \t</div>
 \t
         <div id=\"book\">
+            <!-- 09/07/2017
             <div id=\"borderLeftBook\"></div>
+            -->
             <div id=\"middleFrame\">
                 <div id=\"formLogin\">
                     <input type=\"button\" class=\"closeForm\" value=\"X\">
                     <div class=\"clear\"></div>
                     ";
-        // line 61
+        // line 63
         echo $this->env->getExtension('http_kernel')->renderFragment($this->env->getExtension('http_kernel')->controller("FOSUserBundle:Security:login"));
         echo "
                 </div>
                 ";
-        // line 63
+        // line 65
         $this->displayBlock('body', $context, $blocks);
         echo "  
             </div>
+            <!-- 09/07/2017
             <div id=\"borderRightBook\"></div>
+            -->
         </div>
 \t
-\t<div id=\"rightFrame\">
+\t<div oncontextmenu=\"return false;\" id=\"rightFrame\">
             <a class=\"link\" href=\"#\" title=\"Grossir la police\"><p class=\"firstButton buttonFontSize centerPage\">p</p></a>
             <a class=\"link\" href=\"#\" title=\"Changer l'apparence du texte\"> <p class=\"button buttonTextColor centerPage\">c</p></a>
             
             ";
-        // line 72
+        // line 76
         $this->displayBlock('buttonTextDisplay', $context, $blocks);
-        // line 73
+        // line 77
         echo "            ";
         $this->displayBlock('socialNetwork', $context, $blocks);
-        // line 74
+        // line 78
         echo "        </div>
             
         <!-- A mettre aprés l'utilisation de div(s) avec float-->
@@ -160,14 +164,14 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
                     <li>Réalisation : Axelle Palermo, Hellypse, K.Zlovetch</li>
                         <!-- Si on est connecté-->
                         ";
-        // line 85
+        // line 89
         if ($this->env->getExtension('security')->isGranted("IS_AUTHENTICATED_REMEMBERED")) {
-            // line 86
+            // line 90
             echo "                            <!-- Si on est un admin-->
                             ";
-            // line 87
+            // line 91
             if ($this->env->getExtension('security')->isGranted("ROLE_ADMIN")) {
-                // line 88
+                // line 92
                 echo "                                <li><a class=\"link\" href=\"";
                 echo $this->env->getExtension('routing')->getPath("sonata_admin_dashboard");
                 echo "\">Panneau d'administration</a><a class=\"link\" href=\"";
@@ -175,22 +179,22 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
                 echo "\"> - Déconnexion</a></li>
                             ";
             }
-            // line 90
+            // line 94
             echo "                        <!-- Sinon-->
                         ";
         } else {
-            // line 92
+            // line 96
             echo "                        <li id=\"administration\">Administration</li>
                         ";
         }
-        // line 94
+        // line 98
         echo "                </ul>
             </div>
             
             <div id=\"rightCorner\">
                 <ul>
                     <li><a class=\"underline\" href=\"";
-        // line 99
+        // line 103
         echo $this->env->getExtension('routing')->getPath("apa_generalPage_legalMention");
         echo "\" title=\"Mentions légales\">Mentions légales</a></li>
                     <li id=\"copyright\">© 2015, Héloïse Palermo – <span class=\"bold\">Tous droits réservés</span></li>                   
@@ -201,11 +205,11 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         <!--on met le javascript à la fin si possible (performance)-->
         <!-- pour que ça marche en mode prod : php app/console cache:clear --env=prod ET php app/console assetic:dump --env=prod -->
         ";
-        // line 107
+        // line 111
         if (isset($context['assetic']['debug']) && $context['assetic']['debug']) {
             // asset "7a81978_0"
             $context["asset_url"] = isset($context['assetic']['use_controller']) && $context['assetic']['use_controller'] ? $this->env->getExtension('routing')->getPath("_assetic_7a81978_0") : $this->env->getExtension('assets')->getAssetUrl("js/7a81978_init_1.js");
-            // line 108
+            // line 112
             echo "            <script type=\"text/javascript\" src=\"";
             echo twig_escape_filter($this->env, (isset($context["asset_url"]) ? $context["asset_url"] : null), "html", null, true);
             echo "\"></script>
@@ -225,7 +229,7 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
         ";
         }
         unset($context["asset_url"]);
-        // line 110
+        // line 114
         echo "    </body>
 </html>
 ";
@@ -288,17 +292,17 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
     {
     }
 
-    // line 63
+    // line 65
     public function block_body($context, array $blocks = array())
     {
     }
 
-    // line 72
+    // line 76
     public function block_buttonTextDisplay($context, array $blocks = array())
     {
     }
 
-    // line 73
+    // line 77
     public function block_socialNetwork($context, array $blocks = array())
     {
     }
@@ -315,6 +319,6 @@ class __TwigTemplate_6027eec8daeb2dd35674bdd250bb0e8ba1b70f67ae62f906880b629f5a0
 
     public function getDebugInfo()
     {
-        return array (  302 => 73,  297 => 72,  292 => 63,  287 => 29,  282 => 16,  279 => 15,  275 => 13,  255 => 11,  251 => 10,  248 => 9,  245 => 8,  240 => 6,  235 => 4,  229 => 110,  209 => 108,  205 => 107,  194 => 99,  187 => 94,  183 => 92,  179 => 90,  171 => 88,  169 => 87,  166 => 86,  164 => 85,  151 => 74,  148 => 73,  146 => 72,  134 => 63,  129 => 61,  115 => 50,  111 => 49,  107 => 48,  99 => 43,  93 => 40,  87 => 37,  82 => 35,  78 => 34,  72 => 30,  70 => 29,  63 => 25,  59 => 24,  51 => 18,  49 => 15,  46 => 14,  44 => 8,  39 => 7,  37 => 6,  32 => 4,  27 => 1,);
+        return array (  306 => 77,  301 => 76,  296 => 65,  291 => 29,  286 => 16,  283 => 15,  279 => 13,  259 => 11,  255 => 10,  252 => 9,  249 => 8,  244 => 6,  239 => 4,  233 => 114,  213 => 112,  209 => 111,  198 => 103,  191 => 98,  187 => 96,  183 => 94,  175 => 92,  173 => 91,  170 => 90,  168 => 89,  155 => 78,  152 => 77,  150 => 76,  136 => 65,  131 => 63,  115 => 50,  111 => 49,  107 => 48,  99 => 43,  93 => 40,  87 => 37,  82 => 35,  78 => 34,  72 => 30,  70 => 29,  63 => 25,  59 => 24,  51 => 18,  49 => 15,  46 => 14,  44 => 8,  39 => 7,  37 => 6,  32 => 4,  27 => 1,);
     }
 }

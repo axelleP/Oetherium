@@ -62,7 +62,7 @@ class __TwigTemplate_09c09fd58d1cc494c8a49d05a2bea04e489c7d84199d5c3b1ffb03fc8a6
         echo " - Chapitre ";
         echo twig_escape_filter($this->env, $this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "number", array()), "html", null, true);
         echo "</h1>
-        
+
         <div id=\"contentMiddleFrame\" itemprop=\"text\">
             <div class=\"contentChapter\">
                 ";
@@ -82,7 +82,7 @@ class __TwigTemplate_09c09fd58d1cc494c8a49d05a2bea04e489c7d84199d5c3b1ffb03fc8a6
         // line 19
         echo "            </div>
         </div>
-        
+
         <div id=\"pagination\">";
         // line 22
         echo $this->env->getExtension('knp_pagination')->render((isset($context["pagination"]) ? $context["pagination"] : null));
@@ -94,23 +94,23 @@ class __TwigTemplate_09c09fd58d1cc494c8a49d05a2bea04e489c7d84199d5c3b1ffb03fc8a6
             // line 25
             echo "            <a class=\"boxLink\" itemprop=\"url\" href=\"";
             echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_chapter", array("numero" => ($this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "number", array()) - 1))), "html", null, true);
-            echo "\">Chapitre précédent</a>
+            echo "\">Chapitre précédent</a>&nbsp;-
         ";
         }
         // line 27
-        echo "        
+        echo "
         ";
         // line 28
         if (($this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "id", array()) != (isset($context["lastId"]) ? $context["lastId"] : null))) {
             // line 29
             echo "            <a class=\"boxLink\" itemprop=\"url\" href=\"";
             echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_chapter", array("numero" => ($this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "number", array()) + 1))), "html", null, true);
-            echo "\">Chapitre suivant</a>
+            echo "\">Chapitre suivant</a>&nbsp;-
         ";
         }
         // line 31
-        echo "        
-        - <a class=\"boxLink\" itemprop=\"url\" href=\"";
+        echo "
+        <a class=\"boxLink\" itemprop=\"url\" href=\"";
         // line 32
         echo $this->env->getExtension('routing')->getPath("apa_story_chapters");
         echo "\">Retour aux chapitres</a><br><br>
@@ -137,7 +137,7 @@ class __TwigTemplate_09c09fd58d1cc494c8a49d05a2bea04e489c7d84199d5c3b1ffb03fc8a6
         echo "»%20-%20Oetherium\">
         <i class=\"fa fa-twitter fa-lg tw\">t</i>
     </a>
-    
+
     <a class=\"buttonSocialNetwork centerPage facebookButton\" target=\"_blank\" title=\"Facebook\" href=\"http://www.facebook.com/sharer.php?u=";
         // line 45
         echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : null), "request", array()), "uri", array()), "html", null, true);
@@ -146,7 +146,7 @@ class __TwigTemplate_09c09fd58d1cc494c8a49d05a2bea04e489c7d84199d5c3b1ffb03fc8a6
         echo "»%20-%20Oetherium\">
         <i class=\"fa fa-facebook fa-lg fb\">f</i>
     </a>
-    
+
     <a class=\"buttonSocialNetwork centerPage googleButton\" target=\"_blank\" title=\"Google Plus\" href=\"https://plusone.google.com/_/+1/confirm?hl=en&amp;url=";
         // line 49
         echo twig_escape_filter($this->env, $this->getAttribute($this->getAttribute((isset($context["app"]) ? $context["app"] : null), "request", array()), "uri", array()), "html", null, true);

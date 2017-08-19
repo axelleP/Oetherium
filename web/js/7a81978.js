@@ -88,20 +88,33 @@ function changeTextDisplay(){
 }
 
 function displayAuthor(){
-    $id = this.id;
-    $descriptionId = '#'+$id.replace('avatar', 'description');
-    
-    if($descriptionId == '#descriptionHelly'){
-        $descriptionId2 = '#descriptionKikile';
+    $avatarId = this.id;
+    $descriptionId = '#'+$avatarId.replace('avatar', 'description');
+
+    //si c'est l'avatar helly
+    if($avatarId.indexOf('Helly') != -1){
+        $cssBorder = '2px solid black';
+        $cssBorder2 = '2px solid white';
+        $avatarId2 = 'avatarKikile';
+        $descriptionId2 = '#descriptionKikile';           
     } else{
-        $descriptionId2 = '#descriptionHelly';
+        $cssBorder = '2px solid white';
+        $cssBorder2 = '2px solid black';
+        $avatarId2 = 'avatarHelly';
+        $descriptionId2 = '#descriptionHelly';           
     }
-    
+     
+    //si la description de l'avatar sélectionné est caché
     if($($descriptionId).is(":hidden")){
        $($descriptionId).css( "display", "block");
        $($descriptionId2).css( "display", "none");
-    }
-    else{
+       $('#'+$avatarId).css("border",$cssBorder);
+       $('#'+$avatarId2).css("border",'none');     
+    } else{
        $($descriptionId).css( "display", "none");
+       $('#'+$id).css("border",'none');
     }
+    /* mis en com le 09/07/2017 en attendant de trouver une solution */
+//    $('#'+$avatarId+':hover').css("border",$cssBorder);
+//    $('#'+$avatarId2+':hover').css("border",$cssBorder2);
 }
