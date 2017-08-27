@@ -1,0 +1,56 @@
+/**
+ * Initialisation des écouteurs
+ * 
+ * @author axelle
+ * @version 1.0
+ * @package 
+ */
+
+/**
+ * Gestion des événements
+ */
+$(document).ready(function() {
+    //Affiche/Cache la connexion
+    $('#administration').bind('click',(displayLogin));
+    $('#formLogin .closeForm').bind('click',(displayLogin));
+    $('#failedConnection .closeForm').bind('click',(displayFailedConnection));
+    //Change l'apparence du site
+    $('.buttonFontSize').bind('click',(changeFontSize));
+    $('.buttonTextColor').bind('click',(changeTextColor));
+    $('.buttonTextDisplay').bind('click',(changeTextDisplay));
+    //Affiche le texte de l'auteur
+//    $('#avatarHelly, #avatarKikile').hover(displayBorderAuthor);
+    $('#avatarHelly, #avatarKikile').click(displayTextAuthor);
+    
+    //Gestion du hover sur les images des auteurs
+    $('#avatarHelly, #avatarKikile').hover(
+        function() {
+            $avatarId = '#'+this.id;
+            if($avatarId.indexOf('Helly') != -1){
+                $('#avatarHelly').css("border",'2px solid black');
+            } else{
+                $('#avatarKikile').css("border",'2px solid white');
+            } 
+        },
+        function() {
+            $avatarId = '#'+this.id;
+            //si l'utilisateur n'a pas cliqué sur l'auteur
+            if(!$(this).hasClass('click')){
+                if($avatarId.indexOf('Helly') != -1){
+                    $('#avatarHelly').css("border",'none');
+                } else{
+                    $('#avatarKikile').css("border",'none');
+                }
+            }      
+        }       
+    );
+ 
+    //met l'image du menu courant correspondant à la page courante
+    $( "#navigation ul.firstUl li a" ).each(function() {
+        if(this.href == window.location.href){
+            $target = 'imgMenu';
+            $(this).removeClass('imgMenu')
+            $(this).addClass($target + "Current");
+        }
+    });
+});

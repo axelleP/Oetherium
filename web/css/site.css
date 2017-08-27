@@ -177,7 +177,7 @@ hr{
     border-right: double #40382b 8px;
     border-left: double #40382b 8px;
     
-    overflow-y : auto;
+    overflow-y: scroll;
     width: 100%;/* 09/07/2017 : 82% */
     height: 129%;
     min-width: 50%; /* Permet de r�duire la fen�tre sans conflit css */
