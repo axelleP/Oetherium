@@ -17,7 +17,7 @@ class CharacterStoryAdmin extends Admin
         /* Prévisualisation de l'avatar */
             $avatar = $this->getSubject()->getAvatar();
             $fileFieldOptions = array('required' => false);
-            
+
             if($avatar && $avatar == 'avatarByDefault.png'){
                 $container = $this->getConfigurationPool()->getContainer();
                 $fullPath = $container->get('request')->getBasePath().'/'.'uploads/apastory/images/'.'/'.$avatar;
@@ -30,14 +30,14 @@ class CharacterStoryAdmin extends Admin
                     $fileFieldOptions['help'] = '<img src="'.$fullPath.'" class="admin-preview" />';
                 }
             }
-            
-            
+
+
         /* Prévisualisation de la galerie */
             $images = $this->getSubject()->getImages();
-            
+
             // use $fileFieldOptions so we can add other options to the field
             $fileFieldOptions2 = array('required' => false);
-      
+
             $galerie = array();
             foreach($images as $image ) {
                 if ($image && ($webPath = $image->getUploadDir())) {
@@ -50,11 +50,11 @@ class CharacterStoryAdmin extends Admin
                     $galerie[] = $fileFieldOptions2['help'];
                 }
             }
-           
+
         $formMapper
             ->add('firstname', 'text', array('label' => 'Prénom'))
             ->add('arrayFirstnames', 'text', array('label' => 'Prénoms'))
-            ->add('name', 'text', array('label' => 'Nom'))
+            ->add('name', 'text', array('label' => 'Nom', 'required' => false))
             ->add('file', 'file', array('label' => 'Avatar', 'required' => false), $fileFieldOptions)
             ->add('species', 'text', array('label' => 'Espèce'))
             ->add('gender', 'text', array('label' => 'Sexe'))
@@ -70,16 +70,16 @@ class CharacterStoryAdmin extends Admin
                     'help' => '<div style="color:red;"><b>Attention :</b> Ajouter une nouvelle
                     image supprime les fichiers choisis précédemment!
                     <br/>Il est préférable de cliquer sur le bouton Ajouter autant de fois que nécessaire puis de choisir les images voulu(s).</div>'
-                
+
                 )
                 , array(
                     'edit' => 'inline',
                     'inline' => 'table',
-                    'targetEntity' => 'Apa\StoryBundle\Entity\Image' 
+                    'targetEntity' => 'Apa\StoryBundle\Entity\Image'
                 )
             )
         ;
-        
+
         /*foreach($galerie as $img ) {
             echo $img;
         }*/
@@ -102,7 +102,7 @@ class CharacterStoryAdmin extends Admin
             ->add('name', 'text', array('label' => 'Nom'))
         ;
     }
-    
+
     // fonctions pour gérer les personnages avant enregistrement
     public function prePersist($character){
         if($character->getFile() == null){
@@ -118,11 +118,11 @@ class CharacterStoryAdmin extends Admin
 
     private function manageFileUpload($character) {
         $images = $character->getImages();
-       
+
         foreach($images as $image ) {
             if ($image->getFile()) {
                 $image->refreshUpdated();
-                $image->setCharacterStory($character);  
+                $image->setCharacterStory($character);
             }
         }
     }

@@ -68,7 +68,7 @@ class __TwigTemplate_e638b0edd966fc550ec4373ce82fe9ce82b31a52f13983fab0ed7ed261d
                 echo "                        <span itemscope itemtype=\"http://schema.org/Thing\">
                             <a class=\"link\" itemprop=\"url\" href=\"";
                 // line 18
-                echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_chapter", array("numero" => $this->getAttribute($context["chapter"], "id", array()))), "html", null, true);
+                echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_chapter", array("numero" => $this->getAttribute($context["chapter"], "number", array()))), "html", null, true);
                 echo "\">
                                 <span class=\"capital chapterTitle\" itemprop=\"name\">";
                 // line 19

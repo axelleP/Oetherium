@@ -15,7 +15,7 @@
                 {% if pagination %}
                     {% for chapter in pagination %}
                         <span itemscope itemtype="http://schema.org/Thing">
-                            <a class="link" itemprop="url" href="{{ path('apa_story_chapter',{'numero':chapter.id}) }}">
+                            <a class="link" itemprop="url" href="{{ path('apa_story_chapter',{'numero':chapter.number}) }}">
                                 <span class="capital chapterTitle" itemprop="name">{{chapter.number}}. {{ chapter.title }}</span>
                             </a>
                         </span><br><br>

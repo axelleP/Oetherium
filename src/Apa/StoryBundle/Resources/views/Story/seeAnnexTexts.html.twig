@@ -17,7 +17,7 @@
                     <div itemscope itemtype="http://schema.org/Thing">
                         <p class="capital underline subtitle bold" itemprop="name">{{ annexText.title }}</p>
                         <p itemprop="description">{{ annexText.contents |striptags|truncate(370, true)|raw}}</p>
-                        <a class="colorUnderlineLink" itemprop="url" href="{{ path('apa_story_annexText', {'numero': annexText.id}) }}">Lire la suite</a>
+                        <a class="colorUnderlineLink" itemprop="url" href="{{ path('apa_story_annexText', {'numero': annexText.id}) }}">Lire la suite...</a>
                     </div>
                 {% endfor %}
             {% else %}

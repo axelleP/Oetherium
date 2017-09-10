@@ -20,18 +20,22 @@
                         <div oncontextmenu="return false;" class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
                             <ul class="zoom">
                                 <li>
-                                    <a class="link" itemprop="url" href="{{ path('apa_story_characterProfile',{'firstname':character.firstname, 'name':character.name}) }}">
+                                    {% set name = 'inconnu' %}
+                                    {% if character.name is not empty %}
+                                        {% set name = character.name %}
+                                    {% endif %}   
+                                    <a class="link" itemprop="url" href="{{ path('apa_story_characterProfile',{'firstname':character.firstname, 'name':name}) }}">
                                         <div class="centerPage vignetteAvatar">
                                             {% if character.avatar == 'avatarByDefault.png' %}
-                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{character.name}}"/>
+                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{name}}"/>
                                             {% else %}
-                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.firstname ~'-' ~character.name ~'/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{character.name}}"/>
+                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.firstname ~'-' ~name ~'/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{name}}"/>
                                             {% endif %}
                                         </div>
                                     </a>
                                 </li>
                             </ul>
-                            <div class="vignetteName capital"><span itemprop="givenName">{{ character.firstname }}</span><br><span itemprop="familyName">{{ character.name }}</span></div>
+                            <div class="vignetteName capital"><span itemprop="givenName">{{ character.firstname }}</span><br><span itemprop="familyName">{{ name }}</span></div>
                         </div>
                     {% endfor %}
                 {% else %}
@@ -48,18 +52,22 @@
                         <div oncontextmenu="return false;" class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
                             <ul class="zoom">
                                 <li>
-                                    <a class="link" itemprop="url" href="{{ path('apa_story_characterProfile',{'firstname':character.firstname, 'name':character.name}) }}">
+                                    {% set name = 'inconnu' %}
+                                    {% if character.name is not empty %}
+                                        {% set name = character.name %}
+                                    {% endif %} 
+                                    <a class="link" itemprop="url" href="{{ path('apa_story_characterProfile',{'firstname':character.firstname, 'name':name}) }}">
                                         <div class="centerPage vignetteAvatar">
                                             {% if character.avatar == 'avatarByDefault.png' %}
-                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{character.name}}"/>
+                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{name}}"/>
                                             {% else %}
-                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.firstname ~'-' ~character.name ~'/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{character.name}}"/>
+                                                <img itemprop="image" src="{{ asset(('uploads/apastory/images/' ~character.firstname ~'-' ~name ~'/' ~character.avatar ) | imagine_filter('miniatureAvatar2')) }}" alt="Avatar miniature de {{character.firstname}} {{name}}"/>
                                             {% endif %}
                                         </div>
                                     </a>
                                 </li>
                             </ul>
-                            <div class="vignetteName capital"><span itemprop="givenName">{{ character.firstname }}</span><br><span itemprop="familyName">{{ character.name }}</span></div>
+                            <div class="vignetteName capital"><span itemprop="givenName">{{ character.firstname }}</span><br><span itemprop="familyName">{{ name }}</span></div>
                         </div>
                     {% endfor %}
                 {% else %}

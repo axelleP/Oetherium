@@ -77,7 +77,7 @@ class __TwigTemplate_a3e82ab2a9de248675a11b631e261af589c8034680fb2c8cef5694dfbf7
                         <a class=\"colorUnderlineLink\" itemprop=\"url\" href=\"";
                 // line 20
                 echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_annexText", array("numero" => $this->getAttribute($context["annexText"], "id", array()))), "html", null, true);
-                echo "\">Lire la suite</a>
+                echo "\">Lire la suite...</a>
                     </div>
                 ";
             }
