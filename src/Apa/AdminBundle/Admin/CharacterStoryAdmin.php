@@ -105,14 +105,32 @@ class CharacterStoryAdmin extends Admin
 
     // fonctions pour gérer les personnages avant enregistrement
     public function prePersist($character){
+        //si l'utilsateur n'a pas mis d'avatar on en met un par défaut
         if($character->getFile() == null){
             $character->setAvatar('avatarByDefault.png');
         }
+
         // Gestion des images
         $this->manageFileUpload($character);
     }
 
     public function preUpdate($character){
+        //récupère le nom et le prénom du personnage en base de données
+        $entity = new \Apa\StoryBundle\Entity\CharacterStory();
+        $entityManager = $this->modelManager->getEntityManager($entity);
+        $resultSQL_characterInDatabase = $entityManager->createQuery('SELECT c.name, c.firstname FROM Apa\StoryBundle\Entity\CharacterStory c WHERE c.id = '.$character->getId())->execute();
+        $nameInDatabase = $resultSQL_characterInDatabase[0]['name'];
+        $firstnameInDatabase = $resultSQL_characterInDatabase[0]['firstname'];
+
+        $newFullName = $character->getFirstname().'-'.$character->getName();
+        $oldFullName = $firstnameInDatabase.'-'.$nameInDatabase;
+
+        //si l'utilisateur a changé le nom ou prénom du personnage
+        if($character->getFirstname() != $firstnameInDatabase || $character->getName() != $nameInDatabase){
+            //on renomme le dossier ou sont stockées ses images
+            rename ("uploads/apastory/images/$oldFullName", "uploads/apastory/images/$newFullName");
+        }
+
         $this->manageFileUpload($character);
     }
 

@@ -89,7 +89,7 @@
                         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                             <!-- Si on est un admin-->
                             {% if is_granted('ROLE_ADMIN') %}
-                                <li><a class="link" href="{{ path('sonata_admin_dashboard') }}">Panneau d'administration</a><a class="link" href="{{ path('fos_user_security_logout') }}"> - Déconnexion</a></li>
+                                <li><a target="_blank" class="link" href="{{ path('sonata_admin_dashboard') }}">Panneau d'administration</a><a class="link" href="{{ path('fos_user_security_logout') }}"> - Déconnexion</a></li>
                             {% endif %}
                         <!-- Sinon-->
                         {% else %}
