@@ -96,7 +96,7 @@ class StoryController extends Controller {
                 ->getRepository('ApaStoryBundle:AnnexText');
 
         //On récupère les textes annexes
-        $annexTexts = $repository->findBy(array(), array('id' => 'desc'));
+        $annexTexts = $repository->findAll();
 
         //Pagination
         $paginator = $this->get('knp_paginator'); //on se sert du bundle KnpPaginatorBundle
@@ -116,11 +116,13 @@ class StoryController extends Controller {
         //On récupère les informations du texte annexe
         $annexText = $repository->findOneBy(array('id' => $numero));
 
-        //1er et dernier id en base
-        $firstId = $repository->getIdByOrder('asc');
-        $lastId = $repository->getIdByOrder('desc');
+        $resultSQL_previousId = $repository->getPreviousId($numero);
+        $previousId = $resultSQL_previousId['id'];
 
-        return $this->render('ApaStoryBundle:Story:readAnnexText.html.twig', array('annexText' => $annexText, 'firstId' => $firstId[0]['id'], 'lastId' => $lastId[0]['id']));
+        $resultSQL_nextId = $repository->getNextId($numero);
+        $nextId = $resultSQL_nextId['id'];
+
+        return $this->render('ApaStoryBundle:Story:readAnnexText.html.twig', array('annexText' => $annexText, 'previousId' => $previousId, 'nextId' => $nextId));
     }
 
 }

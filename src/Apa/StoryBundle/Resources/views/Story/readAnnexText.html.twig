@@ -17,13 +17,13 @@
         
         <!-- Rappel : les textes sont affichés du plus récent au plus ancien -->
         <!-- si l'id n'est pas le premier de la liste alors on peut faire précédent-->
-        {% if annexText.id != lastId %}
-            <a class="boxLink" itemprop="url" href="{{ path('apa_story_annexText', {'numero': annexText.id+1}) }}">Texte précédent</a>&nbsp;-
+        {% if previousId is not empty %}
+            <a class="boxLink" itemprop="url" href="{{ path('apa_story_annexText', {'numero': previousId}) }}">Texte précédent</a>&nbsp;-
         {% endif %}
         
         <!-- si l'id n'est pas le dernier de la liste alors on peut faire suivant-->
-        {% if annexText.id != firstId %}
-            <a class="boxLink" itemprop="url" href="{{ path('apa_story_annexText', {'numero': annexText.id-1}) }}">Texte suivant</a>&nbsp;-
+        {% if nextId is not empty %}
+            <a class="boxLink" itemprop="url" href="{{ path('apa_story_annexText', {'numero': nextId}) }}">Texte suivant</a>&nbsp;-
         {% endif %}
     
         <a class="boxLink" itemprop="url" href="{{ path('apa_story_annexTexts') }}">Retour aux textes</a>

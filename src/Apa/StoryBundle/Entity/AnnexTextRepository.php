@@ -12,15 +12,27 @@ use Doctrine\ORM\EntityRepository;
  */
 class AnnexTextRepository extends EntityRepository
 {
-    public function getIdByOrder($order)
-    {    
+    public function getNextId($id)
+    {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('a.id')
-           ->from('ApaStoryBundle:AnnexText', 'a')
-           ->orderBy('a.id', $order);
-           
+            ->from('ApaStoryBundle:AnnexText', 'a')
+            ->where("a.id > $id");
+
         return $qb->getQuery()
                 ->setMaxResults(1)
-                ->getResult();
+                ->getOneOrNullResult();
+    }
+
+    public function getPreviousId($id)
+    {
+        $qb = $this->_em->createQueryBuilder();
+        $qb->select('a.id')
+            ->from('ApaStoryBundle:AnnexText', 'a')
+            ->where("a.id < $id");
+
+        return $qb->getQuery()
+                ->setMaxResults(1)
+                ->getOneOrNullResult();
     }
 }
