@@ -73,7 +73,7 @@ class __TwigTemplate_2c39831a29cd292575a3c1feadc83529fc3e4664d10e3d987944a32cedd
                                 <li>
                                     ";
                 // line 23
-                $context["name"] = "inconnu";
+                $context["name"] = null;
                 // line 24
                 echo "                                    ";
                 if ( !twig_test_empty($this->getAttribute($context["character"], "name", array()))) {
@@ -83,9 +83,8 @@ class __TwigTemplate_2c39831a29cd292575a3c1feadc83529fc3e4664d10e3d987944a32cedd
                     // line 26
                     echo "                                    ";
                 }
-                echo "   
-                                    <a class=\"link\" itemprop=\"url\" href=\"";
                 // line 27
+                echo "                                    <a class=\"link\" itemprop=\"url\" href=\"";
                 echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_characterProfile", array("firstname" => $this->getAttribute($context["character"], "firstname", array()), "name" => (isset($context["name"]) ? $context["name"] : $this->getContext($context, "name")))), "html", null, true);
                 echo "\">
                                         <div class=\"centerPage vignetteAvatar\">
@@ -157,7 +156,7 @@ class __TwigTemplate_2c39831a29cd292575a3c1feadc83529fc3e4664d10e3d987944a32cedd
                                 <li>
                                     ";
                 // line 55
-                $context["name"] = "inconnu";
+                $context["name"] = null;
                 // line 56
                 echo "                                    ";
                 if ( !twig_test_empty($this->getAttribute($context["character"], "name", array()))) {
@@ -265,6 +264,6 @@ class __TwigTemplate_2c39831a29cd292575a3c1feadc83529fc3e4664d10e3d987944a32cedd
 
     public function getDebugInfo()
     {
-        return array (  249 => 90,  242 => 86,  234 => 82,  231 => 81,  224 => 76,  220 => 74,  217 => 73,  206 => 70,  200 => 66,  190 => 64,  180 => 62,  178 => 61,  173 => 59,  168 => 58,  165 => 57,  162 => 56,  160 => 55,  155 => 52,  150 => 51,  148 => 50,  140 => 44,  136 => 42,  133 => 41,  122 => 38,  116 => 34,  106 => 32,  96 => 30,  94 => 29,  89 => 27,  84 => 26,  81 => 25,  78 => 24,  76 => 23,  71 => 20,  66 => 19,  64 => 18,  55 => 11,  52 => 10,  46 => 8,  41 => 5,  38 => 4,  32 => 2,  11 => 1,);
+        return array (  248 => 90,  241 => 86,  233 => 82,  230 => 81,  223 => 76,  219 => 74,  216 => 73,  205 => 70,  199 => 66,  189 => 64,  179 => 62,  177 => 61,  172 => 59,  167 => 58,  164 => 57,  161 => 56,  159 => 55,  154 => 52,  149 => 51,  147 => 50,  139 => 44,  135 => 42,  132 => 41,  121 => 38,  115 => 34,  105 => 32,  95 => 30,  93 => 29,  87 => 27,  84 => 26,  81 => 25,  78 => 24,  76 => 23,  71 => 20,  66 => 19,  64 => 18,  55 => 11,  52 => 10,  46 => 8,  41 => 5,  38 => 4,  32 => 2,  11 => 1,);
     }
 }

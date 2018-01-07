@@ -4,7 +4,7 @@ apa_story_characters:
     
 apa_story_characterProfile:
     path:     /profil/{firstname}-{name}
-    defaults: { _controller: ApaStoryBundle:Story:seeCharacterProfile, name: 'null',  firstname: 'null'  }
+    defaults: { _controller: ApaStoryBundle:Story:seeCharacterProfile, name: null,  firstname: null  }
     
 apa_story_chapters:
     path:     /chapitres/page-{page}

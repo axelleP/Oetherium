@@ -210,7 +210,7 @@ class appDevUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirectab
 
             // apa_story_characterProfile
             if (0 === strpos($pathinfo, '/profil') && preg_match('#^/profil(?:/(?P<firstname>[^/\\-]++)(?:\\-(?P<name>[^/]++))?)?$#s', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'apa_story_characterProfile')), array (  '_controller' => 'Apa\\StoryBundle\\Controller\\StoryController::seeCharacterProfileAction',  'name' => 'null',  'firstname' => 'null',));
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'apa_story_characterProfile')), array (  '_controller' => 'Apa\\StoryBundle\\Controller\\StoryController::seeCharacterProfileAction',  'name' => NULL,  'firstname' => NULL,));
             }
 
         }

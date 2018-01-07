@@ -20,10 +20,10 @@
                         <div oncontextmenu="return false;" class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
                             <ul class="zoom">
                                 <li>
-                                    {% set name = 'inconnu' %}
+                                    {% set name = NULL %}
                                     {% if character.name is not empty %}
                                         {% set name = character.name %}
-                                    {% endif %}   
+                                    {% endif %}
                                     <a class="link" itemprop="url" href="{{ path('apa_story_characterProfile',{'firstname':character.firstname, 'name':name}) }}">
                                         <div class="centerPage vignetteAvatar">
                                             {% if character.avatar == 'avatarByDefault.png' %}
@@ -52,7 +52,7 @@
                         <div oncontextmenu="return false;" class="vignetteCharacter" itemscope itemtype="http://schema.org/Person">
                             <ul class="zoom">
                                 <li>
-                                    {% set name = 'inconnu' %}
+                                    {% set name = NULL %}
                                     {% if character.name is not empty %}
                                         {% set name = character.name %}
                                     {% endif %} 
