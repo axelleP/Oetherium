@@ -58,7 +58,9 @@ class CharacterStoryAdmin extends Admin
             ->add('file', 'file', array('label' => 'Avatar', 'required' => false), $fileFieldOptions)
             ->add('species', 'text', array('label' => 'Espèce'))
             ->add('gender', 'text', array('label' => 'Sexe'))
-            ->add('dateBirth', 'sonata_type_date_picker', array('label' => 'Date de naissance','dp_language'=>'fr','format' => 'yyyy-MM-dd'))
+            ->add('dateBirth', 'sonata_type_date_picker', array('label' => 'Date de naissance','dp_language'=>'fr','format' => 'yyyy-MM-dd', 'attr' => array(
+              'data-date-format' => 'DD/MM/YYYY',
+    )))
             ->add('placeBirth', 'text', array('label' => 'Lieu de naissance'))
             ->add('citation', 'text', array('label' => 'Citation'))
             ->add('description', 'textarea', array('label' => 'Description'))
@@ -69,7 +71,7 @@ class CharacterStoryAdmin extends Admin
                     'label' => 'Images',
                     'help' => '<div style="color:red;"><b>Attention :</b> Ajouter une nouvelle
                     image supprime les fichiers choisis précédemment!
-                    <br/>Il est préférable de cliquer sur le bouton Ajouter autant de fois que nécessaire puis de choisir les images voulu(s).</div>'
+                    <br/>Il est préférable de cliquer sur le bouton Ajouter autant de fois que nécessaire puis de choisir le(s) image(s) voulue(s).</div>'
 
                 )
                 , array(
