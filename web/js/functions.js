@@ -18,24 +18,32 @@ function displayFailedConnection(){
 }
 
 function changeFontSize(){
-    $element = "html";
-    if($($element).css("font-size") == "16px"){
-        $($element).css( "font-size", "0.9em");
+    $element = "html, #middleFrame, #contentMiddleFrame span";
+    
+    if($($element).css("font-family") == "Verdana, Arial, Georgia, \"Trebuchet MS\", serif"){
+        $defaultFontSize = 14;
+    } else {
+        $defaultFontSize = 18;
+    }
+
+    if($($element).css("font-size") == $defaultFontSize+"px"){
+        $($element).css( "font-size", $defaultFontSize+2+"px");
     }else{
-        $($element).css( "font-size", "1em");
+        $($element).css( "font-size", $defaultFontSize+"px");
     }  
 }
 
 function changeTextColor(){
-    $element = "#contentMiddleFrame";
-    $element2 = "#contentMiddleFrame span";
-   
-    if($($element).css("color") == "rgb(0, 0, 0)" && $($element2).css("color") == "rgb(0, 0, 0)"){
-        $($element).css( "color", "blue");
-        $($element2).css( "color", "blue");
+    $element = "html, #middleFrame, #contentMiddleFrame span";
+
+    if($($element).css("color") === "rgb(0, 0, 0)"){
+        $($element).css( "color", "#980000");
+        $($element).css( "font-family", "High Tower Text, Arial, Georgia, \"Trebuchet MS\", serif");
+        $($element).css( "font-size", "18px");
     }else{
         $($element).css( "color", "rgb(0, 0, 0)");
-        $($element2).css( "color", "rgb(0, 0, 0)");
+        $($element).css( "font-family", "Verdana, Arial, Georgia, \"Trebuchet MS\", serif");
+        $($element).css( "font-size", "14px");
     }
 }
 

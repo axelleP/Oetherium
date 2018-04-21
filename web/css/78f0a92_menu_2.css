@@ -10,6 +10,11 @@
     list-style-type : none;
 }
 
+#navigation ul li {
+    width : 222px;
+    margin : 0 9% 0 9%;
+}
+
 /* Blocs - Textes */
 #navigation ul li a{
     display: block;

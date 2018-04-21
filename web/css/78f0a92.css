@@ -115,8 +115,11 @@ html, body {
 }
 hr{
     border: 0;
-    height: 1px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    border-bottom : 1px solid grey;
+    height: 50px;
+    background-image: url('../../img/border-summary.png');
+    background-repeat: no-repeat;
+    background-position: center;
 }
 /* FIN GENERALITE */
 
@@ -177,7 +180,7 @@ hr{
     border-right: double #40382b 8px;
     border-left: double #40382b 8px;
     
-    overflow-y : auto;
+    overflow-y: scroll;
     width: 100%;/* 09/07/2017 : 82% */
     height: 129%;
     min-width: 50%; /* Permet de r�duire la fen�tre sans conflit css */
@@ -691,6 +694,11 @@ footer .link:hover{
     margin-top: 7%;
     padding: 0;
     list-style-type : none;
+}
+
+#navigation ul li {
+    width : 222px;
+    margin : 0 9% 0 9%;
 }
 
 /* Blocs - Textes */

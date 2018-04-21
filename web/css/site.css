@@ -13,8 +13,8 @@ html, body {
     background-color: black;
     background-image:  url('../img/background.jpg');
     text-align: center;
-    font-family: "Verdana", "Arial", Georgia, "Trebuchet MS", serif;
-    font-size: 0.9em;
+    font-family: Verdana, Arial, Georgia, "Trebuchet MS", serif;
+    font-size: 14px;
     color: black;
 }
 /* FIN GLOBAL */
