@@ -12,7 +12,8 @@
 
 #navigation ul li {
     width : 222px;
-    margin : 0 9% 0 9%;
+    margin-left : auto;
+    margin-right : auto;
 }
 
 /* Blocs - Textes */
@@ -88,12 +89,62 @@
 /* FIN SOUS MENU */
 
 /* RESOLUTION */
-@media (max-width: 650px) {
-    #navigation { font-size: 77%; }
-}
-
-@media screen and (max-width:500px){
-    #navigation ul a{
-        margin: 1% 20% 0 20%;
+@media screen and (max-width:1047px) {
+    /* le menu ne conserve pas les images fixes */
+    #navigation .imgMenu {
+        background-image: none;
+        background-color: #f6e5bc;
+        border: double 3px #40382b;
+    }
+    #navigation .imgMenu:hover {
+        background-image: none;
+        background-color: #fff1d3;
+        border: double 3px #40382b;
+    }
+    #navigation .imgMenuCurrent {
+        background-image: none;
+        background-color: #fff1d3;
+        border: double 3px #40382b;
+    }
+    #navigation .imgSubMenu {
+        background-image: none;
+        background-color: #f6e5bc;
+        border: double 3px #40382b;
+    }
+    #navigation .imgSubMenu:hover {
+        background-image: none;
+        background-color: #fff1d3;
+        border: double 3px #40382b;
+    }
+    #navigation .imgSubMenuCurrent {
+        background-image: none;
+        background-color: #fff1d3;
+        border: double 3px #40382b;
+    }
+    
+    #navigation ul.firstUl li {      
+        width : 80%;
+    }
+    #navigation ul li a {
+        height: auto;
+        line-height: 1.5em;
     }
 }
+
+@media screen and (max-width:844px) {
+    /* largeur menu */
+    #navigation ul.firstUl li {      
+        width : 30%;
+    }
+    
+    /* enlève les espaces en trop du sous menu */
+    #navigation ul.firstUl li ul li {
+        height: auto;
+        margin: 0;
+    }
+    #navigation ul.firstUl li ul li a.imgSubMenu {
+        height: auto;
+        margin: 0;
+    }
+}
+/* FIN RESOLUTION */
