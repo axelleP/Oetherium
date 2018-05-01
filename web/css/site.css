@@ -133,8 +133,6 @@ hr{
     height: 129%;
     margin: 0 2% 0 3%;
     background-color: #231d18;
-    overflow-y: scroll;
-    overflow-x: hidden;
 
     border-image: url(../img/border-left.jpg) 0 100% 0 100% round round;
     -webkit-border-image: url(../img/border-left.jpg)  0 100% 0 100% round round;
@@ -144,16 +142,6 @@ hr{
     /* si border-image n'est pas pris en charge */
     border-right: double #40382b 8px;
     border-left: double #40382b 8px;
-}
-
-#leftFrame::-webkit-scrollbar-track{
-    -webkit-box-shadow: inset 0 0 6px transparent;
-    background-color: transparent;
-}
-
-#leftFrame::-webkit-scrollbar{
-    width: 1.2%;
-    background-color: transparent;
 }
 
 #book{
@@ -240,8 +228,6 @@ hr{
     right: 0;
     margin: 0 0 0 3.7%;
     background-color: #231d18;
-    overflow-y: scroll;
-    overflow-x: hidden;
 
     border-image: url(../img/border-left.jpg) 0 90% 0 90% round round;
     border-image-repeat: repeat;
@@ -251,16 +237,6 @@ hr{
     /* si border-image n'est pas prs en charge */
     border-right: double #40382b 8px;
     border-left: double #40382b 8px;
-}
-
-#rightFrame::-webkit-scrollbar-track{
-    -webkit-box-shadow: inset 0 0 6px transparent;
-    background-color: transparent;
-}
-
-#rightFrame::-webkit-scrollbar{
-    width: 1.2%;
-    background-color: transparent;
 }
 
 /* contentPage */
@@ -667,6 +643,8 @@ footer .link:hover{
         border: solid 1px #40382b;
         overflow: hidden;
     }
+    
+    /* replace les boutons */
     .firstButton {
         margin: 0;
         cursor: pointer;
@@ -698,7 +676,7 @@ footer .link:hover{
 }
 
 @media screen and (max-width:844px) {
-    /* les blocs de gauche et du milieu prennent toute la largeur */
+    /* les blocs prennent toute la largeur */
     #leftFrame {
         width: 100%;
         margin: 0 0 2% 0;
@@ -710,33 +688,59 @@ footer .link:hover{
         width: 100%;
         height: auto;
         margin: 0;
-    }
-    
+    } 
     #middleFrame{
         width: 100%;/* 09/07/2017 : 82% */
         height: auto;
     }
-    
-    /* les images se redimensionnent dans le bloc du milieu */
-    #contentMiddleFrame img {
-        width : 50%;
-    }
-    #contentMiddleFrame #authorAvatar img {
-        width : 20%;
-    }
-    #contentMiddleFrame .vignetteAvatar img{
-        width : auto;
-    }
-    
     #rightFrame {
         width: 100%;
         height: 6%;
         margin: 0;
     }
     
+    /* les images se redimensionnent */
+    #leftFrame #logo{
+        width : 20%;
+        height : auto;
+    }
+    #contentMiddleFrame img {
+        width : 50%;
+    }
+    #contentMiddleFrame #authorAvatar img {
+        width : 20%;
+    }
+    ul.zoom {
+        width : 50%;
+    }
+    .zoom li a {
+        width : 100%;
+        height: auto;
+    }
+    .vignetteAvatar {
+        width : 100%;
+        height: auto;
+        background-color: black;
+    }
+    #contentMiddleFrame .vignetteAvatar img {
+        width : 100%;
+        background-color: black;
+    }
+    .vignetteCharacter {
+        width : 20%;
+    }
+    .vignetteName {
+        width : 50%;
+    }
+    
     /* replace le footer */
     #leftCorner{
         margin-left: 16%;
+    }
+    
+    /* cache les boutons mal gérés */
+    .buttonFontSize, .buttonTextColor {
+        display : none;
     }
 }
 /* FIN RESOLUTION */
