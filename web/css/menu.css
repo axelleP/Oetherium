@@ -1,4 +1,4 @@
-#descriptionMenu{
+#descriptionMenu {
     color: #f8e8c0;
     margin: 5% 7% 0 7%;
 }
@@ -17,7 +17,7 @@
 }
 
 /* Blocs - Textes */
-#navigation ul li a{
+#navigation ul li a {
     display: block;
     background-position: center;
     height: 49px;
@@ -30,33 +30,35 @@
     text-decoration: none;
     text-indent: 0.6em;   
 }
-/* bloc visible du sous menu */
-#navigation ul a.imgMenu2{
+
+/* Bloc visible du sous menu */
+#navigation ul a.imgMenu2 {
     margin-bottom: 0;
 }
-/* bloc apres le bloc visible du sous menu */
-#navigation ul a.imgMenu3{
+
+/* Bloc après le bloc visible du sous menu */
+#navigation ul a.imgMenu3 {
     margin-top: 3%;
 }
 
 /* Images  */
-#navigation .imgMenu{
+#navigation .imgMenu {
     background-image: url('../img/nav-close.png');
     background-repeat: no-repeat;
 }
-#navigation .imgMenu:hover{
+#navigation .imgMenu:hover {
     background-image: url('../img/nav-open.png');
     background-repeat: no-repeat;
 }
-#navigation .imgMenuCurrent{
+#navigation .imgMenuCurrent {
     background-image: url('../img/nav-open.png');
     background-repeat: no-repeat;
 }
-#navigation .imgSubMenu{
+#navigation .imgSubMenu {
     background-image: url('../img/sub-nav.png');
     background-repeat: no-repeat;
 }
-#navigation .imgSubMenuCurrent{
+#navigation .imgSubMenuCurrent {
     background-image: url('../img/sub-nav.png');
     background-repeat: no-repeat;
 }
@@ -90,7 +92,7 @@
 
 /* RESOLUTION */
 @media screen and (max-width:1047px) {
-    /* le menu ne conserve pas les images fixes */
+    /* Le menu ne conserve pas les images fixes */
     #navigation .imgMenu {
         background-image: none;
         background-color: #f6e5bc;
@@ -122,6 +124,7 @@
         border: double 3px #40382b;
     }
     
+    /* Largeur menu */
     #navigation ul.firstUl li {      
         width : 80%;
     }
@@ -132,12 +135,12 @@
 }
 
 @media screen and (max-width:844px) {
-    /* largeur menu */
+    /* Largeur menu */
     #navigation ul.firstUl li {      
         width : 30%;
     }
     
-    /* enlève les espaces en trop du sous menu */
+    /* Enlève les espaces en trop du sous menu */
     #navigation ul.firstUl li ul li {
         height: auto;
         margin: 0;

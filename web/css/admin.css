@@ -2,21 +2,21 @@ img.admin-preview {
     max-height: 200px;
     max-width: 200px;
 }
-#navigation{
+#navigation {
     margin-top: 8%;
     text-align: center;
 }
 
-#navigation ul{
+#navigation ul {
     padding: 0;
 }
 
-#navigation ul li{
+#navigation ul li {
     margin-top: 3%;
     padding: 2%;
 }
 
-#navigation ul li:hover{
+#navigation ul li:hover {
     background-color: black;
 }
 .menuLink {

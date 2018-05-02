@@ -18,7 +18,7 @@ apa_admin:
 _liip_imagine:
     resource: "@LiipImagineBundle/Resources/config/routing.xml"
 
-#routes pour le bundle fos user
+# bundle fos user
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 
@@ -48,6 +48,6 @@ _sonata_admin:
     type: sonata_admin
     prefix: /admin
 
-# route javaScript 
+# javaScript 
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"

@@ -25,7 +25,7 @@ framework:
     fragments:       ~
     http_method_override: true
 
-# Twig Configuration
+# Twig
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
@@ -33,13 +33,13 @@ twig:
         resources:
             - 'SonataCoreBundle:Form:datepicker.html.twig'
 
-# Gestion de l'internationalisation (j'arrive pas à mettre le calendrier en fr)
+# Gestion de l'internationalisation
 sonata_intl:
     timezone:
         locales:
             fr: Europe/Paris
 
-# Assetic Configuration
+# Assetic
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
@@ -55,7 +55,7 @@ assetic:
         yui_css:
             jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.7.jar
 
-# Doctrine Configuration
+# Doctrine
 doctrine:
     dbal:
         driver:   "%database_driver%"
@@ -80,7 +80,7 @@ doctrine:
             default:
                 auto_mapping: true
 
-# Swiftmailer Configuration
+# Swiftmailer
 swiftmailer:
     transport: "%mailer_transport%"
     host:      "%mailer_host%"
@@ -88,7 +88,7 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
     
-# Configuration LiipImagineBundle (redimensionnement d'image)
+# LiipImagineBundle (redimensionnement d'image)
 liip_imagine:
   filter_sets:
     miniatureAvatar2:
@@ -103,27 +103,27 @@ liip_imagine:
             filters:
                 relative_resize: { heighten: 150 }
 
-# Configuration KnpPaginatorBundle (pagination)
+# KnpPaginatorBundle (pagination)
 knp_paginator:
     # Nombre de liens en bas de la pagination
-    page_range: 1                      
+    page_range: 1
     default_options:
-        page_name: page                
-        sort_field_name: sort         
-        sort_direction_name: direction 
-        distinct: true                 
+        page_name: page
+        sort_field_name: sort
+        sort_direction_name: direction
+        distinct: true
     template:
-        pagination: KnpPaginatorBundle:Pagination:sliding.html.twig    
+        pagination: KnpPaginatorBundle:Pagination:sliding.html.twig
         sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig
 
-# Configuration FOSUser (utilisateur)  
+# FOSUser (utilisateur)  
 # Type de bdd. Nom du firewall des utilisateurs. Classe de l'entité user
 fos_user:
     db_driver: orm
     firewall_name: main
     user_class: Apa\UserBundle\Entity\User
     
-# Configuration SonataAdminBundle (administration)
+# SonataAdminBundle (administration)
     # Généralités (attention l'indentation est interprétée)
 sonata_block:
     default_contexts: [cms]

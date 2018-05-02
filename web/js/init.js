@@ -30,8 +30,8 @@ $(document).ready(function() {
         }       
     );
     //Met l'image du menu courant correspondant à la page courante
-    $( "#navigation ul.firstUl li a" ).each(function() {
-        if(this.href == window.location.href){
+    $("#navigation ul.firstUl li a").each(function() {
+        if (this.href == window.location.href) {
             $target = "imgMenu";
             $(this).removeClass("imgMenu");
             $(this).addClass($target + "Current");

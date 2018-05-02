@@ -10,8 +10,7 @@
             {% stylesheets 'css/site.css' 'css/menu.css' filter='cssrewrite, ?yui_css' %}
                 <link rel="stylesheet" href="{{ asset_url }}" type="text/css" />
             {% endstylesheets %}
-	{% endblock %}
-            
+	{% endblock %}           
 	{% block javascripts %}
             <script src="{{ asset('js/jquery_3.3.1.js') }}" type="text/javascript"></script>
         {% endblock %}
@@ -43,7 +42,6 @@
                                 <a class="imgSubMenu" href="{{ path('apa_story_annexTexts',{'page':1}) }}" title="Les textes annexes de l'Oetherium">Textes annexes</a>
                             </li>
                         </ul>
-                        <!-- exemple sans les { ! sinon ça exécute : render(controller('ApaStoryBundle:Story:listChapter')) -->
                    </li>
 		   <li><a class="imgMenu imgMenu3" href="{{ path('apa_story_characters') }}" title="Les personnages de l'Oetherium">Personnages</a></li>
 		   <li><a class="imgMenu" href="{{ path('apa_generalPage_faq') }}" title="L'Oetherium répond à vos questions">F.A.Q</a></li>
@@ -53,9 +51,6 @@
 	</div>
 	
         <div id="book">
-            <!-- 09/07/2017
-            <div id="borderLeftBook"></div>
-            -->
             <div id="middleFrame">
                 <div id="formLogin">
                     <input type="button" class="closeForm" value="X">
@@ -64,9 +59,6 @@
                 </div>
                 {% block body %}{% endblock %}  
             </div>
-            <!-- 09/07/2017
-            <div id="borderRightBook"></div>
-            -->
         </div>
 	
 	<div oncontextmenu="return false;" id="rightFrame">
@@ -79,7 +71,7 @@
             </div>
         </div>
             
-        <!-- A mettre aprés l'utilisation de div(s) avec float-->
+        <!-- A mettre aprés l'utilisation de float -->
         <div class="clear"></div>
         
         <footer>
@@ -87,16 +79,12 @@
                 <ul>
                     <li>Contact : hellypse@gmail.com</li>
                     <li>Réalisation : Axelle Palermo, Hellypse, K.Zlovetch</li>
-                        <!-- Si on est connecté-->
-                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                            <!-- Si on est un admin-->
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <li><a target="_blank" class="link" href="{{ path('sonata_admin_dashboard') }}">Panneau d'administration</a><a class="link" href="{{ path('fos_user_security_logout') }}"> - Déconnexion</a></li>
-                            {% endif %}
-                        <!-- Sinon-->
-                        {% else %}
+                    <!-- Si on est connecté en tant qu'admin -->
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li><a target="_blank" class="link" href="{{ path('sonata_admin_dashboard') }}">Panneau d'administration</a><a class="link" href="{{ path('fos_user_security_logout') }}"> - Déconnexion</a></li>  
+                    {% else %}
                         <li id="administration">Administration</li>
-                        {% endif %}
+                    {% endif %}
                 </ul>
             </div>
             
@@ -108,7 +96,7 @@
             </div>
             <div class="clear"></div>
         </footer>
-        <!--on met le javascript à la fin si possible (performance)-->
+        <!--on met le javascript à la fin si possible (performance) -->
         <!-- pour que ça marche en mode prod : php app/console cache:clear --env=prod ET php app/console assetic:dump --env=prod -->
         {% javascripts 'js/init.js' 'js/functions.js' filter='?yui_js'%}
             <script type="text/javascript" src="{{ asset_url }}"></script>
