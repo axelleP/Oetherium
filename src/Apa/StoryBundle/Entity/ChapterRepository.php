@@ -12,23 +12,11 @@ use Doctrine\ORM\EntityRepository;
  */
 class ChapterRepository extends EntityRepository
 {
-    public function getIdByOrder($order)
-    {    
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('c.id')
-           ->from('ApaStoryBundle:Chapter', 'c')
-           ->orderBy('c.id', $order);
-           
-        return $qb->getQuery()
-                ->setMaxResults(1)
-                ->getResult();
-    }
-    
     public function getLastNumber(){
         $qb = $this->_em->createQueryBuilder();
         $qb->select('MAX(c.number) as lastNumber')
-           ->from('ApaStoryBundle:Chapter', 'c');
-        
-        return $qb->getQuery()->getSingleResult() ;
+            ->from('ApaStoryBundle:Chapter', 'c');
+
+        return $qb->getQuery()->getSingleResult();
     }
 }

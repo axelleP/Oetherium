@@ -7,8 +7,8 @@
     <!-- redirection après erreur de connexion -->
     <route id="fos_user_security_login" pattern="/accueil-co">
         <default key="_controller">ApaGeneralPageBundle:GeneralPage:seePage</default>
-        <default key="page">oetherium</default>
-        <default key="errorConnexion">true</default>
+        <default key="pageTitle">oetherium</default>
+        <default key="hasErrorConnexion">true</default>
     </route>
 
     <route id="fos_user_security_check" pattern="/login_check">

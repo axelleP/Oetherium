@@ -1,20 +1,20 @@
 apa_generalPage_homepage:
     path:     /accueil
-    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, page: oetherium, errorConnexion: false }
+    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, pageTitle: oetherium, hasErrorConnexion: false }
 
 apa_generalPage_author:
     path:     /auteurs
-    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, page: auteurs, errorConnexion: false }
+    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, pageTitle: auteurs, hasErrorConnexion: false }
     
 apa_generalPage_link:
     path:     /liens
-    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, page: liens, errorConnexion: false }
+    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, pageTitle: liens, hasErrorConnexion: false }
     
 apa_generalPage_faq:
     path:     /faq
-    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, page: faq, errorConnexion: false }
+    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, pageTitle: faq, hasErrorConnexion: false }
     
 apa_generalPage_legalMention:
     path:     /mentions-legales
-    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, page: Mentions légales, errorConnexion: false }
+    defaults: { _controller: ApaGeneralPageBundle:GeneralPage:seePage, pageTitle: Mentions légales, hasErrorConnexion: false }
 

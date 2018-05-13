@@ -3,20 +3,20 @@
 namespace Apa\GeneralPageBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+//use Symfony\Component\HttpFoundation\Request;// à mettre pour récupèrer les paramètres de la page : exemple la route
+//use Symfony\Component\HttpFoundation\Response; // à mettre quand on utilise response au lieu de render
 
 class GeneralPageController extends Controller
 {
-    public function seePageAction($page, $errorConnexion)
+    public function seePageAction($pageTitle, $hasErrorConnexion)
     {
-        //On appel les services dont on a besoin pour récupérer le repository page
-        $repository = $this->getDoctrine()
-                   ->getManager()
-                   ->getRepository('ApaGeneralPageBundle:Page');
+        //Appel les services dont on a besoin pour récupérer le repository page
+        $repository = $this->getDoctrine()->getManager()->getRepository('ApaGeneralPageBundle:Page');
+        //Récupère la page concernée
+        $page = $repository->findOneBy(array('title' => $pageTitle));
 
-        //On récupère la page par la méthode getPage($name) du repository
-        $selectedPage = $repository->getPage($page);
-        
         return $this->render('ApaGeneralPageBundle:GeneralPage:seePage.html.twig',
-                            array('selectedPage' => $selectedPage, 'errorC' => $errorConnexion));
+            array('page' => $page, 'hasErrorConnexion' => $hasErrorConnexion)
+        );
     }
 }

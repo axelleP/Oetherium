@@ -7,7 +7,6 @@ use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Show\ShowMapper;
 
 class ImageAdmin extends Admin
 {
@@ -15,15 +14,15 @@ class ImageAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         /* Prévisualisation de l'image */
-            $fileFieldOptions3 = array('required' => false);
-            $object = $this->getSubject();
-            
-            if ($object && ($webPath = $object->getUploadDir())) {
-                $path = $object->getPath();
-                $container = $this->getConfigurationPool()->getContainer();
-                $fullPath = $container->get('request')->getBasePath().'/'.$webPath.'/'.$path;
-                $fileFieldOptions3['help'] = '<img src="'.$fullPath.'" class="admin-preview" />';
-            }
+        $fileFieldOptions3 = array('required' => false);
+        $object = $this->getSubject();
+
+        if ($object && ($webPath = $object->getUploadDir())) {
+            $path = $object->getPath();
+            $container = $this->getConfigurationPool()->getContainer();
+            $fullPath = $container->get('request')->getBasePath().'/'.$webPath.'/'.$path;
+            $fileFieldOptions3['help'] = '<img src="'.$fullPath.'" class="admin-preview" />';
+        }
 
         $formMapper
             ->add('path', 'text', array('label' => 'Nom', 'disabled'  => true, 'attr' => array('class' => 'pathImage')))
@@ -48,7 +47,7 @@ class ImageAdmin extends Admin
             ->addIdentifier('path', 'text', array('label' => 'Nom'))
         ;
     }
-    
+
     // fonctions pour gérer les images avant enregistrement
     public function prePersist($image) {
         $this->manageFileUpload($image);

@@ -13,15 +13,13 @@ class ChapterAdmin extends Admin
     // Fields to be shown on create/edit forms (ajout et modification d'objet)
     protected function configureFormFields(FormMapper $formMapper)
     {
-
         $formMapper
         ->add('number','number',
             array(
-                  'label' => 'Numéro',
-                  'read_only' => true,
+                'label' => 'Numéro',
+                'read_only' => true,
             )
-
-        )                             
+        )
         ->add('title', 'text', array('label' => 'Titre'))
         ->add('pagesBook', 'sonata_type_collection',
             array('required' => false,
@@ -29,14 +27,12 @@ class ChapterAdmin extends Admin
                 'help' => '<div style="color:red;"><b>Attention :</b> Ajouter une nouvelle page supprime le texte des pages inséré précédemment!
                 <br/>Il est préférable de cliquer sur le bouton Ajouter autant de fois que nécessaire puis d\'insérer le(s) texte(s) voulu(s).</div>'
             )
-            
             , array(
-            'edit' => 'inline',
-            'inline' => 'table',
-            'targetEntity' => 'Apa\StoryBundle\Entity\PageBook' 
-        ));
-        
-        //var_dump($formMapper);exit;
+                'edit' => 'inline',
+                'inline' => 'table',
+                'targetEntity' => 'Apa\StoryBundle\Entity\PageBook'
+            )
+        );
     }
 
     // Fields to be shown on filter forms (filtre pour rechercher rapidemment un objet)
@@ -53,10 +49,10 @@ class ChapterAdmin extends Admin
     {
         $listMapper
             ->add('number', 'number', array('label' => 'Numéro', 'class' => 'test'))
-            ->addIdentifier('title', 'text', array('label' => 'Titre'))  
+            ->addIdentifier('title', 'text', array('label' => 'Titre'))
         ;
     }
-    
+
     // fonctions pour gérer les chapitres avant enregistrement
     public function prePersist($chapter){
         $this->manageChapter($chapter);
@@ -65,12 +61,12 @@ class ChapterAdmin extends Admin
     public function preUpdate($chapter){
         $this->manageChapter($chapter);
     }
-    
+
     private function manageChapter($chapter) {
         $pages = $chapter->getPagesBook();
-       
+
         foreach($pages as $page ) {
-            $page->setChapter($chapter);  
+            $page->setChapter($chapter);
         }
     }
 }

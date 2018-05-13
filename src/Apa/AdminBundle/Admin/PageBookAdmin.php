@@ -37,20 +37,10 @@ class PageBookAdmin extends Admin
                                 'name'  => 'basicstyles2',
                                 'items' => array('Maximize', 'Source','-', 'Undo', 'Redo',),
                             ),
-                            
                         ),
                         'uiColor' => '#ffffff',
                     ),
-            ))
-            /*->add('chapter', 'sonata_type_model_list', array('label' => 'Chapitre'), array(
-                    'btn_add'       => 'Ajouter un chapitre',      //Specify a custom label
-                    'btn_list'      => 'Sélectionner un chapitre',     //which will be translated
-                    'btn_delete'    => false,             //or hide the button.
-                    'btn_catalogue' => 'SonataNewsBundle' //Custom translation domain for buttons
-                ), array(
-                    'placeholder' => 'Chapitre non sélectionné'
-                ))*/
-        ;
+            ));
     }
 
     // Fields to be shown on filter forms (filtre pour rechercher rapidemment un objet)
@@ -70,7 +60,8 @@ class PageBookAdmin extends Admin
             ->add('chapter.title', 'text', array('label' => 'Chapitre'))
         ;
     }
-    
+
+    // Fonction non utilisée?
     // Récupère l'objet du formulaire
     // il manque la relation avec le chapitre correspondant
     public function getNewInstance()
@@ -81,11 +72,10 @@ class PageBookAdmin extends Admin
         //requete pour récupérer la derniere page
         $entity = new \Apa\StoryBundle\Entity\PageBook();
         $query = $this->modelManager->getEntityManager($entity)->createQuery('SELECT MAX(p.number) FROM Apa\StoryBundle\Entity\PageBook p')->execute();
-        
+
         //met une valeur au champ number
         //$instance->setNumber('1');
-        //var_dump($this );exit;
-    
+
         return $instance;
     }
 }

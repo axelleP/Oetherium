@@ -17,7 +17,8 @@ class AnnexTextRepository extends EntityRepository
         $qb = $this->_em->createQueryBuilder();
         $qb->select('a.id')
             ->from('ApaStoryBundle:AnnexText', 'a')
-            ->where("a.id > $id");
+            ->where("a.id > $id")
+            ->orderBy('a.id', 'ASC');
 
         return $qb->getQuery()
                 ->setMaxResults(1)
@@ -29,7 +30,8 @@ class AnnexTextRepository extends EntityRepository
         $qb = $this->_em->createQueryBuilder();
         $qb->select('a.id')
             ->from('ApaStoryBundle:AnnexText', 'a')
-            ->where("a.id < $id");
+            ->where("a.id < $id")
+            ->orderBy('a.id', 'DESC');
 
         return $qb->getQuery()
                 ->setMaxResults(1)

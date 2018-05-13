@@ -25,6 +25,6 @@ apa_story_annexTexts:
         page:  \d*
     
 apa_story_annexText:
-    path:     /texte-annexe-{numero}
+    path:     /texte-annexe-{id}
     defaults: { _controller: ApaStoryBundle:Story:readAnnexText }
 

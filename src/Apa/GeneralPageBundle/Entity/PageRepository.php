@@ -12,13 +12,4 @@ use Doctrine\ORM\EntityRepository;
  */
 class PageRepository extends EntityRepository
 {
-    public function getPage($title)
-    {    
-        $qb = $this->createQueryBuilder('p')
-             ->where('p.title = :title')
-             ->setParameter('title', $title);
-
-        return $qb->getQuery()
-                  ->getResult();
-    }
 }

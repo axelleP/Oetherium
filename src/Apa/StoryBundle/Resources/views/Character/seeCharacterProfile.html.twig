@@ -1,5 +1,7 @@
 {% extends "::layout.html.twig" %}
-{% block titlePage %}Profil de {{ characterProfile.firstname }} {{ characterProfile.name }} - Oetherium{% endblock %}
+{% block titlePage %}
+    Profil de {{ characterProfile.firstname }} {{ characterProfile.name }} - Oetherium
+{% endblock %}
 
 {% block metaDescriptionPage %}
     <meta name="description" content="Qui est ce personnage de l'Oetherium? Un bandit? un aristocrate? Venez tout de suite le découvrir!">
@@ -9,7 +11,9 @@
     <link rel="stylesheet" href="{{ asset('bundles/apastory/css/lightbox.css') }}" type="text/css" />
 {% endblock %}
 
-{% block descriptionMenu %}Fiche de {{ characterProfile.firstname }} {{ characterProfile.name }}{% endblock %}
+{% block descriptionMenu %}
+    Fiche de {{ characterProfile.firstname }} {{ characterProfile.name }}
+{% endblock %}
 
 {% block body %}
     <div id="contentMiddleFrameUntitled" itemscope itemtype="http://schema.org/Person">   

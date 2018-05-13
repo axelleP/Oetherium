@@ -7,7 +7,6 @@ use Sonata\AdminBundle\Admin\Admin;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Show\ShowMapper;
 
 class CharacterStoryAdmin extends Admin
 {
@@ -15,41 +14,37 @@ class CharacterStoryAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         /* Prévisualisation de l'avatar */
-            $avatar = $this->getSubject()->getAvatar();
-            $fileFieldOptions = array('required' => false);
+        $avatar = $this->getSubject()->getAvatar();
+        $fileFieldOptions = array('required' => false);
 
-            if($avatar && $avatar == 'avatarByDefault.png'){
-                $container = $this->getConfigurationPool()->getContainer();
-                $fullPath = $container->get('request')->getBasePath().'/'.'uploads/apastory/images/'.'/'.$avatar;
-                $fileFieldOptions['help'] = '<img src="'.$fullPath.'" class="admin-preview" />';
-            }
-            else{
-                if ($avatar && ($webPath = $this->getSubject()->getUploadDir())) {
-                    $container = $this->getConfigurationPool()->getContainer();
-                    $fullPath = $container->get('request')->getBasePath().'/'.$webPath.'/'.$avatar;
-                    $fileFieldOptions['help'] = '<img src="'.$fullPath.'" class="admin-preview" />';
-                }
-            }
-
+        if ($avatar && $avatar == 'avatarByDefault.png') {
+            $container = $this->getConfigurationPool()->getContainer();
+            $fullPath = $container->get('request')->getBasePath().'/'.'uploads/apastory/images/'.'/'.$avatar;
+            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" class="admin-preview" />';
+        } elseif ($avatar && ($webPath = $this->getSubject()->getUploadDir())) {
+            $container = $this->getConfigurationPool()->getContainer();
+            $fullPath = $container->get('request')->getBasePath().'/'.$webPath.'/'.$avatar;
+            $fileFieldOptions['help'] = '<img src="'.$fullPath.'" class="admin-preview" />';
+        }
 
         /* Prévisualisation de la galerie */
-            $images = $this->getSubject()->getImages();
+        $images = $this->getSubject()->getImages();
 
-            // use $fileFieldOptions so we can add other options to the field
-            $fileFieldOptions2 = array('required' => false);
+        // use $fileFieldOptions so we can add other options to the field
+        $fileFieldOptions2 = array('required' => false);
 
-            $galerie = array();
-            foreach($images as $image ) {
-                if ($image && ($webPath = $image->getUploadDir())) {
-                    $path = $image->getPath();
-                    // get the container so the full path to the image can be set
-                    $container = $this->getConfigurationPool()->getContainer();
-                    $fullPath = $container->get('request')->getBasePath().'/'.$webPath.'/'.$path;
-                    // add a 'help' option containing the preview's img tag
-                    $fileFieldOptions2['help'] = '<img src="'.$fullPath.'" class="admin-preview admin-galerie" />';
-                    $galerie[] = $fileFieldOptions2['help'];
-                }
+        $galerie = array();
+        foreach($images as $image ) {
+            if ($image && ($webPath = $image->getUploadDir())) {
+                $path = $image->getPath();
+                // get the container so the full path to the image can be set
+                $container = $this->getConfigurationPool()->getContainer();
+                $fullPath = $container->get('request')->getBasePath().'/'.$webPath.'/'.$path;
+                // add a 'help' option containing the preview's img tag
+                $fileFieldOptions2['help'] = '<img src="'.$fullPath.'" class="admin-preview admin-galerie" />';
+                $galerie[] = $fileFieldOptions2['help'];
             }
+        }
 
         $formMapper
             ->add('firstname', 'text', array('label' => 'Prénom'))
@@ -59,8 +54,7 @@ class CharacterStoryAdmin extends Admin
             ->add('species', 'text', array('label' => 'Espèce'))
             ->add('gender', 'text', array('label' => 'Sexe'))
             ->add('dateBirth', 'sonata_type_date_picker', array('label' => 'Date de naissance','dp_language'=>'fr','format' => 'yyyy-MM-dd', 'attr' => array(
-              'data-date-format' => 'DD/MM/YYYY',
-    )))
+                'data-date-format' => 'DD/MM/YYYY')))
             ->add('placeBirth', 'text', array('label' => 'Lieu de naissance'))
             ->add('citation', 'text', array('label' => 'Citation'))
             ->add('description', 'textarea', array('label' => 'Description'))
@@ -72,7 +66,6 @@ class CharacterStoryAdmin extends Admin
                     'help' => '<div style="color:red;"><b>Attention :</b> Ajouter une nouvelle
                     image supprime les fichiers choisis précédemment!
                     <br/>Il est préférable de cliquer sur le bouton Ajouter autant de fois que nécessaire puis de choisir le(s) image(s) voulue(s).</div>'
-
                 )
                 , array(
                     'edit' => 'inline',
@@ -81,10 +74,6 @@ class CharacterStoryAdmin extends Admin
                 )
             )
         ;
-
-        /*foreach($galerie as $img ) {
-            echo $img;
-        }*/
     }
 
     // Fields to be shown on filter forms (filtre pour rechercher rapidemment un objet)

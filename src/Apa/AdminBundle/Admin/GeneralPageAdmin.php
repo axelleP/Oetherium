@@ -39,12 +39,11 @@ class GeneralPageAdmin extends Admin
                                 'name'  => 'basicstyles2',
                                 'items' => array('Maximize', 'Source','-', 'Undo', 'Redo',),
                             ),
-                            
+
                         ),
                         'uiColor' => '#ffffff',
                     ),
             ));
-        ;
     }
 
     // Fields to be shown on filter forms (filtre pour rechercher rapidemment un objet)
@@ -62,7 +61,7 @@ class GeneralPageAdmin extends Admin
             ->addIdentifier('title', 'text', array('label' => 'Titre'))
         ;
     }
-    
+
     // ne pas oublier de rajouter le use Sonata\AdminBundle\Route\RouteCollection;
     protected function configureRoutes(RouteCollection $collection)
     {

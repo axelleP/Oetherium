@@ -12,12 +12,4 @@ use Doctrine\ORM\EntityRepository;
  */
 class CharacterStoryRepository extends EntityRepository
 {
-    public function getMainCharacters()
-    {    
-        $qb = $this->createQueryBuilder('c')
-              ->where('c.main = 1');
-
-        return $qb->getQuery()
-                  ->getResult();
-    }
 }

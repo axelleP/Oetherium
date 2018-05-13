@@ -21,11 +21,11 @@
 
         <div id="pagination">{{ knp_pagination_render(pagination) }}</div>
         <br>
-        {% if chapter.id != firstId %}
+        {% if chapter.id != idFirstChapter %}
             <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapter', {'numero': chapter.number-1}) }}">Chapitre précédent</a>&nbsp;-
         {% endif %}
 
-        {% if chapter.id != lastId %}
+        {% if chapter.id != idlLastChapter %}
             <a class="boxLink" itemprop="url" href="{{ path('apa_story_chapter', {'numero': chapter.number+1}) }}">Chapitre suivant</a>&nbsp;-
         {% endif %}
 
