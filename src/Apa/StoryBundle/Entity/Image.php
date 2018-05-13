@@ -4,7 +4,6 @@ namespace Apa\StoryBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Doctrine\ORM\PersistentCollection;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -21,7 +20,7 @@ class Image
      * @ORM\JoinColumn(nullable=true)
      */
     private $characterStory;
-  
+
     /**
      * @var integer
      *
@@ -37,9 +36,9 @@ class Image
      * @ORM\Column(name="path", type="string", length=100)
      */
     private $path;
-    
+
     /**
-     * 
+     *
      */
     private $oldPath;
 
@@ -49,15 +48,15 @@ class Image
      * @ORM\Column(name="description", type="string", length=100)
      */
     private $description;
-    
+
     /**
      * @Assert\File(maxSize="6000000",
      * mimeTypesMessage = "Votre fichier n'est apparemment pas une image...",
      * maxSizeMessage = "Votre fichier est trop gros ({{ size }} Mo). La taille maximum autorisée est de : {{ limit }} Mo")
      */
     private $file;
-    
-    
+
+
     /**
      * @var datetime
      *
@@ -68,7 +67,7 @@ class Image
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -91,7 +90,7 @@ class Image
     /**
      * Get path
      *
-     * @return string 
+     * @return string
      */
     public function getPath()
     {
@@ -114,13 +113,13 @@ class Image
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
         return $this->description;
     }
-    
+
     /**
      * Set file
      *
@@ -130,7 +129,7 @@ class Image
     {
         $this->file = $file;
     }
-    
+
     /**
      * Get file
      *
@@ -140,7 +139,7 @@ class Image
     {
         return $this->file;
     }
-    
+
     /**
      * Set updated
      *
@@ -157,7 +156,7 @@ class Image
     /**
      * Get updated
      *
-     * @return string 
+     * @return string
      */
     public function getUpdated()
     {
@@ -180,13 +179,13 @@ class Image
     /**
      * Get characterStory
      *
-     * @return \Apa\StoryBundle\Entity\CharacterStory 
+     * @return \Apa\StoryBundle\Entity\CharacterStory
      */
     public function getCharacterStory()
     {
         return $this->characterStory;
     }
-    
+
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
@@ -198,7 +197,7 @@ class Image
             if ($this->getPath() !== null) {
                 $this->oldPath = $this->getPath();
             }
-            
+
             $extension = $this->file->guessExtension();
             if (!$extension) {
                 // l'extension n'a pas été trouvée
@@ -208,7 +207,7 @@ class Image
             $this->path = sha1(uniqid(mt_rand(), true)).'.'.$extension;
         }
     }
-    
+
     /**
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
@@ -216,15 +215,16 @@ class Image
      */
     public function lifecycleFileUpload() {
         $this->upload();
-        
+
         // Si l'utilisateur avait déjà une image, on supprime l'ancienne
         if ($this->oldPath != null) {
-            if ($file = $this->getAbsolutePathOldPath()) {
+            $file = $this->getAbsolutePathOldPath();
+            if ($file) {
                 unlink($file);
             }
         }
     }
-    
+
     /**
      * Manages the copying of the file to the relevant place on the server
      */
@@ -236,7 +236,7 @@ class Image
         }
         // on déplace le fichier choisi dans le répertoire de destination
         $this->file->move($this->getUploadRootDir(), $this->path);
-    
+
         // clean up the file property as you won't need it anymore
         $this->setFile(null);
     }
@@ -246,7 +246,7 @@ class Image
         // le chemin absolu du répertoire où les documents uploadés doivent être sauvegardés
         return __DIR__.'/../../../../web/'.$this->getUploadDir();
     }
-    
+
     public function getUploadDir()
     {
         // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
@@ -256,33 +256,34 @@ class Image
             return 'uploads/apastory/images/'.ucwords($this->getCharacterStory()->getFirstname()).'-'.ucwords($this->getCharacterStory()->getName());
         }
     }
-    
+
     /**
      * @ORM\PostRemove()
      */
     public function removeUpload()
     {
-        if ($file = $this->getAbsolutePath()) {
+        $file = $this->getAbsolutePath();
+        if ($file) {
             unlink($file);
         }
     }
-    
+
     // retourne le chemin absolu du fichier
     public function getAbsolutePath()
     {
         return null === $this->path ? null : $this->getUploadRootDir().'/'.$this->path;
     }
-    
+
     // retourne le chemin absolu de l'ancien avatar
     public function getAbsolutePathOldPath()
     {
         return null === $this->oldPath ? null : $this->getUploadRootDir().'/'.$this->oldPath;
     }
-    
+
     // retourne le chemin web, peut être utilisé dans un template pour ajouter un lien vers le fichier uploadé
     public function getWebPath()
     {
-      return null === $this->path ? null : $this->getUploadDir().'/'.$this->path;
+        return null === $this->path ? null : $this->getUploadDir().'/'.$this->path;
     }
 
     /**

@@ -6,8 +6,6 @@ namespace Apa\StoryBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Doctrine\ORM\Mapping\PrePersist;
-use Doctrine\ORM\Mapping\PreUpdate;
 
 /**
  * CharacterStory
@@ -23,7 +21,7 @@ class CharacterStory
      */
     #orphanRemoval est nécessaire pour supprimer l'image
     private $images;
-    
+
     /**
      * @var integer
      *
@@ -39,49 +37,49 @@ class CharacterStory
      * @ORM\Column(name="name", type="string", length=50)
      */
     private $name;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=50)
      */
     private $firstname;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="arrayFirstnames", type="string", length=100)
      */
     private $arrayFirstnames;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="species", type="string", length=50)
      */
     private $species;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="gender", type="string", length=50)
      */
     private $gender;
-    
+
     /**
      * @var date
      *
      * @ORM\Column(name="dateBirth", type="date")
      */
     private $dateBirth;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="placeBirth", type="string", length=50)
      */
     private $placeBirth;
-    
+
     /**
      * @var string
      *
@@ -102,7 +100,7 @@ class CharacterStory
      * @ORM\Column(name="avatar", type="string", length=150)
      */
     private $avatar;
-    
+
     /**
      * @Assert\File(maxSize="2500000",
      * mimeTypesMessage = "Votre fichier n'est apparemment pas une image...",
@@ -110,12 +108,12 @@ class CharacterStory
      */
     // Limite : 2.5Mo sinon le filtre imagine_filter ne marche pas
     private $file;
-    
+
     /**
-     * 
+     *
      */
     private $oldAvatar;
-    
+
     /**
      * @var boolean
      *
@@ -126,13 +124,13 @@ class CharacterStory
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
     }
-    
+
     public function setId($id)
     {
         $this->id = $id;
@@ -156,13 +154,13 @@ class CharacterStory
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
         return $this->name;
     }
-    
+
     /**
      * Set firstname
      *
@@ -179,13 +177,13 @@ class CharacterStory
     /**
      * Get firstname
      *
-     * @return string 
+     * @return string
      */
     public function getFirstname()
     {
         return $this->firstname;
     }
-    
+
     /**
      * Set arrayFirstnames
      *
@@ -209,7 +207,7 @@ class CharacterStory
     {
         return $this->arrayFirstnames;
     }
-    
+
     /**
      * Set species
      *
@@ -226,7 +224,7 @@ class CharacterStory
     /**
      * Get species
      *
-     * @return string 
+     * @return string
      */
     public function getSpecies()
     {
@@ -249,13 +247,13 @@ class CharacterStory
     /**
      * Get gender
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getGender()
     {
         return $this->gender;
     }
-    
+
     /**
      * Set dateBirth
      *
@@ -272,7 +270,7 @@ class CharacterStory
     /**
      * Get dateBirth
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDateBirth()
     {
@@ -295,13 +293,13 @@ class CharacterStory
     /**
      * Get placeBirth
      *
-     * @return string 
+     * @return string
      */
     public function getPlaceBirth()
     {
         return $this->placeBirth;
     }
-    
+
     /**
      * Set citation
      *
@@ -318,7 +316,7 @@ class CharacterStory
     /**
      * Get citation
      *
-     * @return string 
+     * @return string
      */
     public function getCitation()
     {
@@ -337,17 +335,17 @@ class CharacterStory
 
         return $this;
     }
-    
+
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
         return $this->description;
     }
-    
+
     /**
      * Set avatar
      *
@@ -364,13 +362,13 @@ class CharacterStory
     /**
      * Get avatar
      *
-     * @return string 
+     * @return string
      */
     public function getAvatar()
     {
         return $this->avatar;
     }
-    
+
     /**
      * Set file
      *
@@ -380,7 +378,7 @@ class CharacterStory
     {
         $this->file = $file;
     }
-    
+
     /**
      * Get file
      *
@@ -407,7 +405,7 @@ class CharacterStory
     /**
      * Get main
      *
-     * @return boolean 
+     * @return boolean
      */
     public function getMain()
     {
@@ -447,13 +445,13 @@ class CharacterStory
     /**
      * Get images
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getImages()
     {
         return $this->images;
     }
-    
+
     /**
      * Set images
      *
@@ -466,7 +464,7 @@ class CharacterStory
 
         return $this;
     }
-    
+
     /**
      * @ORM\PrePersist()
      * @ORM\PreUpdate()
@@ -474,12 +472,12 @@ class CharacterStory
     public function preUpload()
     {
         if (null !== $this->file) {
-            
+
             // Sauvegarde temporaire de l'ancien avatar pour le supprimer en postUpdate
             if ($this->getAvatar() !== null) {
                 $this->oldAvatar = $this->getAvatar();
             }
-        
+
             $extension = $this->file->guessExtension();
             if (!$extension) {
                 // l'extension n'a pas été trouvée
@@ -489,7 +487,7 @@ class CharacterStory
             $this->avatar = sha1(uniqid(mt_rand(), true)).'.'.$extension;
         }
     }
-    
+
     /**
      * @ORM\PostPersist()
      * @ORM\PostUpdate()
@@ -497,15 +495,16 @@ class CharacterStory
      */
     public function lifecycleFileUpload() {
         $this->upload();
-        
+
         // Si l'utilisateur avait déjà un avatar, on supprime l'ancien
         if ($this->oldAvatar != null) {
-            if ($file = $this->getAbsolutePathOldAvatar()) {
+            $file = $this->getAbsolutePathOldAvatar();
+            if ($file) {
                 unlink($file);
             }
         }
     }
-    
+
     /**
      * Manages the copying of the file to the relevant place on the server
      */
@@ -517,7 +516,7 @@ class CharacterStory
         }
         // on déplace le fichier choisi dans le répertoire de destination
         $this->file->move($this->getUploadRootDir(), $this->avatar);
-    
+
         // clean up the file property as you won't need it anymore
         $this->setFile(null);
     }
@@ -527,7 +526,7 @@ class CharacterStory
         // le chemin absolu du répertoire où les documents uploadés doivent être sauvegardés
         return __DIR__.'/../../../../web/'.$this->getUploadDir();
     }
-    
+
     public function getUploadDir()
     {
         // on se débarrasse de « __DIR__ » afin de ne pas avoir de problème lorsqu'on affiche
@@ -535,29 +534,30 @@ class CharacterStory
         // ucwords : 1ere lettre en majuscule
         return 'uploads/apastory/images/'.ucwords($this->firstname).'-'.ucwords($this->name);
     }
-    
+
     /**
      * @ORM\PostRemove()
      */
     public function removeUpload()
     {
-        if ($file = $this->getAbsolutePath()) {
+        $file = $this->getAbsolutePath();
+        if ($file) {
             unlink($file);
         }
     }
-    
+
     // retourne le chemin absolu de l'avatar
     public function getAbsolutePath()
     {
         return null === $this->avatar ? null : $this->getUploadRootDir().'/'.$this->avatar;
     }
-    
+
     // retourne le chemin absolu de l'ancien avatar
     public function getAbsolutePathOldAvatar()
     {
         return null === $this->oldAvatar ? null : $this->getUploadRootDir().'/'.$this->oldAvatar;
     }
-    
+
     // retourne le chemin web, peut être utilisé dans un template pour ajouter un lien vers le fichier uploadé
     public function getWebPath()
     {
