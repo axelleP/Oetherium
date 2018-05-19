@@ -56,40 +56,40 @@ class __TwigTemplate_e638b0edd966fc550ec4373ce82fe9ce82b31a52f13983fab0ed7ed261d
         <h1 id=\"title\" class=\"uppercase\" itemprop=\"headline\">Sommaire</h1>
         
         <div id=\"contentMiddleFrame\" itemprop=\"text\"> 
-                ";
+            ";
         // line 15
         if ((isset($context["pagination"]) ? $context["pagination"] : $this->getContext($context, "pagination"))) {
             // line 16
-            echo "                    ";
+            echo "                ";
             $context['_parent'] = (array) $context;
             $context['_seq'] = twig_ensure_traversable((isset($context["pagination"]) ? $context["pagination"] : $this->getContext($context, "pagination")));
             foreach ($context['_seq'] as $context["_key"] => $context["chapter"]) {
                 // line 17
-                echo "                        <span itemscope itemtype=\"http://schema.org/Thing\">
-                            <a class=\"link\" itemprop=\"url\" href=\"";
+                echo "                    <span itemscope itemtype=\"http://schema.org/Thing\">
+                        <a class=\"link\" itemprop=\"url\" href=\"";
                 // line 18
                 echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_chapter", array("numero" => $this->getAttribute($context["chapter"], "number", array()))), "html", null, true);
                 echo "\">
-                                <span class=\"capital chapterTitle\" itemprop=\"name\">";
+                            <span class=\"capital chapterTitle\" itemprop=\"name\">";
                 // line 19
                 echo twig_escape_filter($this->env, $this->getAttribute($context["chapter"], "number", array()), "html", null, true);
                 echo ". ";
                 echo twig_escape_filter($this->env, $this->getAttribute($context["chapter"], "title", array()), "html", null, true);
                 echo "</span>
-                            </a>
-                        </span><br><br>
-                        <hr>
-                    ";
+                        </a>
+                    </span><br><br>
+                    <hr>
+                ";
             }
             $_parent = $context['_parent'];
             unset($context['_seq'], $context['_iterated'], $context['_key'], $context['chapter'], $context['_parent'], $context['loop']);
             $context = array_intersect_key($context, $_parent) + $_parent;
             // line 24
-            echo "                ";
+            echo "            ";
         } else {
             // line 25
-            echo "                    Il n'existe pas encore de chapitres.
-                ";
+            echo "                Il n'existe pas encore de chapitres.
+            ";
         }
         // line 27
         echo "        </div>

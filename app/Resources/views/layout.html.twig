@@ -61,14 +61,12 @@
             </div>
         </div>
 	
-	<div oncontextmenu="return false;" id="rightFrame">
-            <div style="margin-left: 0.3125%;">           
-                <a class="link" href="#" title="Grossir la police"><p class="firstButton buttonFontSize centerPage">p</p></a>
-                <a class="link" href="#" title="Changer l'apparence du texte"> <p class="button buttonTextColor centerPage">c</p></a>
+	<div oncontextmenu="return false;" id="rightFrame">             
+            <a class="link" href="#" title="Grossir la police"><p class="firstButton buttonFontSize centerPage">p</p></a>
+            <a class="link" href="#" title="Changer l'apparence du texte"> <p class="button buttonTextColor centerPage">c</p></a>
 
-                {% block buttonTextDisplay %}{% endblock %}
-                {% block socialNetwork %}{% endblock %}
-            </div>
+            {% block buttonTextDisplay %}{% endblock %}
+            {% block socialNetwork %}{% endblock %}       
         </div>
             
         <!-- A mettre aprés l'utilisation de float -->
