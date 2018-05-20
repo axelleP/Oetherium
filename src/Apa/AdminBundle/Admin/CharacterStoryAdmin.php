@@ -109,17 +109,31 @@ class CharacterStoryAdmin extends Admin
         //récupère le nom et le prénom du personnage en base de données
         $entity = new \Apa\StoryBundle\Entity\CharacterStory();
         $entityManager = $this->modelManager->getEntityManager($entity);
-        $resultSQL_characterInDatabase = $entityManager->createQuery('SELECT c.name, c.firstname FROM Apa\StoryBundle\Entity\CharacterStory c WHERE c.id = '.$character->getId())->execute();
-        $nameInDatabase = $resultSQL_characterInDatabase[0]['name'];
-        $firstnameInDatabase = $resultSQL_characterInDatabase[0]['firstname'];
+        $resultSQL_characterInDatabase = $entityManager->createQuery('SELECT c.name, c.firstname FROM Apa\StoryBundle\Entity\CharacterStory c WHERE c.id = '.$character->getId())->getOneOrNullResult();
+        $nameInDatabase = $resultSQL_characterInDatabase['name'];
+        $firstnameInDatabase = $resultSQL_characterInDatabase['firstname'];
 
-        $newFullName = $character->getFirstname().'-'.$character->getName();
-        $oldFullName = $firstnameInDatabase.'-'.$nameInDatabase;
+        $newFullName = utf8_decode($character->getFirstname().'-'.$character->getName());
+        $oldFullName = utf8_decode($firstnameInDatabase.'-'.$nameInDatabase);
+        $path = 'uploads/apastory/images/';
 
         //si l'utilisateur a changé le nom ou prénom du personnage
-        if($character->getFirstname() != $firstnameInDatabase || $character->getName() != $nameInDatabase){
+        if($newFullName != $oldFullName){
             //on renomme le dossier ou sont stockées ses images
-            rename ("uploads/apastory/images/$oldFullName", "uploads/apastory/images/$newFullName");
+
+            if (file_exists($path)) {
+                rename ($path.$oldFullName, $path.$newFullName);
+            }
+
+            $path2 = 'media/cache/normalAvatar/uploads/apastory/images/';
+            if (file_exists($path2)) {
+                rename ($path2.$oldFullName, $path2.$newFullName);
+            }
+
+            $path3 = 'media/cache/miniatureAvatar2/uploads/apastory/images/';
+            if (file_exists($path3)) {
+                rename ($path3.$oldFullName, $path3.$newFullName);
+            }
         }
 
         $this->manageFileUpload($character);

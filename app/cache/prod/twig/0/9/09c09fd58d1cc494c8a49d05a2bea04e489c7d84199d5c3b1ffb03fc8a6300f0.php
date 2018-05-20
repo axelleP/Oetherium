@@ -90,7 +90,7 @@ class __TwigTemplate_09c09fd58d1cc494c8a49d05a2bea04e489c7d84199d5c3b1ffb03fc8a6
         <br>
         ";
         // line 24
-        if (($this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "id", array()) != (isset($context["firstId"]) ? $context["firstId"] : null))) {
+        if (($this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "id", array()) != (isset($context["idFirstChapter"]) ? $context["idFirstChapter"] : null))) {
             // line 25
             echo "            <a class=\"boxLink\" itemprop=\"url\" href=\"";
             echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_chapter", array("numero" => ($this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "number", array()) - 1))), "html", null, true);
@@ -101,7 +101,7 @@ class __TwigTemplate_09c09fd58d1cc494c8a49d05a2bea04e489c7d84199d5c3b1ffb03fc8a6
         echo "
         ";
         // line 28
-        if (($this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "id", array()) != (isset($context["lastId"]) ? $context["lastId"] : null))) {
+        if (($this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "id", array()) != (isset($context["idlLastChapter"]) ? $context["idlLastChapter"] : null))) {
             // line 29
             echo "            <a class=\"boxLink\" itemprop=\"url\" href=\"";
             echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_chapter", array("numero" => ($this->getAttribute((isset($context["chapter"]) ? $context["chapter"] : null), "number", array()) + 1))), "html", null, true);

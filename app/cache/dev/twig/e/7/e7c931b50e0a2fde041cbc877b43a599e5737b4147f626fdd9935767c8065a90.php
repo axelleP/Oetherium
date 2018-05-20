@@ -139,7 +139,7 @@ class __TwigTemplate_e7c931b50e0a2fde041cbc877b43a599e5737b4147f626fdd9935767c80
         <div id=\"characterDescription\">
             <p class=\"oneCapital\" itemprop=\"description\">";
         // line 39
-        echo twig_escape_filter($this->env, $this->getAttribute((isset($context["characterProfile"]) ? $context["characterProfile"] : $this->getContext($context, "characterProfile")), "description", array()), "html", null, true);
+        echo nl2br(twig_escape_filter($this->env, $this->getAttribute((isset($context["characterProfile"]) ? $context["characterProfile"] : $this->getContext($context, "characterProfile")), "description", array()), "html", null, true));
         echo "</p>
         </div>
 \t

@@ -599,7 +599,7 @@ footer .link:hover {
     html, body {
         font-size: 1.4vw;
     }
-    #contentMiddleFrame span { /* surcharge l'éditeur du panneau admin */
+    #contentMiddleFrame span, #characterInformation span { /* surcharge l'éditeur du panneau admin */
         font-size: 2vw !important;
     }
     

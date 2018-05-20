@@ -30,29 +30,29 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
         if (0 === strpos($pathinfo, '/a')) {
             // apa_generalPage_homepage
             if ($pathinfo === '/accueil') {
-                return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'page' => 'oetherium',  'errorConnexion' => false,  '_route' => 'apa_generalPage_homepage',);
+                return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'pageTitle' => 'oetherium',  'hasErrorConnexion' => false,  '_route' => 'apa_generalPage_homepage',);
             }
 
             // apa_generalPage_author
             if ($pathinfo === '/auteurs') {
-                return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'page' => 'auteurs',  'errorConnexion' => false,  '_route' => 'apa_generalPage_author',);
+                return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'pageTitle' => 'auteurs',  'hasErrorConnexion' => false,  '_route' => 'apa_generalPage_author',);
             }
 
         }
 
         // apa_generalPage_link
         if ($pathinfo === '/liens') {
-            return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'page' => 'liens',  'errorConnexion' => false,  '_route' => 'apa_generalPage_link',);
+            return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'pageTitle' => 'liens',  'hasErrorConnexion' => false,  '_route' => 'apa_generalPage_link',);
         }
 
         // apa_generalPage_faq
         if ($pathinfo === '/faq') {
-            return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'page' => 'faq',  'errorConnexion' => false,  '_route' => 'apa_generalPage_faq',);
+            return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'pageTitle' => 'faq',  'hasErrorConnexion' => false,  '_route' => 'apa_generalPage_faq',);
         }
 
         // apa_generalPage_legalMention
         if ($pathinfo === '/mentions-legales') {
-            return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'page' => 'Mentions légales',  'errorConnexion' => false,  '_route' => 'apa_generalPage_legalMention',);
+            return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'pageTitle' => 'Mentions légales',  'hasErrorConnexion' => false,  '_route' => 'apa_generalPage_legalMention',);
         }
 
         // apa_user_homepage
@@ -68,7 +68,7 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
 
             // apa_story_characterProfile
             if (0 === strpos($pathinfo, '/profil') && preg_match('#^/profil(?:/(?P<firstname>[^/\\-]++)(?:\\-(?P<name>[^/]++))?)?$#s', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'apa_story_characterProfile')), array (  '_controller' => 'Apa\\StoryBundle\\Controller\\StoryController::seeCharacterProfileAction',  'name' => 'null',  'firstname' => 'null',));
+                return $this->mergeDefaults(array_replace($matches, array('_route' => 'apa_story_characterProfile')), array (  '_controller' => 'Apa\\StoryBundle\\Controller\\StoryController::seeCharacterProfileAction',  'name' => NULL,  'firstname' => NULL,));
             }
 
         }
@@ -93,7 +93,7 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
             }
 
             // apa_story_annexText
-            if (0 === strpos($pathinfo, '/texte-annexe') && preg_match('#^/texte\\-annexe\\-(?P<numero>[^/]++)$#s', $pathinfo, $matches)) {
+            if (0 === strpos($pathinfo, '/texte-annexe') && preg_match('#^/texte\\-annexe\\-(?P<id>[^/]++)$#s', $pathinfo, $matches)) {
                 return $this->mergeDefaults(array_replace($matches, array('_route' => 'apa_story_annexText')), array (  '_controller' => 'Apa\\StoryBundle\\Controller\\StoryController::readAnnexTextAction',));
             }
 
@@ -131,7 +131,7 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
 
         // fos_user_security_login
         if ($pathinfo === '/accueil-co') {
-            return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'page' => 'oetherium',  'errorConnexion' => 'true',  '_route' => 'fos_user_security_login',);
+            return array (  '_controller' => 'Apa\\GeneralPageBundle\\Controller\\GeneralPageController::seePageAction',  'pageTitle' => 'oetherium',  'hasErrorConnexion' => 'true',  '_route' => 'fos_user_security_login',);
         }
 
         if (0 === strpos($pathinfo, '/log')) {

@@ -68,31 +68,31 @@ class __TwigTemplate_4913ea8685bc1dd69d28fb3ff7e4ba8f404c1f37a848a06886be44ee5c5
         </div>
         
         <!-- Rappel : les textes sont affichés du plus récent au plus ancien -->
-        <!-- si l'id n'est pas le premier de la liste alors on peut faire précédent-->
+        <!-- si l'id n'est pas le premier de la liste alors on peut faire précédent -->
         ";
         // line 20
-        if (($this->getAttribute((isset($context["annexText"]) ? $context["annexText"] : null), "id", array()) != (isset($context["lastId"]) ? $context["lastId"] : null))) {
+        if ( !twig_test_empty((isset($context["idPreviousAnnexText"]) ? $context["idPreviousAnnexText"] : null))) {
             // line 21
             echo "            <a class=\"boxLink\" itemprop=\"url\" href=\"";
-            echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_annexText", array("numero" => ($this->getAttribute((isset($context["annexText"]) ? $context["annexText"] : null), "id", array()) + 1))), "html", null, true);
-            echo "\">Texte précédent</a>
+            echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_annexText", array("id" => (isset($context["idPreviousAnnexText"]) ? $context["idPreviousAnnexText"] : null))), "html", null, true);
+            echo "\">Texte précédent</a>&nbsp;-
         ";
         }
         // line 23
         echo "        
-        <!-- si l'id n'est pas le dernier de la liste alors on peut faire suivant-->
+        <!-- si l'id n'est pas le dernier de la liste alors on peut faire suivant -->
         ";
         // line 25
-        if (($this->getAttribute((isset($context["annexText"]) ? $context["annexText"] : null), "id", array()) != (isset($context["firstId"]) ? $context["firstId"] : null))) {
+        if ( !twig_test_empty((isset($context["idNextAnnexText"]) ? $context["idNextAnnexText"] : null))) {
             // line 26
             echo "            <a class=\"boxLink\" itemprop=\"url\" href=\"";
-            echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_annexText", array("numero" => ($this->getAttribute((isset($context["annexText"]) ? $context["annexText"] : null), "id", array()) - 1))), "html", null, true);
-            echo "\">Texte suivant</a>
+            echo twig_escape_filter($this->env, $this->env->getExtension('routing')->getPath("apa_story_annexText", array("id" => (isset($context["idNextAnnexText"]) ? $context["idNextAnnexText"] : null))), "html", null, true);
+            echo "\">Texte suivant</a>&nbsp;-
         ";
         }
         // line 28
         echo "    
-        - <a class=\"boxLink\" itemprop=\"url\" href=\"";
+        <a class=\"boxLink\" itemprop=\"url\" href=\"";
         // line 29
         echo $this->env->getExtension('routing')->getPath("apa_story_annexTexts");
         echo "\">Retour aux textes</a>

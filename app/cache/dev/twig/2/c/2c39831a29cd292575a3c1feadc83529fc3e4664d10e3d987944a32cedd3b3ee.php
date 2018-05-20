@@ -119,7 +119,7 @@ class __TwigTemplate_2c39831a29cd292575a3c1feadc83529fc3e4664d10e3d987944a32cedd
                             <div class=\"vignetteName capital\"><span itemprop=\"givenName\">";
                 // line 38
                 echo twig_escape_filter($this->env, $this->getAttribute($context["character"], "firstname", array()), "html", null, true);
-                echo "</span><br><span itemprop=\"familyName\">";
+                echo "</span> <span itemprop=\"familyName\">";
                 echo twig_escape_filter($this->env, (isset($context["name"]) ? $context["name"] : $this->getContext($context, "name")), "html", null, true);
                 echo "</span></div>
                         </div>
@@ -203,7 +203,7 @@ class __TwigTemplate_2c39831a29cd292575a3c1feadc83529fc3e4664d10e3d987944a32cedd
                             <div class=\"vignetteName capital\"><span itemprop=\"givenName\">";
                 // line 70
                 echo twig_escape_filter($this->env, $this->getAttribute($context["character"], "firstname", array()), "html", null, true);
-                echo "</span><br><span itemprop=\"familyName\">";
+                echo "</span> <span itemprop=\"familyName\">";
                 echo twig_escape_filter($this->env, (isset($context["name"]) ? $context["name"] : $this->getContext($context, "name")), "html", null, true);
                 echo "</span></div>
                         </div>
