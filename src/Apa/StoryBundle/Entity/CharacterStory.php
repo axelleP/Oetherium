@@ -499,7 +499,7 @@ class CharacterStory
         // Si l'utilisateur avait déjà un avatar, on supprime l'ancien
         if ($this->oldAvatar != null) {
             $file = $this->getAbsolutePathOldAvatar();
-            if ($file) {
+            if (file_exists($file)) {
                 unlink($file);
             }
         }
@@ -541,7 +541,7 @@ class CharacterStory
     public function removeUpload()
     {
         $file = $this->getAbsolutePath();
-        if ($file) {
+        if (file_exists($file)) {
             unlink($file);
         }
     }

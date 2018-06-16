@@ -52,8 +52,8 @@ class CharacterStoryAdmin extends Admin
             ->add('name', 'text', array('label' => 'Nom', 'required' => false))
             ->add('file', 'file', array('label' => 'Avatar', 'required' => false), $fileFieldOptions)
             ->add('species', 'text', array('label' => 'Espèce'))
-            ->add('gender', 'text', array('label' => 'Sexe'))
-            ->add('dateBirth', 'sonata_type_date_picker', array('label' => 'Date de naissance','dp_language'=>'fr','format' => 'yyyy-MM-dd', 'attr' => array(
+            ->add('gender', 'choice', array('label' => 'Sexe', 'choices' => array('mâle' => 'Mâle', 'femelle' => 'Femelle')))
+            ->add('dateBirth', 'sonata_type_date_picker', array('sonata_field_description' => true, 'label' => 'Date de naissance','dp_language'=>'fr','format' => 'yyyy-MM-dd', 'attr' => array(
                 'data-date-format' => 'DD/MM/YYYY')))
             ->add('placeBirth', 'text', array('label' => 'Lieu de naissance'))
             ->add('citation', 'text', array('label' => 'Citation'))
@@ -63,9 +63,11 @@ class CharacterStoryAdmin extends Admin
                 array(
                     'required' => false,
                     'label' => 'Images',
-                    'help' => '<div style="color:red;"><b>Attention :</b> Ajouter une nouvelle
-                    image supprime les fichiers choisis précédemment!
-                    <br/>Il est préférable de cliquer sur le bouton Ajouter autant de fois que nécessaire puis de choisir le(s) image(s) voulue(s).</div>'
+                    'help' => '<div style="color:red;"><b>Attention :</b>
+                    <br/>- Ajouter une nouvelle image supprime les fichiers choisis précédemment!
+                    <br/>Il est préférable de cliquer sur le bouton Ajouter autant de fois que nécessaire puis de choisir le(s) image(s) voulue(s).
+                    <br/>- Cliquer sur Ajouter sans mettre d\'image provoque une erreur.
+                    </div>'
                 )
                 , array(
                     'edit' => 'inline',
@@ -120,18 +122,17 @@ class CharacterStoryAdmin extends Admin
         //si l'utilisateur a changé le nom ou prénom du personnage
         if($newFullName != $oldFullName){
             //on renomme le dossier ou sont stockées ses images
-
-            if (file_exists($path)) {
-                rename ($path.$oldFullName, $path.$newFullName);
+            if (file_exists($path.$oldFullName)) {
+                rename($path.$oldFullName, $path.$newFullName);
             }
 
             $path2 = 'media/cache/normalAvatar/uploads/apastory/images/';
-            if (file_exists($path2)) {
-                rename ($path2.$oldFullName, $path2.$newFullName);
+            if (file_exists($path2.$oldFullName)) {
+                rename($path2.$oldFullName, $path2.$newFullName);
             }
 
             $path3 = 'media/cache/miniatureAvatar2/uploads/apastory/images/';
-            if (file_exists($path3)) {
+            if (file_exists($path3.$oldFullName)) {
                 rename ($path3.$oldFullName, $path3.$newFullName);
             }
         }
@@ -148,5 +149,40 @@ class CharacterStoryAdmin extends Admin
                 $image->setCharacterStory($character);
             }
         }
+    }
+
+    //après avoir supprimé un personnage
+    public function preRemove($character){
+        //on supprime ses images
+        $fileName = utf8_decode($character->getFirstname().'-'.$character->getName());
+
+        $path = 'uploads/apastory/images/';
+        if (file_exists($path.$fileName)) {
+            $this->rmAllDir($path.$fileName.'/');
+        }
+
+        $path2 = 'media/cache/normalAvatar/uploads/apastory/images/';
+        if (file_exists($path2.$fileName)) {
+            $this->rmAllDir($path2.$fileName);
+        }
+
+        $path3 = 'media/cache/miniatureAvatar2/uploads/apastory/images/';
+        if (file_exists($path3.$fileName)) {
+            $this->rmAllDir($path3.$fileName);
+        }
+    }
+    public function rmAllDir($strDirectory){
+        $handle = opendir($strDirectory);
+        while(false !== ($entry = readdir($handle))){
+            if($entry != '.' && $entry != '..'){
+                if(is_dir($strDirectory.'/'.$entry)){
+                    $this->rmAllDir($strDirectory.'/'.$entry);
+                }elseif(is_file($strDirectory.'/'.$entry)){
+                    unlink($strDirectory.'/'.$entry);
+                }
+            }
+        }
+        rmdir($strDirectory.'/'.$entry);
+        closedir($handle);
     }
 }
