@@ -12,7 +12,7 @@
         <h1 id="title" class="uppercase" itemprop="headline">Sommaire</h1>
         
         <div id="contentMiddleFrame" itemprop="text"> 
-            {% if pagination %}
+            {% if pagination is not empty %}
                 {% for chapter in pagination %}
                     <span itemscope itemtype="http://schema.org/Thing">
                         <a class="link" itemprop="url" href="{{ path('apa_story_chapter',{'numero':chapter.number}) }}">

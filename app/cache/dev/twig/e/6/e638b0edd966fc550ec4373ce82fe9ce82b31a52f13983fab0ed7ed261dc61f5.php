@@ -58,7 +58,7 @@ class __TwigTemplate_e638b0edd966fc550ec4373ce82fe9ce82b31a52f13983fab0ed7ed261d
         <div id=\"contentMiddleFrame\" itemprop=\"text\"> 
             ";
         // line 15
-        if ((isset($context["pagination"]) ? $context["pagination"] : $this->getContext($context, "pagination"))) {
+        if ( !twig_test_empty((isset($context["pagination"]) ? $context["pagination"] : $this->getContext($context, "pagination")))) {
             // line 16
             echo "                ";
             $context['_parent'] = (array) $context;

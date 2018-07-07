@@ -133,7 +133,7 @@ class CharacterStoryAdmin extends Admin
 
             $path3 = 'media/cache/miniatureAvatar2/uploads/apastory/images/';
             if (file_exists($path3.$oldFullName)) {
-                rename ($path3.$oldFullName, $path3.$newFullName);
+                rename($path3.$oldFullName, $path3.$newFullName);
             }
         }
 

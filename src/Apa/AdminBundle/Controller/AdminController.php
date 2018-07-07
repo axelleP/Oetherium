@@ -12,8 +12,13 @@ class AdminController extends Controller
         $repository = $this->getDoctrine()->getManager()->getRepository('ApaStoryBundle:Chapter');
 
         //Récupère le dernier numéro de chapitre
-        $lastChapterNumber = $repository->getLastNumber();
+        $chapter = $repository->getLastNumber();
 
-        return new JsonResponse($lastChapterNumber['lastNumber']);
+        $lastChapterNumber = 0;
+        if (!empty($chapter['lastNumber'])) {
+            $lastChapterNumber = $chapter['lastNumber'];
+        }
+
+        return new JsonResponse($lastChapterNumber);
     }
 }

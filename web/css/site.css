@@ -237,6 +237,9 @@ hr {
     display: none;
     text-decoration: none;
 }
+.contentChapter s { /* texte barré caché */
+    display: none;
+}
 /* End Story */
 
 /* Character */
@@ -732,7 +735,7 @@ footer .link:hover {
     }
     
     /* Cache les boutons mal gérés */
-    .buttonFontSize, .buttonTextColor {
+    .buttonFontSize, .buttonTextColor, .buttonTextDisplay {
         display : none;
     }
 }

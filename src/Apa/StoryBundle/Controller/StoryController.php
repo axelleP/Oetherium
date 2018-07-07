@@ -70,11 +70,15 @@ class StoryController extends Controller {
         $chapter = $rep_chapter->findOneBy(array('number' => $numero));
         $pages = $rep_pageBook->findBy(array('chapter' => $chapter), array('number' => 'asc'));
 
-        //1er et dernier id en base
-        $firstChapter = $rep_chapter->findOneBy(array(), array('id' => 'asc'), 1);
-        $lastChapter = $rep_chapter->findOneBy(array(), array('id' => 'desc'), 1);
-        $idFirstChapter = $firstChapter->getId();
-        $idlLastChapter = $lastChapter->getId();
+        $idFirstChapter = null;
+        $idlLastChapter = null;
+        if (!empty($chapter)) {
+            //1er et dernier id en base
+            $firstChapter = $rep_chapter->findOneBy(array(), array('id' => 'asc'), 1);
+            $lastChapter = $rep_chapter->findOneBy(array(), array('id' => 'desc'), 1);
+            $idFirstChapter = $firstChapter->getId();
+            $idlLastChapter = $lastChapter->getId();
+        }
 
         //Pagination
         $paginator = $this->get('knp_paginator'); //on se sert du bundle KnpPaginatorBundle

@@ -66,5 +66,6 @@ class GeneralPageAdmin extends Admin
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->remove('create');
+        $collection->remove('delete');
     }
 }

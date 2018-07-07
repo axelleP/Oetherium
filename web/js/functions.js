@@ -47,10 +47,9 @@ function changeTextColor() {
 }
 
 function changeTextDisplay() {
-    $element = ".contentChapter s";
+    $element = ".contentChapter s";//texte barré
     
-    if ($($element).hasClass("spaceTextDisplay")) {}
-    else {
+    if (!$($element).hasClass("spaceTextDisplay")) {
         $($element).append("<br>");
         $($element).addClass("spaceTextDisplay");
     }
@@ -60,6 +59,7 @@ function changeTextDisplay() {
     } else {
         $($element).fadeIn("slow");
         $($element).css("color", "rgb(192, 158, 101)");
+        $($element).css("text-decoration", "none");
     }   
 }
 
