@@ -2,4 +2,4 @@ _assetic:
     resource: .
     type: assetic
 _app:
-    resource: 'C:\wamp\www\Oetherium\app/config/routing_dev.yml'
+    resource: 'C:\wamp64\www\Oetherium\app/config/routing_dev.yml'

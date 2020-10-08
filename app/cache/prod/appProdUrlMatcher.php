@@ -482,11 +482,6 @@ class appProdUrlMatcher extends Symfony\Bundle\FrameworkBundle\Routing\Redirecta
                         return $this->mergeDefaults(array_replace($matches, array('_route' => 'admin_apa_generalpage_page_edit')), array (  '_controller' => 'Sonata\\AdminBundle\\Controller\\CRUDController::editAction',  '_sonata_admin' => 'sonata.admin.generalpage',  '_sonata_name' => 'admin_apa_generalpage_page_edit',));
                     }
 
-                    // admin_apa_generalpage_page_delete
-                    if (preg_match('#^/admin/apa/generalpage/page/(?P<id>[^/]++)/delete$#s', $pathinfo, $matches)) {
-                        return $this->mergeDefaults(array_replace($matches, array('_route' => 'admin_apa_generalpage_page_delete')), array (  '_controller' => 'Sonata\\AdminBundle\\Controller\\CRUDController::deleteAction',  '_sonata_admin' => 'sonata.admin.generalpage',  '_sonata_name' => 'admin_apa_generalpage_page_delete',));
-                    }
-
                     // admin_apa_generalpage_page_show
                     if (preg_match('#^/admin/apa/generalpage/page/(?P<id>[^/]++)/show$#s', $pathinfo, $matches)) {
                         return $this->mergeDefaults(array_replace($matches, array('_route' => 'admin_apa_generalpage_page_show')), array (  '_controller' => 'Sonata\\AdminBundle\\Controller\\CRUDController::showAction',  '_sonata_admin' => 'sonata.admin.generalpage',  '_sonata_name' => 'admin_apa_generalpage_page_show',));
