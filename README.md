@@ -1,3 +1,15 @@
+# Training
+I used :
+- Symfony 2
+- jQuery 3.3.1
+- Sonata Admin Bundle
+- egeloen/ckeditor-bundle
+- knplabs/knp-paginator-bundle
+- friendsofsymfony/user-bundle
+- friendsofsymfony/jsrouting-bundle
+- imagine/Imagine and liip/imagine-bundle : management of images
+
+
 Symfony Standard Edition
 ========================
 
