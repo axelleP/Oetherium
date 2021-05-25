@@ -7,7 +7,7 @@ I used :
 - knplabs/knp-paginator-bundle
 - friendsofsymfony/user-bundle
 - friendsofsymfony/jsrouting-bundle
-- imagine/Imagine and liip/imagine-bundle : management of images
+- imagine/Imagine and liip/imagine-bundle : image management
 
 
 Symfony Standard Edition
