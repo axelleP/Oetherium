@@ -1,81 +1,75 @@
-# Training
-I used :
+# <h1 align="center">👁️ Oetherium 👁️ </h1>
+
+</br>
+
+L'oetherium est le nom de l'histoire écrit par 2 artistes : HellyPse et Kikile.  
+Ce site Web permet de présenter l'univers de l'oetherium, son histoire et ces auteurs.  
+Il a été réalisé selon les maquettes et les instructions fourni par HellyPse.  
+
+</br>
+
+En savoir plus sur l'histoire : https://www.deviantart.com/oetherium  
+
+</br>
+
+En savoir plus sur les auteurs :  
+- https://www.deviantart.com/hellypse  
+- https://k-zlovetch.deviantart.com/  
+
+</br>
+
+[Voir les images du site Web](#images-du-site-web)
+
+</br>
+
+## Bibliothèques
 - Symfony 2
 - jQuery 3.3.1
-- Sonata Admin Bundle
-- egeloen/ckeditor-bundle
-- knplabs/knp-paginator-bundle
-- friendsofsymfony/user-bundle
-- friendsofsymfony/jsrouting-bundle
-- imagine/Imagine and liip/imagine-bundle : image management
+- Sonata Admin Bundle ~2.3 : création d'une interface d'administration
+- egeloen/ckeditor-bundle ~2.0 : éditeur de texte pour l'utilisateur
+- knplabs/knp-paginator-bundle ~2.4.2 : pagination
+- friendsofsymfony/user-bundle 2.0.x-dev : gestion des utilisateurs
+- friendsofsymfony/jsrouting-bundle ^1.6 : gestion du routage des pages
+- imagine/Imagine >=0.2.8 et liip/imagine-bundle ~1.3.0 : gestion du format des images
 
+## Exemples de code
+- Entité CharacterStory : [CharacterStory.php](src/Apa/StoryBundle/Entity/CharacterStory.php)
+- Profil CharacterStory : [seeCharacterProfile.html.twig](src/Apa/StoryBundle/Resources/views/Character/seeCharacterProfile.html.twig)
+- Contrôleur Story : [StoryController.php](src/Apa/StoryBundle/Controller/StoryController.php)
+- Admin - CharacterStory : [CharacterStoryAdmin.php](src/Apa/AdminBundle/Admin/CharacterStoryAdmin.php)
 
-Symfony Standard Edition
-========================
+[imgSize]: 1000
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony2
-application that you can use as the skeleton for your new applications.
-
-For details on how to download and get started with Symfony, see the
-[Installation][1] chapter of the Symfony Documentation.
-
-What's inside?
---------------
-
-The Symfony Standard Edition is configured with the following defaults:
-
-  * An AppBundle you can use to start coding;
-
-  * Twig as the only configured template engine;
-
-  * Doctrine ORM/DBAL;
-
-  * Swiftmailer;
-
-  * Annotations enabled for everything.
-
-It comes pre-configured with the following bundles:
-
-  * **FrameworkBundle** - The core Symfony framework bundle
-
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
-
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
-
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
-
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
-
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
-
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
-
-  * [**AsseticBundle**][12] - Adds support for Assetic, an asset processing
-    library
-
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
-
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
-
-  * [**SensioGeneratorBundle**][13] (in dev/test env) - Adds code generation
-    capabilities
-
-All libraries and bundles included in the Symfony Standard Edition are
-released under the MIT or BSD license.
-
-Enjoy!
-
-[1]:  http://symfony.com/doc/2.6/book/installation.html
-[6]:  http://symfony.com/doc/2.6/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  http://symfony.com/doc/2.6/book/doctrine.html
-[8]:  http://symfony.com/doc/2.6/book/templating.html
-[9]:  http://symfony.com/doc/2.6/book/security.html
-[10]: http://symfony.com/doc/2.6/cookbook/email.html
-[11]: http://symfony.com/doc/2.6/cookbook/logging/monolog.html
-[12]: http://symfony.com/doc/2.6/cookbook/assetic/asset_management.html
-[13]: http://symfony.com/doc/2.6/bundles/SensioGeneratorBundle/index.html
+<details>
+  <summary><h2>Images du site Web</h2></summary>
+  
+  ### <ins>Accueil</ins>
+  <img src="web/img/readme/home.png" alt="home" width=[imgSize]/>
+  
+  ### <ins>Auteurs</ins>
+  <img src="/web/img/readme/author-hellypse.png" alt="author-hellypse" width=[imgSize]/>
+ 
+  ### <ins>Histoire</ins>
+  <img src="/web/img/readme/story.png" alt="story" width=[imgSize]/>
+ 
+  ### <ins>Personnages</ins>
+  <img src="/web/img/readme/characters.png" alt="characters" width=[imgSize]/>
+ 
+  ### <ins>FAQ</ins>
+  <img src="/web/img/readme/FAQ.png" alt="FAQ" width=[imgSize]/>
+ 
+  ### <ins>Liens</ins>
+  <img src="/web/img/readme/links.png" alt="links" width=[imgSize]/>
+ 
+  ### <ins>Administration</ins>
+  <img src="/web/img/readme/admin.png" alt="admin" width=[imgSize]/>
+ 
+  ### <ins>Admin - Liste des textes annexes</ins>
+  <img src="/web/img/readme/admin-secondary_texts-list.png" alt="admin-secondary_texts-list" width=[imgSize]/>
+ 
+  ### <ins>Admin - Création d'un texte annexe</ins>
+  <img src="/web/img/readme/admin-secondary_texts-create.png" alt="admin-secondary_texts-create" width=[imgSize]/>
+ 
+  ### <ins>Admin - Modification d'un texte annexe</ins>
+  <img src="/web/img/readme/admin-secondary_texts-update.png" alt="admin-secondary_texts-update" width=[imgSize]/>
+</details>
